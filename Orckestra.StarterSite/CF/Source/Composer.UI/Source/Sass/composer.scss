@@ -3,15 +3,18 @@
  */
 
 /**
+* Bootstrap
+ */
+@import "refapp_bootstrap";
+
+/**
  * Configs
  */
-@import "config-bootstrap";
 @import "config";
 
 /**
  * Libs
  */
-@import "bootstrap";
 @import "lib/font-awesome/font-awesome";
 @import "lib/nouislider/nouislider";
 @import "lib/slick/slick";

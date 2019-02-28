@@ -1,32 +1,29 @@
-﻿<div data-templateid='ProductImages'>
+﻿<div class="col-md-6" data-templateid='ProductImages'>
 {{#if Images}}
-  <div class="col-md-6  col-sm-6">
-      <div class="row">
+  <div class="row">
+      <!-- Main image -->
+      <div class="col-lg-10 order-lg-12">
+          {{> MainImage}}
+      </div>
 
-          <!-- Main image -->
-          <div class="col-md-10  col-md-push-2">
-              {{> MainImage}}
-          </div>
-
-          <!-- Thumbnails -->
-          <div class="col-md-2  col-md-pull-10">
-              <div class="row">
-              {{#if Images}}
-                {{#each Images}}
-                  <div class="col-xs-3  col-md-12">
-                        {{#if Selected}}
-                        <a href="#" style="display: none;" class="thumbnail  active  js-thumbnail" data-oc-click="selectImage" data-index="{{@index}}">
-                          <img class="img-fluid" src="{{ThumbnailUrl}}" alt="{{../../DisplayName}} - {{@index}}" onload="if (this.complete) { this.parentNode.style.display = 'block' }"/>
-                        </a>
-                        {{else}}
-                        <a href="#" style="display: none;" class="thumbnail" data-oc-click="selectImage" data-index="{{@index}}">
-                          <img class="img-fluid" src="{{ThumbnailUrl}}" alt="{{../../DisplayName}} - {{@index}}" onload="if (this.complete) { this.parentNode.style.display = 'block' }"/>
-                        </a>
-                        {{/if}}
-                  </div>
-                {{/each}}
-              {{/if}}
+      <!-- Thumbnails -->
+      <div class="col-lg-2 order-lg-1">
+          <div class="row">
+          {{#if Images}}
+            {{#each Images}}
+              <div class="col-3 col-lg-12">
+                    {{#if Selected}}
+                    <a href="#" style="display: none;" class="img-thumbnail mb-4 border-dark js-thumbnail" data-oc-click="selectImage" data-index="{{@index}}">
+                      <img class="img-fluid" src="{{ThumbnailUrl}}" alt="{{../../DisplayName}} - {{@index}}" onload="if (this.complete) { this.parentNode.style.display = 'block' }"/>
+                    </a>
+                    {{else}}
+                    <a href="#" style="display: none;" class="img-thumbnail mb-4" data-oc-click="selectImage" data-index="{{@index}}">
+                      <img class="img-fluid" src="{{ThumbnailUrl}}" alt="{{../../DisplayName}} - {{@index}}" onload="if (this.complete) { this.parentNode.style.display = 'block' }"/>
+                    </a>
+                    {{/if}}
               </div>
+            {{/each}}
+          {{/if}}
           </div>
       </div>
   </div>

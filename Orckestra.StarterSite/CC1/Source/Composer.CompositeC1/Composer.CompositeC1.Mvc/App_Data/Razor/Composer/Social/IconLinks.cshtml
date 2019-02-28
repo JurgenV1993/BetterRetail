@@ -122,78 +122,78 @@
 
 @helper SocialLinks_List(string className)
 {
-    <ul class="@className pull-left list-inline nav-social">
+    <ul class="@className pull-left list-inline">
         @if (!String.IsNullOrEmpty(Facebook))
         {
-            <li class="facebook"><a target="_blank" href="@Facebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+            <li class="list-inline-item facebook"><a target="_blank" href="@Facebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Twitter))
         {
-            <li class="twitter"><a target="_blank" href="@Twitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+            <li class="list-inline-item twitter"><a target="_blank" href="@Twitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(GooglePlus))
         {
-            <li class="googleplus"><a target="_blank" href="@GooglePlus" title="GooglePlus"><i class="fa fa-google-plus"></i></a></li>
+            <li class="list-inline-item googleplus"><a target="_blank" href="@GooglePlus" title="GooglePlus"><i class="fa fa-google-plus"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Skype))
         {
-            <li class="skype"><a target="_blank" href="@Skype" title="Skype"><i class="fa fa-skype"></i></a></li>
+            <li class="list-inline-item skype"><a target="_blank" href="@Skype" title="Skype"><i class="fa fa-skype"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Instagram))
         {
-            <li class="instagram"><a target="_blank" href="@Instagram" title="Instagram"><i class="fa fa-instagram"></i></a></li>
+            <li class="list-inline-item instagram"><a target="_blank" href="@Instagram" title="Instagram"><i class="fa fa-instagram"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(LinkedIn))
         {
-            <li class="linkedin"><a target="_blank" href="@LinkedIn" title="LinkedIn"><i class="fa fa-linkedin"></i></a></li>
+            <li class="list-inline-item linkedin"><a target="_blank" href="@LinkedIn" title="LinkedIn"><i class="fa fa-linkedin"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Pinterest))
         {
-            <li class="pinterest"><a target="_blank" href="@Pinterest" title="Pinterest"><i class="fa fa-pinterest"></i></a></li>
+            <li class="list-inline-item pinterest"><a target="_blank" href="@Pinterest" title="Pinterest"><i class="fa fa-pinterest"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Flickr))
         {
-            <li class="flickr"><a target="_blank" href="@Flickr" title="Flickr"><i class="fa fa-flickr"></i></a></li>
+            <li class="list-inline-item flickr"><a target="_blank" href="@Flickr" title="Flickr"><i class="fa fa-flickr"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(YouTube))
         {
-            <li class="youtube"><a target="_blank" href="@YouTube" title="YouTube"><i class="fa fa-youtube"></i></a></li>
+            <li class="list-inline-item youtube"><a target="_blank" href="@YouTube" title="YouTube"><i class="fa fa-youtube"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(FourSquare))
         {
-            <li class="foursquare"><a target="_blank" href="@FourSquare" title="FourSquare"><i class="fa fa-foursquare"></i></a></li>
+            <li class="list-inline-item foursquare"><a target="_blank" href="@FourSquare" title="FourSquare"><i class="fa fa-foursquare"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(SoundCloud))
         {
-            <li class="soundcloud"><a target="_blank" href="@SoundCloud" title="SoundCloud"><i class="fa fa-soundcloud"></i></a></li>
+            <li class="list-inline-item soundcloud"><a target="_blank" href="@SoundCloud" title="SoundCloud"><i class="fa fa-soundcloud"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Tumblr))
         {
-            <li class="tumblr"><a target="_blank" href="@Tumblr" title="Tumblr"><i class="fa fa-tumblr"></i></a></li>
+            <li class="list-inline-item tumblr"><a target="_blank" href="@Tumblr" title="Tumblr"><i class="fa fa-tumblr"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Vimeo))
         {
-            <li class="vimeo"><a target="_blank" href="@Vimeo" title="Vimeo"><i class="fa fa-vimeo-square"></i></a></li>
+            <li class="list-inline-item vimeo"><a target="_blank" href="@Vimeo" title="Vimeo"><i class="fa fa-vimeo-square"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Dribbble))
         {
-            <li class="dribbble"><a target="_blank" href="@Dribbble" title="Dribbble"><i class="fa fa-dribbble"></i></a></li>
+            <li class="list-inline-item dribbble"><a target="_blank" href="@Dribbble" title="Dribbble"><i class="fa fa-dribbble"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Behance))
         {
-            <li class="behance"><a target="_blank" href="@Behance" title="Behance"><i class="fa fa-behance"></i></a></li>
+            <li class="list-inline-item behance"><a target="_blank" href="@Behance" title="Behance"><i class="fa fa-behance"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Vine))
         {
-            <li class="vine"><a target="_blank" href="@Vine" title="Vine"><i class="fa fa-vine"></i></a></li>
+            <li class="list-inline-item vine"><a target="_blank" href="@Vine" title="Vine"><i class="fa fa-vine"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(Stumbleupon))
         {
-            <li class="stumbleupon"><a target="_blank" href="@Stumbleupon" title="Stumbleupon"><i class="fa fa-stumbleupon"></i></a></li>
+            <li class="list-inline-item stumbleupon"><a target="_blank" href="@Stumbleupon" title="Stumbleupon"><i class="fa fa-stumbleupon"></i></a></li>
         }
         @if (!String.IsNullOrEmpty(MailTo))
         {
-            <li class="mailto"><a href="@MailTo" title="Mail"><i class="fa fa-envelope-o"></i></a></li>
+            <li class="list-inline-item mailto"><a href="@MailTo" title="Mail"><i class="fa fa-envelope-o"></i></a></li>
         }
     </ul>
 }

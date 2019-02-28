@@ -1,32 +1,32 @@
-<ul class="pager" role="presentation">
+<div class="row">
     {{#if Pagination }}
-    {{#with Pagination}}
-        {{#if PreviousPage }}
-        <li class="previous  {{#unless PreviousPage.Url }} disabled {{/unless}}">
-            {{#if PreviousPage.Url }}
-            <a data-qa="search-pagination-previous" href="{{PreviousPage.Url}}" aria-label="{{localize 'General' 'L_GoToPreviousPage'}}">
-                <span class="fa  fa-arrow-circle-left" aria-hidden="true"></span> {{PreviousPage.DisplayName}}
-            </a>
-            {{else}}
-            <span data-qa="search-pagination-previous">
-                <span class="fa  fa-arrow-circle-left" aria-hidden="true"></span> {{PreviousPage.DisplayName}}
-            </span>
-            {{/if}}
-        </li>
-        {{/if}}
-        {{#if NextPage }}
-        <li class="next  {{#unless NextPage.Url }} disabled {{/unless}}">
-            {{#if NextPage.Url }}
-            <a data-qa="search-pagination-next" href="{{NextPage.Url}}" aria-label="{{localize 'General' 'L_GoToNextPage'}}">
-                {{NextPage.DisplayName}} <span class="fa  fa-arrow-circle-right" aria-hidden="true"></span>
-            </a>
-            {{else}}
-            <span data-qa="search-pagination-next">
-                {{NextPage.DisplayName}} <span class="fa  fa-arrow-circle-right" aria-hidden="true"></span>
-            </span>
-            {{/if}}
-        </li>
-        {{/if}}
-    {{/with}}
+        {{#with Pagination}}
+            <div class="col">
+                {{#if PreviousPage }}
+                    {{#if PreviousPage.Url}}
+                        <a class="btn btn-outline-secondary" href="{{PreviousPage.Url}}" aria-label="{{localize 'List-Search' 'L_GoToPreviousPage'}}">
+                            <i class="fa  fa-arrow-circle-left" aria-hidden="true"></i>&#160;{{PreviousPage.DisplayName}}
+                        </a>
+                    {{else}}
+                        <span class="btn btn-outline-secondary disabled" data-qa="search-pagination-previous">
+                            <i class="fa  fa-arrow-circle-left" aria-hidden="true"></i>&#160;{{PreviousPage.DisplayName}}
+                        </span>
+                    {{/if}}
+                {{/if}}
+            </div>
+            <div class="col text-right">
+                {{#if NextPage }}
+                    {{#if NextPage.Url}}
+                        <a class="btn btn-outline-secondary" href="{{NextPage.Url}}" aria-label="{{localize 'List-Search' 'L_GoToNextPage'}}">
+                            {{NextPage.DisplayName}}&#160;<i class="fa  fa-arrow-circle-right" aria-hidden="true"></i>
+                        </a>
+                    {{else}}
+                        <span class="btn btn-outline-secondary disabled" data-qa="search-pagination-next">
+                            {{NextPage.DisplayName}}&#160;<i class="fa  fa-arrow-circle-right" aria-hidden="true"></i>
+                        </span>
+                    {{/if}}
+                {{/if}}
+            </div>
+        {{/with}}
     {{/if}}
-</ul>
+</div>

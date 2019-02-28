@@ -1,17 +1,17 @@
 <div class="wishlist-tile  island-xl">
     <div class="row">
-        <div class="col-xs-4 col-sm-12">
+        <div class="col-4 col-md-12">
             <a class="wishlist-tile-media" href="{{ProductUrl}}" aria-hidden="true" tabindex="-1">
                 <img class="img-fluid" src="{{ImageUrl}}" alt="{{ProductSummary.DisplayName}}" onerror="this.onerror=null; this.src='{{FallbackImageUrl}}'" />
             </a>
-            <div class="wishlist-tile-delete hidden-xs">
-                <button type="button" title="{{localize 'MyAccount' 'H_RemoveFromTheWishList'}}" class="btn  btn-default" data-lineitemid="{{Id}}" data-oc-click="deleteLineItem" data-qa="wishlist-product-delete">
+            <div class="wishlist-tile-delete d-none d-md-block">
+                <button type="button" title="{{localize 'MyAccount' 'H_RemoveFromTheWishList'}}" class="btn  btn-outline-secondary" data-lineitemid="{{Id}}" data-oc-click="deleteLineItem" data-qa="wishlist-product-delete">
                     <span class="fa  fa-times  fa-lg" aria-hidden="true"></span>
                     <span class="sr-only">{{localize 'MyAccount' 'H_RemoveFromTheWishList'}} {{ProductSummary.DisplayName}}</span>
                 </button>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-12">
+        <div class="col-6 col-md-12">
             <div class="wishlist-tile-text">
                 {{#if ProductSummary.Brand}}
                 <strong class="text-uppercase  product-tile-brand">{{ProductSummary.Brand}}</strong>
@@ -41,9 +41,9 @@
             </div>
             
         </div>
-        <div class="col-xs-2 col-sm-12 visible-xs-block">
+        <div class="col-2 col-md-12 d-md-none">
             <div class="wishlist-tile-delete">
-                <button type="button" title="{{localize 'MyAccount' 'H_RemoveFromTheWishList'}}" class="btn  btn-default" data-lineitemid="{{Id}}" data-oc-click="deleteLineItem" data-qa="wishlist-product-delete">
+                <button type="button" title="{{localize 'MyAccount' 'H_RemoveFromTheWishList'}}" class="btn  btn-outline-secondary" data-lineitemid="{{Id}}" data-oc-click="deleteLineItem" data-qa="wishlist-product-delete">
                     <span class="fa  fa-times  fa-lg" aria-hidden="true"></span>
                     <span class="sr-only">{{localize 'MyAccount' 'H_RemoveFromTheWishList'}}</span>
                 </button>

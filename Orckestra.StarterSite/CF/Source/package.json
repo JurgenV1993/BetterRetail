@@ -55,6 +55,8 @@
     "open": "0.0.5",
     "phantomjs": "2.1.7",
     "phantomjs-prebuilt": "^2.1.7",
+    "popper.js": "1.14.7",
+    "scrollpos-styler": "0.7.0",
     "sinon": "7.2.3",
     "through2": "3.0.0",
     "tslint": "5.12.1",

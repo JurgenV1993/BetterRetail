@@ -29,7 +29,7 @@
                     </p>
                 </div>
 
-                <div class="cart-cell  cart-price  text-sm-right  hidden-xs">
+                <div class="cart-cell  cart-price  text-sm-right  d-none d-md-block">
                     <div class="text-align-button  small">
                         {{#if IsOnSale}}
                             <del data-qa="cart-product-price">{{DefaultListPrice}}</del><br />
@@ -42,8 +42,8 @@
 
                 <div class="cart-cell  cart-qty  text-sm-center  small">
                     <div class="row">
-                        <div class="col-sm-6  hidden-xs" aria-hidden="true"><span class="text-muted">X</span></div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6  d-none d-md-block" aria-hidden="true"><span class="text-muted">X</span></div>
+                        <div class="col-md-6">
                             <strong>
                                 <span class="visible-xs-inline">{{localize 'CheckoutProcess' 'L_QuantityMobile'}}</span>
                                 <span data-qa="checkout-product-quantity">{{Quantity}}</span>

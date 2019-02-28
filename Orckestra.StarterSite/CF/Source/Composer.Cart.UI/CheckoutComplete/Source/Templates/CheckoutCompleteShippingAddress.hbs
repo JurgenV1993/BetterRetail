@@ -1,18 +1,18 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card">
+    <div class="card-header text-white bg-dark">
         <div class="row">
-            <div class="col-xs-10">
+            <div class="col-sm-10">
                 <h2 class="h3" data-qa="checkout-header-shipping-address">{{localize 'CheckoutProcess' 'T_ShippingAddress'}}</h2>
             </div>
-            <div class="col-xs-2">
-                <a href="{{OrderSummary.CheckoutStepUrls.[1]}}" class="pull-right" title="{{localize 'CheckoutProcess' 'B_Edit'}}">
+            <div class="col-sm-2">
+                <a href="{{OrderSummary.CheckoutStepUrls.[1]}}" class="float-right text-white" title="{{localize 'CheckoutProcess' 'B_Edit'}}">
                     <span class="fa  fa-pencil  fa-lg" aria-hidden="true"></span>
                     <span class="sr-only">{{localize 'CheckoutProcess' 'B_Edit'}} {{localize 'CheckoutProcess' 'T_ShippingAddress'}}</span>
                 </a>
             </div>
         </div>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         {{#if GettingCart}}
             {{>Loading}}
         {{else}}

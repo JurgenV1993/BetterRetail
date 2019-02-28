@@ -1,6 +1,6 @@
 <div data-templateid="OrderDetailsShipment">
-    <div class="panel  panel-light">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header bg-light">
             <h2 class="h4">{{localize 'MyAccount' 'L_Shipping'}} {{Index}}</h2>            
             <span class="text-success">
                 {{#if_eq ShipmentStatusName "Fulfilled"}}
@@ -14,9 +14,9 @@
                 {{/if_eq}}                
             </span>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
-                <div class="col-xs-12  col-sm-8  col-md-9">
+                <div class="col-sm-12 col-md-8 col-lg-9 mb-2">
                     <h2 class="h4">{{localize 'MyAccount' 'L_OrderShipping'}}</h2>
                     {{#if ShippingAddress.FirstName}}
                         <span data-qa="order-shipping-address-firstname">{{ShippingAddress.FirstName}}</span>&#160;<span data-qa="order-shipping-address-lastname">{{ShippingAddress.LastName}}</span>
@@ -31,7 +31,7 @@
                     <span data-qa="order-shipping-address-postalcode">{{ShippingAddress.PostalCode}}</span><br />
                     <span data-qa="order-shipping-address-phone">{{ShippingAddress.PhoneNumber}}</span>
                 </div>
-                <div class="col-xs-12  col-sm-4  col-md-3 text-sm-right">
+                <div class="col-sm-12 col-md-4 col-lg-3 text-md-right">
                     <h2 class="h4">{{ShippingMethod.DisplayName}}</h2>
                     <p>{{ShippingMethod.Cost}}</p>
                 </div>

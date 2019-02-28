@@ -1,9 +1,9 @@
 <div data-templateid="CheckoutCompletePaymentProvider">
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header text-white bg-dark">
             <h2 class="h3" data-qa="checkout-header-payment-method">{{localize 'MyAccount' 'T_PaymentMethod'}}</h2>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             {{#if GettingCart}}
                 {{>Loading}}
             {{else}}

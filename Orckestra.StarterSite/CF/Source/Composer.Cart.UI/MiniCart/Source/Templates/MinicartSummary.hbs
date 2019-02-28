@@ -15,10 +15,10 @@
         {{#unless IsCartEmpty}}
         <div class="minicart-summary-summary">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                 <span>{{TotalQuantity}} {{localize 'MiniCart' 'L_Items'}}  |  <a href="{{OrderSummary.EditCartUrlTarget}}" class="cta">{{localize 'MiniCart' 'L_ViewCart'}}</a></span>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="text-right">
                         <span>{{localize 'MiniCart' 'L_Subtotal'}} <strong>{{OrderSummary.SubTotal}}</strong></span>
                     </div>
@@ -31,13 +31,13 @@
                     {{#unless IsAuthenticated}}
                         <a data-oc-click="onCheckout" data-order-subtotal="{{OrderSummary.SubTotal}}" href="{{OrderSummary.CheckoutUrlTarget}}" class="btn btn-primary btn-block">{{localize 'MiniCart' 'B_Login'}}</a>
                     {{/unless}}
-                    <a class="btn btn-default btn-block" data-oc-click="onCloseMiniCart">{{localize 'MiniCart' 'B_StartShopping'}}</a>
+                    <a class="btn btn-outline-secondary btn-block" data-oc-click="onCloseMiniCart">{{localize 'MiniCart' 'B_StartShopping'}}</a>
                 {{else}}
                     <div class="row">
-                        <div class="col-sm-6">
-                            <a class="btn btn-default" data-oc-click="onCloseMiniCart">{{localize 'MiniCart' 'B_ContinueShopping'}}</a>
+                        <div class="col-md-6">
+                            <a class="btn btn-outline-secondary" data-oc-click="onCloseMiniCart">{{localize 'MiniCart' 'B_ContinueShopping'}}</a>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <a data-oc-click="onCheckout" data-order-subtotal="{{OrderSummary.SubTotal}}" href="{{OrderSummary.CheckoutUrlTarget}}" class="btn btn-success">{{localize 'MiniCart' 'B_Checkout'}}</a>
                         </div>
                     </div>

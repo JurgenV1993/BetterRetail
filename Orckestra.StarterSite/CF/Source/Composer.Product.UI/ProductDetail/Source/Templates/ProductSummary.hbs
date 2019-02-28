@@ -3,7 +3,7 @@
     <div class="row">
         {{> ProductImages}}
 
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <div class="island">
                 <h1 property="name" data-qa="product-title">{{DisplayName}}</h1>
 
@@ -17,7 +17,7 @@
             {{> KvaItems}}
 
             <div class="row">
-                <div class="col-xs-6  col-sm-5  col-md-4  col-lg-3">
+                <div class="col-sm-6  col-md-5  col-lg-4  col-xl-3">
                     {{> ProductQuantity}}
                 </div>
             </div>
@@ -26,14 +26,16 @@
                 {{> PriceDiscount}}
             </div>
 
-            {{> AddToCartProductDetail}}
-            {{> AddToWishList}}
+            <div class="mb-4">
+                {{> AddToCartProductDetail}}
+                {{> AddToWishList}}
+            </div>
         </div>
     </div>
 
 </div>
-<div class="panel panel-default">
-	<div class="panel-body text-center">{{>StoreInventoryLink}}</div>
+<div class="card mb-4">
+	<div class="card-body">{{>StoreInventoryLink}}</div>
 </div>
 
 {{> ProductZoom}}

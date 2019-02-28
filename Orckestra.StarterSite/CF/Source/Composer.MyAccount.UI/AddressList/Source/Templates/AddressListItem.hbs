@@ -1,18 +1,18 @@
-<div class="panel {{#if IsPreferredShipping}} panel-primary {{else}} panel-default {{/if}}" data-address-id="{{Id}}">
-    <div class="panel-body  {{#if IsPreferredShipping}} text-primary {{/if}}">
+<div class="card{{#if IsPreferredShipping}} text-primary border-primary{{else}}{{/if}}" data-address-id="{{Id}}">
+    <div class="card-body">
 
         <div class="row">
-            <div class="col-sm-4  col-sm-push-8  text-sm-right">
+            <div class="col-md-4 order-md-2 text-md-right">
                 {{#if IsPreferredShipping}}<strong>{{/if}}
                 <span class="h5">{{AddressName}}</span>
                 {{#if IsPreferredShipping}}</strong>{{/if}}
 
                 {{#if IsPreferredShipping}}
-                <br class="hidden-xs"/>
+                <br class="d-none d-md-block"/>
                 <em class="text-muted">{{localize 'MyAccount' 'L_IsDefaultAddress'}}</em>
                 {{/if}}
             </div>
-            <div class="col-sm-8  col-sm-pull-4">
+            <div class="col-md-8 order-md-1">
                 {{FirstName}}
                 {{LastName}}<br />
                 {{Line1}}<br />
@@ -25,7 +25,7 @@
                 {{PhoneNumber}}
             </div>
 
-            <div class="col-xs-12  text-right">
+            <div class="col-sm-12 text-right order-last">
                 <button type="button" class="btn  btn-link" data-qa="address-delete" data-oc-click="deleteAddressConfirm" title="{{localize 'MyAccount' 'B_DeleteAddress'}}">
                     <span class="fa  fa-trash-o  fa-lg" aria-hidden="true"></span>
                     <span class="sr-only">{{localize 'MyAccount' 'B_DeleteAddress'}}</span>
@@ -40,9 +40,9 @@
 
         {{#unless IsPreferredShipping}}
         <div class="row">
-            <div class="col-xs-12  text-right">
+            <div class="col-sm-12  text-right">
                 <hr/>
-                <button type="button" class="btn  btn-default" data-qa="address-setdefault" data-oc-click="setDefaultAddress">
+                <button type="button" class="btn  btn-outline-secondary" data-qa="address-setdefault" data-oc-click="setDefaultAddress">
                    {{localize 'MyAccount' 'B_SetDefaultAddress'}}
                 </button>
             </div>

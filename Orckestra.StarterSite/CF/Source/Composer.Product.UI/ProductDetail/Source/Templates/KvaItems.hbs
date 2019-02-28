@@ -13,7 +13,7 @@
             {{#each Values}}
                 {{#if Disabled}}
                     {{#if Selected}}
-                        <button class="btn  btn-inactive  btn-sm active"
+                        <button class="btn  btn-inactive  btn-sm active  mb-1"
                                 data-oc-click="selectKva"
                                 value="{{Value}}" aria-pressed="true">
                           {{#if ImageUrl}}
@@ -23,7 +23,7 @@
                           {{/if}}
                         </button>
                     {{else}}
-                        <button class="btn  btn-inactive  btn-sm"
+                        <button class="btn  btn-inactive  btn-sm  mb-1"
                                 data-oc-click="selectKva"
                                 value="{{Value}}" aria-pressed="false">
                           {{#if ImageUrl}}
@@ -36,7 +36,7 @@
 
                 {{else}}
                     {{#if Selected}}
-                        <button class="btn  btn-primary  btn-sm active"
+                        <button class="btn  btn-primary  btn-sm active  mb-1"
                                 data-oc-click="selectKva"
                                 value="{{Value}}" aria-pressed="true">
                           {{#if ImageUrl}}
@@ -46,7 +46,7 @@
                           {{/if}}
                         </button>
                     {{else}}
-                        <button class="btn  btn-default  btn-sm"
+                        <button class="btn  btn-outline-secondary  btn-sm  mb-1"
                                 data-oc-click="selectKva"
                                 value="{{Value}}" aria-pressed="false">
                           {{#if ImageUrl}}

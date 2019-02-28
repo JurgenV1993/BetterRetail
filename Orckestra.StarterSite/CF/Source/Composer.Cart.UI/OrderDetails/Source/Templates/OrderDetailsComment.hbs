@@ -1,9 +1,9 @@
  <div data-templateid="OrderDetailsComment">
-    <div class="panel  panel-default">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header text-white bg-dark">
             <h2 class="h3">{{localize 'MyAccount' 'T_Comments' }}</h2>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             {{#if Shipments.[0].Comments}}
                 {{#each Shipments.[0].Comments}}
         	       <p>{{this}}</p>

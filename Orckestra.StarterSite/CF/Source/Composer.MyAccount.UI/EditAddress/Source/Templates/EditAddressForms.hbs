@@ -1,7 +1,7 @@
 
 <form id="EditAddressForm" {{#if IsUpdating}}data-oc-submit="updateAddress" data-address-id="{{Id}}"{{else}}data-oc-submit="createAddress"{{/if}}>
-    <div class="panel  panel-default">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header text-white bg-dark">
             <h2 class="h3">
                 {{#if AddressName}}
                     {{localize 'MyAccount' 'T_EditAddress'}}
@@ -10,11 +10,11 @@
                 {{/if}}
             </h2>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             {{>FormErrorMessages}}
 
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="AddressName">{{localize 'Forms' 'F_AddressName'}} *</label>
                         <input name="AddressName" id="AddressName" data-qa="editaddress-name"
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="FirstName">{{localize 'Forms' 'F_FirstName'}} *</label>
                         <input name="FirstName" id="FirstName" data-qa="editaddress-firstname"
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="LastName">{{localize 'Forms' 'F_LastName'}} *</label>
                         <input name="LastName" id="LastName" data-qa="editaddress-lastname"
@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="Line1">{{localize 'Forms' 'F_Address'}} *</label>
                         <input name="Line1" id="Line1" data-qa="editaddress-address"
@@ -90,7 +90,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="Line2">{{localize 'Forms' 'F_ComplementaryAddress'}}</label>
                         <input name="Line2" id="Line2" data-qa="editaddress-complementary-address"
@@ -108,7 +108,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="City">{{localize 'Forms' 'F_City'}} *</label>
                         <input name="City" id="City" data-qa="editaddress-city"
@@ -127,9 +127,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <input type="hidden" name="CountryCode" value="{{CountryCode}}" />
                                 <label for="RegionCode">{{localize 'Forms' 'F_Province'}} *</label>
@@ -137,7 +137,7 @@
                                 {{> AddressRegionPicker }}
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="PostalCode">{{localize 'Forms' 'F_PostalCode'}} *</label>
                                 <input name="PostalCode" id="PostalCode" data-qa="editaddress-postalcode"
@@ -159,7 +159,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="PhoneNumber">{{localize 'Forms' 'F_PhoneNumber'}} *</label>
                         <input name="PhoneNumber" id="PhoneNumber" data-qa="editaddress-phone"
@@ -179,7 +179,7 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-6">
                     <div class="checkbox">
                         <label>
                             <input name="IsPreferredShipping" id="IsPreferredShipping" data-qa="editaddress-ispreferredshipping" type="checkbox" {{#if IsPreferredShipping}}checked="checked"{{/if}} />
@@ -192,9 +192,9 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-md-12">
             <div class="form-group pull-right">
-                <button type="button" onclick="window.history.back();" class="btn btn-default" data-qa="editaddress-cancel">
+                <button type="button" onclick="window.history.back();" class="btn btn-outline-secondary" data-qa="editaddress-cancel">
                     {{localize 'General' 'B_Cancel'}}
                 </button>
 

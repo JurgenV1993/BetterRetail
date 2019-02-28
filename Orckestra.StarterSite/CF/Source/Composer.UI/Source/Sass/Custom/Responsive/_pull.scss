@@ -1,13 +1,5 @@
 
-@media (max-width: $screen-xs-max) {
-    .pull-xs-left {
-        float: left;
-    }
-    .pull-xs-right {
-        float: right;
-    }
-}
-@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+@include media-breakpoint-down(xs) {
     .pull-sm-left {
         float: left;
     }
@@ -15,7 +7,7 @@
         float: right;
     }
 }
-@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+@include media-breakpoint-only(md) {
     .pull-md-left {
         float: left;
     }
@@ -23,11 +15,19 @@
         float: right;
     }
 }
-@media (min-width: $screen-lg-min) {
+@include media-breakpoint-only(lg) {
     .pull-lg-left {
         float: left;
     }
     .pull-lg-right {
+        float: right;
+    }
+}
+@include media-breakpoint-up(xl) {
+    .pull-xl-left {
+        float: left;
+    }
+    .pull-xl-right {
         float: right;
     }
 }

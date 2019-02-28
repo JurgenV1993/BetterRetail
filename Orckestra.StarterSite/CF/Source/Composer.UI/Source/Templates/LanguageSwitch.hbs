@@ -1,18 +1,17 @@
 ﻿{{#if IsMultiLanguage}}
-<li class="dropdown" data-oc-controller="General.LanguageSwitch" role="region" aria-label="Language selector">
-    <a href="{{CurrentLanguage.Url}}" data-qa="language-selector" data-toggle="dropdown"><span aria-hidden="true">{{CurrentLanguage.ShortDisplayName}}</span><span class="sr-only">{{CurrentLanguage.DisplayName}}</span></a>
-    <ul class="dropdown-menu">
+<li class="nav-item dropdown" data-oc-controller="General.LanguageSwitch" role="region" aria-label="Language selector">
+    <a class="nav-link dropdown-toggle" href="{{CurrentLanguage.Url}}" id="navbarDropdownMenuLink" data-qa="language-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span aria-hidden="true">{{CurrentLanguage.ShortDisplayName}}</span>
+        <span class="sr-only">{{CurrentLanguage.DisplayName}}</span>
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
     {{#each Entries}}
         {{#if IsCurrent}}
-        <li class="active">
-            <a data-oc-click="onLanguageSwitch" href="{{Url}}" data-qa="language-value-{{@index}}" aria-selected="true">{{DisplayName}}</a>
-        </li>
+            <a class="dropdown-item active" data-oc-click="onLanguageSwitch" href="{{Url}}" data-qa="language-value-{{@index}}" aria-selected="true">{{DisplayName}}</a>
         {{else}}
-        <li>
-            <a data-oc-click="onLanguageSwitch" href="{{Url}}" data-qa="language-value-{{@index}}">{{DisplayName}}</a>
-        </li>
+            <a class="dropdown-item" data-oc-click="onLanguageSwitch" href="{{Url}}" data-qa="language-value-{{@index}}">{{DisplayName}}</a>
         {{/if}}
     {{/each}}
-    </ul>
+    </div>
 </li>
 {{/if}}

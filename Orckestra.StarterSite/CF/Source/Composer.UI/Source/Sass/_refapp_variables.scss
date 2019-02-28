@@ -1,0 +1,46 @@
+// Color system
+$theme-colors: (
+        "primary": #0f4e66,
+        "success": #4e9e4e,
+        "info": #0984b2,
+        "warning": #f0ad4e,
+        "danger": #bf1d3f,
+        "light": #e9ecef
+);
+
+// Grid breakpoints
+$grid-breakpoints: (
+        xs: 0,
+        sm: 480px,
+        md: 768px,
+        lg: 992px,
+        xl: 1220px
+);
+
+// Grid containers
+$container-max-widths: (
+        sm: 100%,
+        md: 740px,
+        lg: 960px,
+        xl: 1200px
+);
+
+// Grid columns
+$grid-gutter-width: 20px;
+
+// Typography
+$font-size-base: 0.875rem;
+$headings-font-weight: 700;
+
+// Cards
+
+// Breadcrumbs
+$breadcrumb-padding-y: 0;
+$breadcrumb-padding-x: 0;
+$breadcrumb-item-padding: .25rem;
+//$breadcrumb-margin-bottom:          1rem !default;
+$breadcrumb-bg: transparent;
+$breadcrumb-divider-color: inherit;
+$breadcrumb-active-color: inherit;
+$breadcrumb-divider: quote(">");
+$breadcrumb-border-radius: 0;

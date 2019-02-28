@@ -23,17 +23,11 @@ $stumbleupon-color: #f74425;
 $mailto-color: #666;
 
 .social-il {
-    list-style: none;
     font-size: 0;
-    padding: 0;
-    margin: 0 0;
-    margin-top: 5px;
-    margin-bottom: 0;
+    margin: 0.5rem;
 
     li {
         display: inline-block;
-        margin: 0 2px 2px 0;
-
 
         &.twitter a:hover {
             color: $twitter-color;

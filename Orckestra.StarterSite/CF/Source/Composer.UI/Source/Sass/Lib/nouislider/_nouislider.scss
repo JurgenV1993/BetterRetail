@@ -128,7 +128,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 
 .noUi-connect {
-  background: $brand-primary;
+  background: theme-color("primary");
 }
 
 /* Handles and cursors;
@@ -147,11 +147,11 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   @extend .fa-2x;
   text-align: center;
   cursor: default;
-  color: $gray-base;
+  color: $black;
 }
 
 .noUi-active {
-  color: lighten($gray-base, 10%);
+  color: lighten($black, 10%);
 }
 
 /* Disabled state;

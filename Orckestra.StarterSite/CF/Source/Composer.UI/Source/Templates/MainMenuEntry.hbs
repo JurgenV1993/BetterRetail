@@ -2,54 +2,54 @@
 
     {{#if HasChildren}}
 
-        <a href="{{Url}}" data-qa="main-menu-category" role="menuitem" class="dropdown-toggle" style="{{CssClass}}" aria-haspopup="true">{{DisplayName}}
+        <a class="dropdown-toggle nav-link" href="{{Url}}" data-qa="main-menu-category" role="menuitem" style="{{CssClass}}" aria-haspopup="true">{{DisplayName}}
             <span class="fa fa-chevron-down" aria-hidden="true"></span>
             <span class="fa fa-chevron-up" aria-hidden="true"></span>
         </a>
- 
-        <ul class="dropdown-menu" role="menu">
+
+        <ul class="dropdown-menu shadow" role="menu">
             <li role="presentation">
                 <!-- Content container to add padding -->
                 <div class="main-nav-content">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-lg-8 px-1 px-md-3">
                             <div class="row">
                                 {{#each Children}}
-                                    <ul class="col-sm-3 list-unstyled accessible-megamenu-panel-group">
+                                    <ul class="col-md-3 list-unstyled accessible-megamenu-panel-group">
                                         <li>
                                             <p><strong><a data-qa="main-menu-section" href="{{Url}}" target="{{UrlTarget}}" style="{{CssClass}}" role="menuitem">{{DisplayName}}</a></strong></p>
                                         </li>
                                         <li>
-                                        <span class="menu-image hidden-xs hidden-sm">
+                                        <span class="menu-image  d-none d-md-inline">
                                             {{#if Image.ImageSource}}
                                                     {{#if Image.ImageUrl}}
-                                                            <a href="{{Image.ImageUrl}}" target="{{Image.ImageUrlTarget}}"><img src="{{Image.ImageSource}}" class="img-responsive img-menu" /></a>
-                                                    {{else}}                                            
-                                                            <img src="{{Image.ImageSource}}" class="img-responsive img-menu" />
-                                                    {{/if}}      
-                                            {{/if}}    
+                                                            <a href="{{Image.ImageUrl}}" target="{{Image.ImageUrlTarget}}"><img src="{{Image.ImageSource}}" class="img-fluid img-menu" /></a>
+                                                    {{else}}
+                                                            <img src="{{Image.ImageSource}}" class="img-fluid img-menu" />
+                                                    {{/if}}
+                                            {{/if}}
                                         </span>
                                         </li>
                                         {{#each Children}}
-                                            <li><a data-qa="main-menu-link" href="{{Url}}" target="{{UrlTarget}}" class="hidden-xs" style="{{CssClass}}" role="menuitem">{{DisplayName}}</a></li>
+                                            <li><a data-qa="main-menu-link" href="{{Url}}" target="{{UrlTarget}}" class=" d-none d-sm-block" style="{{CssClass}}" role="menuitem">{{DisplayName}}</a></li>
                                         {{/each}}
                                     </ul>
                                 {{/each}}
                             </div>
                         </div>
-                        <div class="col-md-4">    
-                            <span class="menu-image hidden-xs">
+                        <div class="col-lg-4">
+                            <span class="menu-image  d-none d-sm-inline">
                                 {{#if Image.ImageSource}}
                                         {{#if Image.ImageUrl}}
-                                                <a href="{{Image.ImageUrl}}" target="{{Image.ImageUrlTarget}}"><img src="{{Image.ImageSource}}" class="img-responsive"/></a>
-                                        {{else}}                                        
-                                                <img src="{{Image.ImageSource}}" class="img-responsive" />
+                                                <a href="{{Image.ImageUrl}}" target="{{Image.ImageUrlTarget}}"><img src="{{Image.ImageSource}}" class="img-fluid"/></a>
+                                        {{else}}
+                                                <img src="{{Image.ImageSource}}" class="img-fluid" />
                                         {{/if}}
                                                 <span class="caption">
                                                     <span> {{Image.ImageLabel}} </span>
                                                 </span>
                                         {{/if}}
-                            </span>                      
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
 
     {{else}}
 
-        <a href="{{Url}}" data-qa="main-menu-category-link" target="{{UrlTarget}}" style="{{CssClass}}" role="menuitem">{{DisplayName}}</a>
+        <a class="nav-link" href="{{Url}}" data-qa="main-menu-category-link" target="{{UrlTarget}}" style="{{CssClass}}" role="menuitem">{{DisplayName}}</a>
 
     {{/if}}
 </li>

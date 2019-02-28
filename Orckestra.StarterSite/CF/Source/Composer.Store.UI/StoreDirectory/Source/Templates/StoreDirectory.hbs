@@ -1,8 +1,8 @@
  <div class="row store-directory" data-oc-controller="Store.Directory">
-    <div class="col-xs-12">
+    <div class="col-sm-12">
         <form action="{{StoreLocatorPageUrl}}" method="POST" class="store-locator-search  form-horizontal">
         <div class="form-group">
-            <div class="col-xs-12  col-sm-6  col-md-4">
+            <div class="col-sm-12  col-md-6  col-lg-4">
                 <label for="storeDirectorySearchInput" class="sr-only">{{localize 'Store' 'L_FindStore'}}</label>
                <input id="storeDirectorySearchInput"
                   name="storeDirectorySearchInput"
@@ -10,7 +10,7 @@
 		          placeholder="{{localize 'Store' 'I_Placeholder'}}" />
                   <i class="fa  fa-search  text-muted" aria-hidden="true"></i>
             </div>
-            <div class="col-xs-12  col-sm-6  col-md-4">
+            <div class="col-sm-12  col-md-6  col-lg-4">
                   <span class="label-or">- {{localize 'Store' 'L_OrUseMyLocation'}} -</span>
                   <button class="btn  btn-primary  geolocate-btn">
                     <i class="fa  fa-crosshairs" aria-hidden="true"></i>
@@ -21,7 +21,7 @@
 	   </form>
     </div>
     {{#each Groups}}
-        <div class="col-xs-12">
+        <div class="col-sm-12">
             <h3 class="group-title">{{DisplayName}}</h3>
              <hr class="group-separator"/>
              <div class="group-anchors">
@@ -31,7 +31,7 @@
             </div>
         </div>
         {{#each SubGroups}}
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                <span id="{{Key}}" class="anchor-offset"></span>
                <h4 class="group-title">{{DisplayName}}</h4>
                <hr class="group-separator"/>

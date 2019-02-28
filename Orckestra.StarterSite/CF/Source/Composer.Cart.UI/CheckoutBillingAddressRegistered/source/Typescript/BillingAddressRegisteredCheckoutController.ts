@@ -154,7 +154,7 @@ module Orckestra.Composer {
         }
 
         private getVisibleForms(): JQuery {
-            let visibleForms = $('form', this.context.container).not('form:has(.hide)');
+            let visibleForms = $('form', this.context.container).not('form:has(.hidden)');
             return visibleForms;
         }
 
@@ -169,9 +169,9 @@ module Orckestra.Composer {
 
             let useShippingAddress: Boolean = this.useShippingAddress();
             if (useShippingAddress) {
-                $('#BillingAddressContent').addClass('hide');
+                $('#BillingAddressContent').addClass('hidden');
             } else {
-                $('#BillingAddressContent').removeClass('hide');
+                $('#BillingAddressContent').removeClass('hidden');
             }
         }
 

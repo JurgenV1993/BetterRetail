@@ -307,7 +307,7 @@ module Orckestra.Composer {
             }
 
             nearestInfo.html(info);
-            nearestInfoPanel.removeClass('hide');
+            nearestInfoPanel.removeClass('hidden');
         }
 
         protected getStoresForPage(page: number, pageSize?: number, element?: any) {

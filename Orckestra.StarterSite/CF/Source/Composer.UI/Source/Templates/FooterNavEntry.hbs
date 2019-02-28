@@ -1,5 +1,5 @@
 <div data-templateid="FooterNavList">
-    <ul class="nav-footer-entry list-unstyled hidden-xs" role="presentation">
+    <ul class="nav-footer-entry list-unstyled d-none d-md-block" role="presentation">
         <li>
             <h4>
                 {{#if HasChildren}}
@@ -21,7 +21,7 @@
             </ul>
         </li>
     </ul>
-    <ul class="nav-footer-entry list-unstyled collapse-mobile hidden-sm hidden-md hidden-lg">
+    <ul class="nav-footer-entry list-unstyled collapse-mobile d-block d-md-none">
         <li>
             <h4 id="{{@index}}">
 

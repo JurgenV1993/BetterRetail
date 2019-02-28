@@ -1,8 +1,8 @@
-<div class="panel panel-default" data-templateid="CheckoutSignInAsGuest">
-    <div class="panel-heading">
+<div class="card" data-templateid="CheckoutSignInAsGuest">
+    <div class="card-header text-white bg-dark">
         <h2 class="h3">{{localize 'CheckoutProcess' 'T_LogInCheckout'}}</h2>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <p>{{localize 'CheckoutProcess' 'L_LogInCheckout'}}</p>
         <div class="form-group">
             <a data-qa="checkout-as-guest" onclick="(function() { Orckestra.Composer.AnalyticsPlugin.setCheckoutOrigin('Guest Checkout'); return true; })()" href="{{CheckoutUrlTarget}}" class="btn  btn-success  btn-lg  btn-block">{{localize 'CheckoutProcess' 'B_GuestCheckout'}}</a>

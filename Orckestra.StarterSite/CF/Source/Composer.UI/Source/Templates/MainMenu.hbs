@@ -1,11 +1,11 @@
 <div class="main-nav">
-    <hr class="hidden-xs"/>
+    <hr class="d-none d-md-block"/>
     <div class="container">
-        <div id="main-nav-collapse" class="navbar-collapse collapse main-nav-menu">
+        <div id="main-nav-collapse" class="collapse d-md-block main-nav-menu">
             <div class="container">
-                <nav class="navbar megamenu">
+                <nav class="navbar navbar-expand-md megamenu mb-4">
                     {{!--<div class="navbar-collapse collapse"></div>--}}
-                    <ul class="nav navbar-nav" role="menubar">
+                    <ul class="nav navbar-nav w-100" role="menubar">
                         {{#each Entries}}
                             {{>MainMenuEntry}}
                         {{/each}}

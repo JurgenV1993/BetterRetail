@@ -1,12 +1,14 @@
 .minicart-header:hover {
     + .minicart-summary  {
-        display: block;
+        @include media-breakpoint-up(md) {
+            display: block;
+        }
     }
 }
  
 .minicart-summary {
     background: #fff;
-    border: 1px solid $gray-light;
+    border: 1px solid gray("400");
     position: absolute;
     margin-top: 1px;
     right: 0;
@@ -53,7 +55,7 @@
             }
 
             + .minicart-line-item {
-                border-top: 1px solid $gray-lighter;
+                border-top: 1px solid gray("200");
                 margin-top: 20px;
                 padding-top: 20px;
             }
@@ -70,8 +72,8 @@
     }
 
     .minicart-summary-summary {
-        background: rgba($gray-lighter, 0.5);
-        border-top: 1px solid $gray-light;
+        background: rgba(gray("200"), 0.5);
+        border-top: 1px solid gray("400");
         padding: 10px;
     }
 

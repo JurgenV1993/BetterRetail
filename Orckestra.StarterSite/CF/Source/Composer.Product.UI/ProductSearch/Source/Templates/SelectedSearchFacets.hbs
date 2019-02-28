@@ -1,7 +1,7 @@
 <div data-oc-controller="Product.SelectedSearchFacets">
 {{#if SelectedFacets.Facets }}
-    <div id="selectedFacets" class="panel  panel-default">
-        <div class="panel-body" role="region" aria-label="{{localize 'List-Search' 'L_Selection'}}">
+    <div id="selectedFacets" class="card">
+        <div class="card-body" role="region" aria-label="{{localize 'List-Search' 'L_Selection'}}">
             <h2 class="h4">{{localize 'List-Search' 'L_Selection'}}</h2>
             {{#if SelectedFacets.IsAllRemovable }}
                 <p class="clearfix"><a class="pull-right  small" data-qa="search-refiners-clear-all" href="#" {{#if ../../LandingPageUrls}}data-landingpageurl="{{../../LandingPageUrls.[0]}}"{{/if}} data-oc-click="clearSelectedFacets">{{localize 'List-Search' 'B_ClearAll'}}</a></p>
@@ -10,10 +10,10 @@
                 {{#each SelectedFacets.Facets}}
                     <li>
                         <div class="row">
-                            <div class="col-xs-10">
+                            <div class="col-sm-10">
                                 {{DisplayName}}
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-sm-2">
                                 {{#if IsRemovable}}
                                     <a href="#"
                                        class="pull-right"

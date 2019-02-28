@@ -21,4 +21,4 @@
 ///<reference path='./Plugins/HelpBubblesPlugin.ts' />
 ///<reference path='./Plugins/ParsleyAccessibilityPlugin.ts' />
 ///<reference path='./Plugins/SlickCarouselPlugin.ts' />
-///<reference path='./Plugins/StickyAffixPlugin.ts' />
+/* <reference path='./Plugins/StickyAffixPlugin.ts' /> */

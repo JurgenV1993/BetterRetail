@@ -1,17 +1,17 @@
 <div data-templateid="CompleteCheckoutOrderSummary">
-    <div class="panel  panel-default">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header">
             <h2 class="h3">{{localize 'ShoppingCart' 'T_OrderSummary'}}</h2>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             {{#if GettingCart}}
                 {{> Loading}}
             {{else}}
                {{> CheckoutOrderSummaryDetails}}
 
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-sm-12">
                         <hr>
 
                         <p class="text-center">{{localize 'CheckoutProcess' 'L_SubmitOrderIndication'}}</p>

@@ -5,11 +5,11 @@
     {{/if}}
     {{#each Facets}}
         {{#if IsDisplayed}}
-        <div class="panel  panel-default" data-facetfieldname="{{FieldName}}" data-facettype="{{FacetType}}"
+        <div class="card" data-facetfieldname="{{FieldName}}" data-facettype="{{FacetType}}"
             {{#if_eq FacetType "Range"}}
             data-min="{{StartValue}}" data-max="{{EndValue}}" data-step="{{GapSize}}" data-max-label="{{Localize 'List-Search' 'L_RangeAll'}}"
             {{/if_eq}}>
-            <div class="panel-body" data-qa="search-refiner">
+            <div class="card-body" data-qa="search-refiner">
                 <fieldset>
                     <legend class="h4">{{Title}}</legend>
                 {{#if_eq FacetType 'Range'}}

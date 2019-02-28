@@ -1,9 +1,9 @@
 .logo {
     margin-top: 10px;
-    margin-bottom: $padding-large-vertical;
+    margin-bottom: map_get($spacers, 3);
     display: block;
 
-    @media (min-width: $screen-md-min) {
+    @include media-breakpoint-up(lg) {
         margin-bottom: 10px;
         display: inline-block;
     }
@@ -17,7 +17,7 @@
 .masthead {
 
     &-with-mega-menu {
-        border-bottom: 1px solid $gray-light;
+        border-bottom: 1px solid gray("400");
         margin-bottom: $grid-gutter-width;
         padding-bottom: $grid-gutter-width;
     }
@@ -34,9 +34,10 @@
         .navbar {
             min-height: 42px;
         }
-        .navbar.affix {
+        .navbar.sps--blw {
+            position: fixed;
             width: 100%;
-            z-index: $zindex-navbar-fixed;
+            z-index: $zindex-fixed;
             animation-name: drop;
             animation-fill-mode: forwards;
             animation-duration: .5s;
@@ -45,14 +46,14 @@
         }
         .navbar-right {
             float: right;
-            margin-right: -$navbar-padding-horizontal;
+            margin-right: -$navbar-padding-x;
         }
         .navbar-nav > li {
             float: left;
-            border-right: solid 1px $gray-darker;
+            border-right: solid 1px gray("600");;
         }
         .navbar-nav > li:first-child {
-            border-left: solid 1px $gray-darker;
+            border-left: solid 1px gray("600");;
         }  
         .navbar-nav > li > a {
             padding-top: 10px;  
@@ -61,7 +62,7 @@
 
         // override bootstrap defaults that put the dropdown in stacked mode
         // when in a mobile and in a navbar.
-        @media (max-width: $screen-sm-max) {
+        @include media-breakpoint-down(sm) {
             .navbar-nav {
                 margin-top: 0;
                 margin-bottom: 0;
@@ -74,8 +75,7 @@
                     width: auto;
                     margin: 0; // override default ul
                     background-color: $dropdown-bg;
-                    border: 1px solid $dropdown-fallback-border; // IE8 fallback
-                    border: 1px solid $dropdown-border;
+                    border: 1px solid $dropdown-border-color;
                     @include box-shadow(0 6px 12px rgba(0, 0, 0, .175));
 
                     > li > a, .dropdown-header {
@@ -91,15 +91,15 @@
                     }
                     > .active > a:hover,
                     > .active > a:focus {
-                        background-color: darken($brand-info, 5%)
+                        background-color: darken(theme-color("info"), 5%)
                     }
                 }
             }
         }
     }
 
-    @media (min-width: $screen-sm-min) {
-        // override collapse on >= md
+    @include media-breakpoint-up(md) {
+        // override collapse on >= lg
         .search-box .collapse {
             display: block;
             overflow: visible;
@@ -107,14 +107,14 @@
         }
     }
 
-    @media (min-width: $screen-sm-min) and (max-width: $screen-md-max) {
+    @include media-breakpoint-between(md, lg) {
         .search-box .navbar-form {
             margin-top: 0;
             padding-top: 0;
         }
     }
 
-    @media (max-width: $screen-sm-max) {
+    @include media-breakpoint-down(sd) {
         .search-box {
             margin-top: 10px;
         }

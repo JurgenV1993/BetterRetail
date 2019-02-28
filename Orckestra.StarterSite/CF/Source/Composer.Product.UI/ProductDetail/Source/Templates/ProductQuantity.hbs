@@ -3,24 +3,23 @@
     {{#with Quantity}}
     <div class="form-group">
         <div class="input-group">
-            <label for="product-quantity" class="sr-only">{{localize 'MyAccount' 'L_Quantity'}}</label>
-            <span class="input-group-btn" aria-hidden="true">
-                <button class="btn  btn-default"
-                        {{#if_eq ../Disabled false}}
-                            {{#if_eq Value Min}}
-                                disabled="disabled"
-                            {{else}}
-                                data-oc-click="decrementQuantity"
-                            {{/if_eq}}
+            <div class="input-group-prepend">
+                <button class="btn  btn-outline-secondary" aria-hidden="true"
+                    {{#if_eq ../Disabled false}}
+                        {{#if_eq Value Min}}
+                        disabled="disabled"
                         {{else}}
-                            disabled="disabled"
+                        data-oc-click="decrementQuantity"
                         {{/if_eq}}
+                    {{else}}
+                        disabled="disabled"
+                    {{/if_eq}}
                         data-qa="product-quantity-decrease" tabindex="-1">
                     <span class="fa  fa-minus"></span>
                     <span class="sr-only">{{localize 'ProductPage' 'B_Decrement'}}</span>
                 </button>
-            </span>
-
+            </div>
+            <label for="product-quantity" class="sr-only">{{localize 'MyAccount' 'L_Quantity'}}</label>
             <input class="form-control  text-center"
                    id="product-quantity"
                    name="product-quantity"
@@ -32,23 +31,22 @@
                    data-oc-change="changeQuantity"
                    value="{{Value}}"
                    {{#if ../Disabled}} disabled="disabled" {{/if}} />
-
-            <span class="input-group-btn" aria-hidden="true">
-                <button class="btn  btn-default"
-                        {{#if_eq ../Disabled false}}
-                            {{#if_eq Value Max}}
-                                disabled="disabled"
-                            {{else}}
-                                data-oc-click="incrementQuantity"
-                            {{/if_eq}}
+            <div class="input-group-append">
+                <button class="btn  btn-outline-secondary" aria-hidden="true"
+                    {{#if_eq ../Disabled false}}
+                        {{#if_eq Value Max}}
+                        disabled="disabled"
                         {{else}}
-                            disabled="disabled"
+                        data-oc-click="incrementQuantity"
                         {{/if_eq}}
+                    {{else}}
+                        disabled="disabled"
+                    {{/if_eq}}
                         data-qa="product-quantity-increase" tabindex="-1">
                     <span class="fa  fa-plus" aria-hidden="true"></span>
                     <span class="sr-only">{{localize 'ProductPage' 'B_Increment'}}</span>
                 </button>
-            </span>
+            </div>
         </div>
     </div>
     {{/with}}
