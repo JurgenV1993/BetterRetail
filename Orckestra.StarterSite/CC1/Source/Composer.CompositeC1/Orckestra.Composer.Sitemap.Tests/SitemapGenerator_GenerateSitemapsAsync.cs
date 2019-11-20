@@ -24,9 +24,9 @@ namespace Orckestra.Composer.Sitemap.Tests
 
         private string SitemapDirectory { get; set; }
 
-        private string SitemapIndexDirectory { get; set; }
-
         private string WorkingDirectory { get; set; }
+
+        private string WorkingRootDirectory { get; set; }
 
         [SetUp]
         public void Init()
@@ -35,12 +35,12 @@ namespace Orckestra.Composer.Sitemap.Tests
 
             // Sitemap generator config
             SitemapDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            SitemapIndexDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            WorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            WorkingRootDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            WorkingDirectory = Path.Combine(WorkingRootDirectory, Path.GetRandomFileName());
             var config = _container.GetMock<ISitemapGeneratorConfig>();
 
             config.Setup(c => c.GetSitemapDirectory(It.IsAny<SitemapParams>())).Returns(SitemapDirectory);
-            config.Setup(c => c.GetSitemapIndexDirectory(It.IsAny<SitemapParams>())).Returns(SitemapIndexDirectory);
+            config.Setup(c => c.GetWorkingRootDirectory()).Returns(WorkingRootDirectory);
             config.Setup(c => c.GetWorkingDirectory(It.IsAny<SitemapParams>())).Returns(WorkingDirectory);
 
             // Sitemap index generator
@@ -167,37 +167,6 @@ namespace Orckestra.Composer.Sitemap.Tests
         }
 
         [Test]
-        public void WHEN_GenerateSitemap_SHOULD_SitemapIndexIsDeployed()
-        {
-            // ARRANGE    
-            var providerMock1 = MockSitemapProvider(1);
-            _container.Use<IEnumerable<ISitemapProvider>>(new[] { providerMock1.Mock.Object });
-
-            Directory.CreateDirectory(SitemapDirectory);
-
-            string baseUrl = "baseUrl";
-            string baseSitemapUrl = "relativeUrl";
-            string scope = "scope";
-            CultureInfo[] cultures = new[] { new CultureInfo("en") };
-
-            var sut = _container.CreateInstance<SitemapGenerator>();
-
-            try
-            {
-                // ACT
-                sut.GenerateSitemaps(new SitemapParams() { BaseUrl = baseUrl, Scope = scope }, baseSitemapUrl, cultures);
-
-                // ASSERT
-                var path = Path.Combine(SitemapIndexDirectory, SitemapGenerator.SitemapIndexFilename);
-                File.Exists(path).Should().BeTrue();
-            }
-            finally
-            {
-                Cleanup();
-            }
-        }
-
-        [Test]
         public void WHEN_GenerateSitemap_SHOULD_DeleteWorkingDirectory()
         {
             // ARRANGE                
@@ -219,7 +188,7 @@ namespace Orckestra.Composer.Sitemap.Tests
                 sut.GenerateSitemaps(new SitemapParams() { BaseUrl = baseUrl, Scope = scope }, relativeUrl, cultures);
 
                 // ASSERT
-                Directory.Exists(WorkingDirectory).Should().BeFalse();
+                Directory.Exists(WorkingRootDirectory).Should().BeFalse();
             }
             finally
             {
@@ -252,7 +221,7 @@ namespace Orckestra.Composer.Sitemap.Tests
 
                 // ASSERT
                 action.ShouldThrow<Exception>();
-                Directory.Exists(WorkingDirectory).Should().BeFalse();
+                Directory.Exists(WorkingRootDirectory).Should().BeFalse();
             }
             finally
             {
@@ -294,8 +263,7 @@ namespace Orckestra.Composer.Sitemap.Tests
 
         private void Cleanup()
         {
-            DeleteDirectoryIfExists(SitemapDirectory);
-            DeleteDirectoryIfExists(SitemapIndexDirectory);            
+            DeleteDirectoryIfExists(SitemapDirectory);         
         }
 
         private void DeleteDirectoryIfExists(string directoryPath)

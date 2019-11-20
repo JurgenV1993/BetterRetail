@@ -44,7 +44,6 @@ namespace Orckestra.Composer.CompositeC1.Sitemap
 
             var sitemapGeneratorConfig = new SitemapGeneratorConfig(
                 HostingEnvironment.MapPath(C1SitemapConfiguration.SitemapDirectory),
-                HostingEnvironment.MapPath("~/"),
                 HostingEnvironment.MapPath(C1SitemapConfiguration.WorkingDirectory)
             );
 

@@ -53,7 +53,6 @@ namespace Orckestra.Composer.Sitemap
             {
                 var sitemapDirectory = _config.GetSitemapDirectory(sitemapParams);
                 EnsureDirectoryExists(sitemapDirectory);
-                EnsureDirectoryExists(_config.GetSitemapIndexDirectory(sitemapParams));
 
                 var tasks = new List<Task>();
                 var sitemapNames = new List<string>();
@@ -99,7 +98,7 @@ namespace Orckestra.Composer.Sitemap
                 }
                 finally
                 {
-                    DeleteWorkingDirectory(sitemapParams);
+                    DeleteWorkingDirectory();
                 }
 
                 // Log stopwatch duration                 
@@ -115,7 +114,7 @@ namespace Orckestra.Composer.Sitemap
             var tempDirInfo = new DirectoryInfo(workingDirectory);
 
             var sitemapIndexOriginFilepath = Path.Combine(workingDirectory, SitemapIndexFilename);
-            var sitemapIndexDestinationFilepath = Path.Combine(_config.GetSitemapIndexDirectory(sitemapParams), SitemapIndexFilename);
+            var sitemapIndexDestinationFilepath = Path.Combine(sitemapDirectory, SitemapIndexFilename);
 
             // Delete sitemap index
             if (File.Exists(sitemapIndexDestinationFilepath))
@@ -158,9 +157,9 @@ namespace Orckestra.Composer.Sitemap
             }
         }
 
-        private void DeleteWorkingDirectory(SitemapParams sitemapParams)
+        private void DeleteWorkingDirectory()
         {
-            var workingDirectory = _config.GetWorkingDirectory(sitemapParams);
+            var workingDirectory = _config.GetWorkingRootDirectory();
             if (Directory.Exists(workingDirectory))
             {
                 Directory.Delete(workingDirectory, recursive: true);

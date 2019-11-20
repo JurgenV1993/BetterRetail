@@ -12,6 +12,7 @@ using Composite.Data.Types;
 using Orckestra.Composer.CompositeC1.Utils;
 using Orckestra.ExperienceManagement.Configuration;
 using Orckestra.ExperienceManagement.Configuration.DataTypes;
+using System.Web;
 
 namespace Orckestra.Composer.CompositeC1.Sitemap
 {
@@ -78,12 +79,13 @@ namespace Orckestra.Composer.CompositeC1.Sitemap
                     string websiteBaseUrl;
                     if (websitesBaseUrl.TryGetValue(website.Key, out websiteBaseUrl))
                     {
+                        var sitemapUrl = $"{websiteBaseUrl}{VirtualPathUtility.ToAbsolute(C1SitemapConfiguration.SitemapDirectory, "/")}/{website.Key}";
                         sitemapGenerator.GenerateSitemaps(new SitemapParams
                         {
                             Website = website.Key,
                             BaseUrl = websiteBaseUrl,
                             Scope = SiteConfiguration.GetScopeIdByPageId(website.Key)
-                        }, $"{websiteBaseUrl}/{website.Key}", website.Value.ToArray());
+                        }, sitemapUrl, website.Value.ToArray());
                     }
                     else
                     {
