@@ -77,6 +77,7 @@ namespace Orckestra.Composer.CompositeC1
             host.Register<CacheService, ICacheService>(ComponentLifestyle.Singleton);
             host.Register<PreviewModeService, IPreviewModeService>();
             host.Register<AutocompleteProvider, IAutocompleteProvider>();
+            host.Register<Scheduler, IScheduler>(ComponentLifestyle.Singleton);
         }
     }
 }
