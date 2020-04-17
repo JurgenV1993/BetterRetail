@@ -31,9 +31,8 @@ namespace Orckestra.Composer.CompositeC1
             }
 
             HttpContext httpContext = (sender as HttpApplication).Context;
-            Page page = httpContext.Handler as Page;
 
-            if (page != null && !string.IsNullOrWhiteSpace(C1PageRoute.GetPathInfo()))
+            if (httpContext.Handler is Page page && !string.IsNullOrWhiteSpace(C1PageRoute.GetPathInfo()))
             {
                 page.PreRender += (a, b) => CheckThatPathInfoHasBeenUsed(httpContext, page);
             }
