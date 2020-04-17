@@ -1,11 +1,11 @@
-﻿using Composite.Core;
-using Composite.Data;
-using Orckestra.ExperienceManagement.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Composite.Core;
+using Composite.Data;
+using Orckestra.ExperienceManagement.Configuration;
 
 namespace Orckestra.Composer.CompositeC1.Sitemap
 {
@@ -60,8 +60,7 @@ namespace Orckestra.Composer.CompositeC1.Sitemap
 
                     foreach (var propertyName in group)
                     {
-                        PropertyInfo propertyInfo;
-                        if (configDataProperties.TryGetValue(propertyName.Prop, out propertyInfo))
+                        if (configDataProperties.TryGetValue(propertyName.Prop, out PropertyInfo propertyInfo))
                         {
                             if (propertyInfo.PropertyType == typeof(Guid?))
                             {
