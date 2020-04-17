@@ -18,11 +18,8 @@ namespace Orckestra.Composer.Cart.Api
 
         public AddressController(ICountryService countryService, IComposerContext composerContext)
         {
-            if (countryService == null) { throw new ArgumentNullException("countryService"); }
-            if (composerContext == null) { throw new ArgumentNullException("composerContext"); }
-
-            CountryService = countryService;
-            ComposerContext = composerContext;
+            CountryService = countryService ?? throw new ArgumentNullException(nameof(countryService));
+            ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
         }
 
         /// <summary>
