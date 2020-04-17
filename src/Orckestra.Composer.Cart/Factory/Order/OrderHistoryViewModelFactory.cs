@@ -9,6 +9,7 @@ using Orckestra.Composer.Providers.Localization;
 using Orckestra.Composer.Utils;
 using Orckestra.Composer.ViewModels;
 using Orckestra.Overture.ServiceModel.Orders;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Cart.Factory.Order
 {
@@ -28,13 +29,9 @@ namespace Orckestra.Composer.Cart.Factory.Order
             IViewModelMapper viewModelMapper,
             IShippingTrackingProviderFactory shippingTrackingProviderFactory)
         {
-            if (localizationProvider == null) { throw new ArgumentNullException("localizationProvider"); }
-            if (viewModelMapper == null) { throw new ArgumentNullException("viewModelMapper"); }
-            if (shippingTrackingProviderFactory == null) { throw new ArgumentNullException("shippingTrackingProviderFactory"); }
-
-            LocalizationProvider = localizationProvider;
-            ViewModelMapper = viewModelMapper;
-            ShippingTrackingProviderFactory = shippingTrackingProviderFactory;
+            LocalizationProvider = localizationProvider ?? throw new ArgumentNullException(nameof(localizationProvider));
+            ViewModelMapper = viewModelMapper ?? throw new ArgumentNullException(nameof(viewModelMapper));
+            ShippingTrackingProviderFactory = shippingTrackingProviderFactory ?? throw new ArgumentNullException(nameof(shippingTrackingProviderFactory));
         }
 
         /// <summary>
@@ -44,10 +41,10 @@ namespace Orckestra.Composer.Cart.Factory.Order
         /// <returns />
         public virtual OrderHistoryViewModel CreateViewModel(GetOrderHistoryViewModelParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.CultureInfo == null) { throw new ArgumentException("param.CultureInfo"); }
-            if (param.OrderStatuses == null) { throw new ArgumentException("param.OrderStatuses"); }
-            if (string.IsNullOrWhiteSpace(param.OrderDetailBaseUrl)) { throw new ArgumentException("param.OrderDetailBaseUrl"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (param.OrderStatuses == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.OrderStatuses)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.OrderDetailBaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.OrderDetailBaseUrl)), nameof(param)); }
 
             OrderHistoryViewModel viewModel = null;
 
