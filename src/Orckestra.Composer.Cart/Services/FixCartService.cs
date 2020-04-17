@@ -8,6 +8,7 @@ using Orckestra.Composer.Cart.Repositories;
 using Orckestra.Composer.Parameters;
 using Orckestra.Composer.Providers;
 using Orckestra.Overture.ServiceModel.Orders;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Cart.Services
 {
@@ -32,8 +33,8 @@ namespace Orckestra.Composer.Cart.Services
         /// <returns></returns>
         public virtual async Task<ProcessedCart> FixCartAsync(FixCartParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.Cart == null) { throw new ArgumentException("param.Cart"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.Cart == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.Cart)), nameof(param)); }
 
           param.Cart = await AddPaymentIfRequired(param).ConfigureAwait(false);
           param.Cart = await SetFulfillmentLocationIfRequired(param);
@@ -80,7 +81,7 @@ namespace Orckestra.Composer.Cart.Services
                     CultureInfo = new CultureInfo(cart.CultureName),
                     FulfillmentLocationId = fulfillmentLocation.Id,
                     CustomerId = cart.CustomerId,
-                    FulfillmentMethodName = shipment.FulfillmentMethod == null ? null : shipment.FulfillmentMethod.Name,
+                    FulfillmentMethodName = shipment.FulfillmentMethod?.Name,
                     FulfillmentScheduleMode = shipment.FulfillmentScheduleMode,
                     FulfillmentScheduledTimeBeginDate = shipment.FulfillmentScheduledTimeBeginDate,
                     FulfillmentScheduledTimeEndDate = shipment.FulfillmentScheduledTimeEndDate,
