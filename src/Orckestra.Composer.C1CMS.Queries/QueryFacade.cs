@@ -16,16 +16,14 @@ namespace Orckestra.Composer.C1CMS.Queries
     {
         public static List<string> GetSearchQueryList(string type)
         {
-            SearchQueryType queryType;
-            Enum.TryParse(type, out queryType);
+            Enum.TryParse(type, out SearchQueryType queryType);
 
             try
             {
                 var searchQueryRepository = ServiceLocator.GetService<ISearchQueryRepository>();
                 var siteConfiguration = ServiceLocator.GetService<ISiteConfiguration>();
                 var pageIdString = HttpContext.Current.Request["pageId"];
-                Guid pageId;
-                if (Guid.TryParse(pageIdString, out pageId))
+                if (Guid.TryParse(pageIdString, out Guid pageId))
                 {
                     var scope = siteConfiguration.GetScopeIdByPageId(pageId);
                     var queries = searchQueryRepository.GetSearchQueriesAsync(new GetSearchQueriesParam()
