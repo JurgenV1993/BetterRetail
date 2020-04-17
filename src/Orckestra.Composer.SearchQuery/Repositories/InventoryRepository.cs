@@ -1,11 +1,11 @@
-﻿using Orckestra.Composer.SearchQuery.Parameters;
-using Orckestra.Overture;
-using Orckestra.Overture.ServiceModel.Products.Inventory;
-using Orckestra.Overture.ServiceModel.Requests.Products.Inventory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Orckestra.Composer.SearchQuery.Parameters;
+using Orckestra.Overture;
+using Orckestra.Overture.ServiceModel.Products.Inventory;
+using Orckestra.Overture.ServiceModel.Requests.Products.Inventory;
 
 namespace Orckestra.Composer.SearchQuery.Repositories
 {
@@ -13,12 +13,7 @@ namespace Orckestra.Composer.SearchQuery.Repositories
     {
         public InventoryRepository(IOvertureClient overtureClient)
         {
-            if (overtureClient == null)
-            {
-                throw new ArgumentNullException("overtureClient");
-            }
-
-            OvertureClient = overtureClient;
+            OvertureClient = overtureClient ?? throw new ArgumentNullException(nameof(overtureClient));
         }
 
         protected IOvertureClient OvertureClient { get; set; }
