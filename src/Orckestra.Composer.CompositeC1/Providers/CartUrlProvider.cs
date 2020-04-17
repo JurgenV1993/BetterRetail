@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Composite.Core;
-using Composite.Data;
 using Orckestra.Composer.CompositeC1.Services;
 using Orckestra.Composer.Configuration;
 using Orckestra.Composer.Parameters;
@@ -11,6 +10,7 @@ using Orckestra.Composer.Providers.Checkout;
 using Orckestra.Composer.Services;
 using Orckestra.ExperienceManagement.Configuration;
 using Orckestra.Overture.Caching;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.CompositeC1.Providers
 {
@@ -26,11 +26,8 @@ namespace Orckestra.Composer.CompositeC1.Providers
             IWebsiteContext websiteContext,
             ISiteConfiguration siteConfiguration)
         {
-            if (pageService == null) { throw new ArgumentNullException("pageService"); }
-            if (cacheProvider == null) { throw new ArgumentNullException("cacheProvider"); }
-
-            PageService = pageService;
-            CacheProvider = cacheProvider;
+            PageService = pageService ?? throw new ArgumentNullException(nameof(pageService));
+            CacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
             WebsiteContext = websiteContext;
             SiteConfiguration = siteConfiguration;
           
@@ -38,9 +35,8 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public virtual string GetCartUrl(BaseUrlParameter parameters)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException("parameters.CultureInfo is required", "parameters"); }
-
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
+            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(parameters.CultureInfo, WebsiteContext.WebsiteId);
             return PageService.GetPageUrl(pagesConfiguration.CartPageId, parameters.CultureInfo);
@@ -48,8 +44,8 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public virtual string GetCheckoutSignInUrl(BaseUrlParameter parameters)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException("parameters.CultureInfo is required", "parameters"); }
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
+            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(parameters.CultureInfo, WebsiteContext.WebsiteId);
             var signInPath = PageService.GetPageUrl(pagesConfiguration.CheckoutSignInPageId, parameters.CultureInfo);
@@ -83,7 +79,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
             if (!stepUrls.ContainsKey(parameters.StepNumber))
             {
-                throw new ArgumentOutOfRangeException("parameters", "StepNumber is invalid");
+                throw new ArgumentOutOfRangeException(nameof(parameters.StepNumber));
             }
 
             return stepUrls[parameters.StepNumber].Url;
@@ -129,7 +125,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public virtual string GetCheckoutAddAddressUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             var url = PageService.GetPageUrl(pagesConfiguration.CheckoutAddAddressPageId, param.CultureInfo);
@@ -138,7 +134,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public virtual string GetCheckoutUpdateAddressBaseUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             var url = PageService.GetPageUrl(pagesConfiguration.CheckoutUpdateAddressPageId, param.CultureInfo);
@@ -147,8 +143,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public string GetHomepageUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
          
             var url = PageService.GetPageUrl(WebsiteContext.WebsiteId, param.CultureInfo);
             ///TODO - fix this
