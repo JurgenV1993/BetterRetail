@@ -12,8 +12,7 @@ namespace Orckestra.Composer.Store.Providers
 
         public StoreGeoCoordinate(Overture.ServiceModel.Customers.Stores.Store store)
         {
-            if (store == null) throw new ArgumentNullException(nameof(store));
-            _store = store;
+            _store = store ?? throw new ArgumentNullException(nameof(store));
         }
 
         public Coordinate GetCoordinate()
