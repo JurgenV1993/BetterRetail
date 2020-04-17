@@ -39,7 +39,7 @@ namespace Orckestra.Composer.Search.Providers
                 queryString.Add(SearchRequestParams.SortDirection, param.SearchCriteria.SortDirection);
             }
 
-            if (param.SearchCriteria.Page >= 1)
+            if (param.SearchCriteria.Page > 0)
             {
                 queryString.Add(SearchRequestParams.Page, param.SearchCriteria.Page.ToString(CultureInfo.InvariantCulture));
             }
