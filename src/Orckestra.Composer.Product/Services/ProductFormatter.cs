@@ -28,18 +28,8 @@ namespace Orckestra.Composer.Product.Services
 
         public ProductFormatter(ILocalizationProvider localizationProvider, ILookupService lookupService)
         {
-            if (localizationProvider == null)
-            {
-                throw new ArgumentNullException("localizationProvider");
-            }
-
-            if (lookupService == null)
-            {
-                throw new ArgumentNullException("lookupService");
-            }
-
-            _localizationProvider = localizationProvider;
-            _lookupService = lookupService;
+            _localizationProvider = localizationProvider ?? throw new ArgumentNullException(nameof(localizationProvider));
+            _lookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
         }
 
         public virtual string FormatValue(ProductPropertyDefinition property, object value, CultureInfo cultureInfo)
