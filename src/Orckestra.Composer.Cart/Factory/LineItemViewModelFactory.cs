@@ -67,8 +67,7 @@ namespace Orckestra.Composer.Cart.Factory
 
             var imgDictionary = LineItemHelper.BuildImageDictionaryFor(param.ImageInfo.ImageUrls);
 
-            var processedCart = param.Cart as ProcessedCart;
-            var preMapAction = processedCart == null
+            var preMapAction = !(param.Cart is ProcessedCart processedCart)
                 ? new Action<LineItem>(li => { })
                 : li => LineItemValidationProvider.ValidateLineItem(processedCart, li);
 
@@ -119,8 +118,7 @@ namespace Orckestra.Composer.Cart.Factory
                 KvaDisplayValues = lineItem.KvaDisplayValues
             }).ToList();
 
-            ProductMainImage mainImage;
-            if (param.ImageDictionary.TryGetValue(Tuple.Create(lineItem.ProductId, lineItem.VariantId), out mainImage))
+            if (param.ImageDictionary.TryGetValue(Tuple.Create(lineItem.ProductId, lineItem.VariantId), out ProductMainImage mainImage))
             {
                 vm.ImageUrl = mainImage.ImageUrl;
                 vm.FallbackImageUrl = mainImage.FallbackImageUrl;
@@ -240,8 +238,7 @@ namespace Orckestra.Composer.Cart.Factory
 
             var imgDictionary = LineItemHelper.BuildImageDictionaryFor(param.ImageInfo.ImageUrls);
 
-            var processedCart = param.Cart as ProcessedCart;
-            var preMapAction = processedCart == null
+            var preMapAction = !(param.Cart is ProcessedCart processedCart)
                 ? new Action<LineItem>(li => { })
                 : li => LineItemValidationProvider.ValidateLineItem(processedCart, li);
 
@@ -271,9 +268,8 @@ namespace Orckestra.Composer.Cart.Factory
             {
                 vm.IsValid = true;
             }
-                        
-            ProductMainImage mainImage;
-            if (param.ImageDictionary.TryGetValue(Tuple.Create(lineItem.ProductId, lineItem.VariantId), out mainImage))
+
+            if (param.ImageDictionary.TryGetValue(Tuple.Create(lineItem.ProductId, lineItem.VariantId), out ProductMainImage mainImage))
             {
                 vm.ImageUrl = mainImage.ImageUrl;
                 vm.FallbackImageUrl = mainImage.FallbackImageUrl;
