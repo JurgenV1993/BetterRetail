@@ -166,11 +166,11 @@ namespace Orckestra.Composer.Cart.Factory
             {
                 if (program != null)
                 {
-                    var frequency = program.Frequencies.FirstOrDefault(f => string.Equals(f.RecurringOrderFrequencyName, lineItem.RecurringOrderFrequencyName, StringComparison.OrdinalIgnoreCase));
+                    var frequency = program.Frequencies.Find(f => string.Equals(f.RecurringOrderFrequencyName, lineItem.RecurringOrderFrequencyName, StringComparison.OrdinalIgnoreCase));
 
                     if (frequency != null)
                     {
-                        var localization = frequency.Localizations.FirstOrDefault(l => string.Equals(l.CultureIso, cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
+                        var localization = frequency.Localizations.Find(l => string.Equals(l.CultureIso, cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
 
                         if (localization != null)
                             return localization.DisplayName;
