@@ -1,14 +1,12 @@
-﻿using Orckestra.Composer.Sitemap.Config;
-using Orckestra.Composer.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Text.RegularExpressions;
 using Orckestra.Composer.CompositeC1.Sitemap;
+using Orckestra.Composer.Sitemap.Config;
+
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Sitemap
 {
@@ -21,9 +19,9 @@ namespace Orckestra.Composer.Sitemap
 
         public SitemapProvider(ISitemapEntryProvider entryProvider, ISitemapProviderConfig config, IC1SitemapConfiguration mainConfig)
         {
-            Guard.NotNull(entryProvider, nameof(entryProvider));
-            Guard.NotNull(config, nameof(config));
-            if (mainConfig.NumberOfEntriesPerFile < 1) throw new ArgumentException("Must be greater than zero.", nameof(mainConfig.NumberOfEntriesPerFile));
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+            if (mainConfig.NumberOfEntriesPerFile < 1) throw new ArgumentOutOfRangeException(
+                nameof(mainConfig), mainConfig.NumberOfEntriesPerFile, GetMessageOfZeroNegative(nameof(mainConfig.NumberOfEntriesPerFile)));
 
             EntryProvider = entryProvider;
             NumberOfEntriesPerSitemap = mainConfig.NumberOfEntriesPerFile;
@@ -32,9 +30,9 @@ namespace Orckestra.Composer.Sitemap
 
         public IEnumerable<Models.Sitemap> GenerateSitemaps(SitemapParams sitemapParams)
         {
-            Guard.NotNullOrWhiteSpace(sitemapParams.BaseUrl, nameof(sitemapParams.BaseUrl));
-            Guard.NotNullOrWhiteSpace(sitemapParams.Scope, nameof(sitemapParams.Scope));
-            Guard.NotNull(sitemapParams.Culture, nameof(sitemapParams.Culture));
+            if (string.IsNullOrWhiteSpace(sitemapParams.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.BaseUrl)), nameof(sitemapParams)); }
+            if (string.IsNullOrWhiteSpace(sitemapParams.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.Scope)), nameof(sitemapParams)); }
+            if (sitemapParams.Culture == null) {throw new ArgumentException(GetMessageOfNull(nameof(sitemapParams.Culture)), nameof(sitemapParams)); }
 
             var iterationIndex = 1;
             var offset = 0;
