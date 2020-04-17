@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Web.Routing;
 using Orckestra.Composer.Providers;
 using Orckestra.Composer.Providers.Localization;
 using Orckestra.Composer.Store.Parameters;
 using Orckestra.Composer.Utils;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Store.Providers
 {
@@ -18,9 +18,7 @@ namespace Orckestra.Composer.Store.Providers
 
         public StoreUrlProvider(ILocalizationProvider localizationProvider)
         {
-            if (localizationProvider == null) { throw new ArgumentNullException("localizationProvider"); }
-
-            LocalizationProvider = localizationProvider;
+            LocalizationProvider = localizationProvider ?? throw new ArgumentNullException(nameof(localizationProvider));
         }
 
         public virtual string GetStoreLocatorUrl(GetStoreLocatorUrlParam parameters)
@@ -90,9 +88,9 @@ namespace Orckestra.Composer.Store.Providers
 
         private void Assert(GetStoreUrlParam parameters)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("BaseUrl"), "parameters"); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("CultureInfo"), "parameters"); }
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
+            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.BaseUrl)), nameof(parameters)); }
+            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
         }
     }
 }
