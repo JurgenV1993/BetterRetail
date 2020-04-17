@@ -10,7 +10,6 @@ using Orckestra.Composer.Providers;
 using Orckestra.Composer.Services;
 using Orckestra.Composer.Utils;
 using Orckestra.Composer.WebAPIFilters;
-using Orckestra.ExperienceManagement.Configuration;
 
 namespace Orckestra.Composer.Cart.Api
 {
@@ -28,12 +27,9 @@ namespace Orckestra.Composer.Cart.Api
             IOrderHistoryViewService orderHistoryViewService,
             IOrderUrlProvider orderUrlProvider)
         {
-            if (orderHistoryViewService == null) { throw new ArgumentNullException("orderHistoryViewService"); }
-            if (composerContext == null) { throw new ArgumentNullException("composerContext"); }
-
-            OrderHistoryViewService = orderHistoryViewService;
+            OrderHistoryViewService = orderHistoryViewService ?? throw new ArgumentNullException(nameof(orderHistoryViewService));
             OrderUrlProvider = orderUrlProvider;
-            ComposerContext = composerContext;
+            ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
         }
 
         [HttpPost]
