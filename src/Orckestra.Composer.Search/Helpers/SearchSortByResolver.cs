@@ -39,11 +39,8 @@ namespace Orckestra.Composer.Search.Helpers
         /// <param name="generateUrl"></param>
         public SearchSortByResolver(ILocalizationProvider localizationProvider, IList<SearchSortBy> searchSortBy, Func<CreateSearchPaginationParam<TParam>, string> generateUrl)
         {
-            if (localizationProvider == null) { throw new ArgumentNullException("localizationProvider"); }
-            if (generateUrl == null) { throw new ArgumentNullException("generateUrl"); }
-
-            _localizationProvider = localizationProvider;
-            _generateUrl = generateUrl;
+            _localizationProvider = localizationProvider ?? throw new ArgumentNullException(nameof(localizationProvider));
+            _generateUrl = generateUrl ?? throw new ArgumentNullException(nameof(generateUrl));
             _searchSortBy = searchSortBy;
 
         }
