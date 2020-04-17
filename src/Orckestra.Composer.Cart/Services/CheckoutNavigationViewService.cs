@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orckestra.Composer.Cart.Parameters;
 using Orckestra.Composer.Cart.ViewModels;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Cart.Services
 {
@@ -15,8 +16,8 @@ namespace Orckestra.Composer.Cart.Services
         /// <returns>The CheckoutNavigationViewModel</returns>
         public virtual CheckoutNavigationViewModel GetCheckoutNavigationViewModel(GetCheckoutNavigationParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.StepUrls == null) { throw new ArgumentException("param.StepUrls is required"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.StepUrls == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.StepUrls)), nameof(param)); }
 
             var viewModel = new CheckoutNavigationViewModel
             {
