@@ -43,10 +43,7 @@ namespace Orckestra.Composer.Store.Models
                 return false;
             }
 
-            if (lat < SouthWest.Lat || lat > NorthEast.Lat)
-                return false;
-
-            return true;
+            return lat >= SouthWest.Lat && lat <= NorthEast.Lat;
         }
 
         public override string ToString()
