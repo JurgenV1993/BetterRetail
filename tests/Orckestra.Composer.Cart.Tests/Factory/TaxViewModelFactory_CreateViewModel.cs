@@ -60,10 +60,11 @@ namespace Orckestra.Composer.Cart.Tests.Factory
             //Assert
             vm.Should().NotBeNull();
             vm.Should().HaveSameCount(_taxes, "only taxes from first shipment are considered");
+            var collection = vm.ToList();
 
-            for (int i = 0; i < vm.ToList().Count; i++)
+            for (int i = 0; i < collection.Count; i++)
             {
-                var tax = vm.ToList()[i];
+                var tax = collection[i];
                 var taxReference = _taxes[i];
 
                 tax.Should().NotBeNull();
