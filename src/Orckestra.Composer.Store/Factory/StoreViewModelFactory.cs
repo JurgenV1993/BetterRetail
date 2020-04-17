@@ -314,8 +314,7 @@ namespace Orckestra.Composer.Store.Factory
                 CultureInfo = cultureInfo
             });
 
-            long phoneNumberAsInt;
-            if (localFormattingString != null && long.TryParse(phoneNumber, out phoneNumberAsInt))
+            if (localFormattingString != null && long.TryParse(phoneNumber, out long phoneNumberAsInt))
             {
                 return string.Format(cultureInfo, localFormattingString, phoneNumberAsInt);
             }
