@@ -9,10 +9,7 @@ namespace Orckestra.Composer.TypeExtensions
 
         public static object GetDefaultValue(this Type t)
         {
-            if (t == null)
-            {
-                throw new ArgumentNullException("t");
-            }
+            if (t == null) { throw new ArgumentNullException(nameof(t)); }
 
             if (!t.IsValueType)
             {
@@ -25,8 +22,7 @@ namespace Orckestra.Composer.TypeExtensions
                 DefaultValues.TryAdd(t, defaultValue);
             }
 
-            object value;
-            var isSuccess = DefaultValues.TryGetValue(t, out value);
+            var isSuccess = DefaultValues.TryGetValue(t, out object value);
 
             if (!isSuccess)
             {
