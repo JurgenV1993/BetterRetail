@@ -5,6 +5,7 @@ using Orckestra.Composer.Providers;
 using Orckestra.Composer.Utils;
 using System;
 using System.Collections.Specialized;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.CompositeC1.Providers
 {
@@ -16,12 +17,8 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public RecurringCartUrlProvider(IPageService pageService, IRecurringOrdersSettings recurringOrdersSettings)
         {
-            if (pageService == null) { throw new ArgumentNullException("pageService"); }
-
-            PageService = pageService;
-       
+            PageService = pageService ?? throw new ArgumentNullException(nameof(pageService));
             RecurringOrdersSettings = recurringOrdersSettings;
-
         }
         public string GetRecurringCartsUrl(GetRecurringCartsUrlParam param)
         {
@@ -34,7 +31,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         public string GetRecurringCartDetailsUrl(GetRecurringCartDetailsUrlParam param)
         {
             if (param == null) { throw new ArgumentNullException(nameof(param)); }
-            if (param.RecurringCartName == null) { throw new ArgumentNullException(nameof(param.RecurringCartName)); }
+            if (param.RecurringCartName == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.RecurringCartName)), nameof(param)); }
 
             var url = PageService.GetPageUrl(RecurringOrdersSettings.RecurringCartDetailsPageId, param.CultureInfo);
             var UrlWithReturn = UrlProviderHelper.BuildUrlWithParams(url, param.ReturnUrl);
