@@ -123,7 +123,7 @@ namespace Orckestra.Composer.CompositeC1.Services.Facet
             for (int i = dependsOnIds.Count - 1; i >= 0; i--)
             {
                 var facetId = dependsOnIds[i];
-                var facet = existingFacets.FirstOrDefault(f => f.Id == facetId);
+                var facet = existingFacets.Find(f => f.Id == facetId);
                 if (facet != null)
                     result[facetId] = facet;
                 dependsOnIds.RemoveAt(i);
