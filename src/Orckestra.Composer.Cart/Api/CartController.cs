@@ -38,19 +38,12 @@ namespace Orckestra.Composer.Cart.Api
             ICartUrlProvider cartUrlProvider,
             IRecurringOrdersSettings recurringOrdersSettings)
         {
-            if (cartService == null) { throw new ArgumentNullException("cartService"); }
-            if (composerContext == null) { throw new ArgumentNullException("composerContext"); }
-            if (couponViewService == null) { throw new ArgumentNullException("couponViewService"); }
-            if (checkoutService == null) { throw new ArgumentNullException("checkoutService"); }
-            if (shippingMethodService == null) { throw new ArgumentNullException("shippingMethodService"); }
-            if (cartUrlProvider == null) { throw new ArgumentNullException("cartUrlProvider"); }
-
-            CartService = cartService;
-            ComposerContext = composerContext;
-            CouponViewService = couponViewService;
-            CheckoutService = checkoutService;
-            ShippingMethodService = shippingMethodService;
-            CartUrlProvider = cartUrlProvider;
+            CartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
+            ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
+            CouponViewService = couponViewService ?? throw new ArgumentNullException(nameof(couponViewService));
+            CheckoutService = checkoutService ?? throw new ArgumentNullException(nameof(checkoutService));
+            ShippingMethodService = shippingMethodService ?? throw new ArgumentNullException(nameof(shippingMethodService));
+            CartUrlProvider = cartUrlProvider ?? throw new ArgumentNullException(nameof(cartUrlProvider));
             RecurringOrdersSettings = recurringOrdersSettings;
         }
 
