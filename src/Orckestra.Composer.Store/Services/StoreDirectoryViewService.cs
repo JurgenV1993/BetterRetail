@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Store.Services
 {
@@ -38,17 +39,19 @@ namespace Orckestra.Composer.Store.Services
         }
         public virtual async Task<StoreDirectoryViewModel> GetStoreDirectoryViewModelAsync(GetStoresParam viewModelParam)
         {
-            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentException("scope"); }
-            if (viewModelParam.CultureInfo == null) { throw new ArgumentNullException("cultureInfo"); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException("baseUrl"); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.Scope)), nameof(viewModelParam)); }
+            if (viewModelParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(viewModelParam.CultureInfo)), nameof(viewModelParam)); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.BaseUrl)), nameof(viewModelParam)); }
 
-            var model = new StoreDirectoryViewModel();
-            model.StoreLocatorPageUrl = StoreUrlProvider.GetStoreLocatorUrl(new GetStoreLocatorUrlParam
+            var model = new StoreDirectoryViewModel
             {
-                BaseUrl = viewModelParam.BaseUrl,
-                CultureInfo = viewModelParam.CultureInfo,
-                Page = 1
-            });
+                StoreLocatorPageUrl = StoreUrlProvider.GetStoreLocatorUrl(new GetStoreLocatorUrlParam
+                {
+                    BaseUrl = viewModelParam.BaseUrl,
+                    CultureInfo = viewModelParam.CultureInfo,
+                    Page = 1
+                })
+            };
 
             var overtureStores = await StoreRepository.GetStoresAsync(new GetStoresParam
             {
@@ -61,7 +64,7 @@ namespace Orckestra.Composer.Store.Services
             var sortedResults = SortStoreDirectoryResult(overtureStores.Results);
 
             //get result for currect page
-            var totalCount = sortedResults.Count();
+            var totalCount = sortedResults.Count;
             var result =
                 sortedResults.Skip((viewModelParam.PageNumber - 1) * viewModelParam.PageSize)
                     .Take(viewModelParam.PageSize).OrderBy(st => st.Name).ToList();
