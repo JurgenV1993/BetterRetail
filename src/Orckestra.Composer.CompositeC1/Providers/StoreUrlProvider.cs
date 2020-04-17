@@ -10,6 +10,7 @@ using Orckestra.Composer.Store.Parameters;
 using Orckestra.Composer.Store.Providers;
 using Orckestra.Composer.Utils;
 using Orckestra.ExperienceManagement.Configuration;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.CompositeC1.Providers
 {
@@ -24,11 +25,8 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public StoreUrlProvider(ILocalizationProvider localizationProvider, IPageService pageService, IWebsiteContext wbsiteContext, ISiteConfiguration siteConfiguration)
         {
-            if (localizationProvider == null) { throw new ArgumentNullException("localizationProvider"); }
-            if (pageService == null) { throw new ArgumentNullException("pageService"); }
-
-            LocalizationProvider = localizationProvider;
-            PageService = pageService;
+            LocalizationProvider = localizationProvider ?? throw new ArgumentNullException(nameof(localizationProvider));
+            PageService = pageService ?? throw new ArgumentNullException(nameof(pageService));
             WebsiteContext = wbsiteContext;
             SiteConfiguration = siteConfiguration;
         }
@@ -87,10 +85,10 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         private void Assert(GetStoreUrlParam parameters)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("BaseUrl"), "parameters"); }
-            if (string.IsNullOrWhiteSpace(parameters.StoreNumber)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("StoreNumber"), "parameters"); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("CultureInfo"), "parameters"); }
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
+            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.BaseUrl)), nameof(parameters)); }
+            if (string.IsNullOrWhiteSpace(parameters.StoreNumber)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.StoreNumber)), nameof(parameters)); }
+            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
         }
     }
 }
