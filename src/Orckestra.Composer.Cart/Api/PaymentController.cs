@@ -9,7 +9,6 @@ using Orckestra.Composer.Cart.ViewModels;
 using Orckestra.Composer.Parameters;
 using Orckestra.Composer.Providers;
 using Orckestra.Composer.Services;
-using Orckestra.Composer.Utils;
 using Orckestra.Composer.WebAPIFilters;
 
 namespace Orckestra.Composer.Cart.Api
@@ -27,17 +26,11 @@ namespace Orckestra.Composer.Cart.Api
         public PaymentController(IComposerContext composerContext, IPaymentViewService paymentViewService, IImageViewService imageService,
             IRecurringScheduleUrlProvider recurringScheduleUrlProvider, IRecurringCartUrlProvider recurringCartUrlProvider)
         {
-            if (composerContext == null) { throw new ArgumentNullException("composerContext"); }
-            if (imageService == null) { throw new ArgumentNullException("imageService"); }
-            if (paymentViewService == null) { throw new ArgumentNullException(nameof(paymentViewService)); }
-            if (recurringScheduleUrlProvider == null) { throw new ArgumentNullException("recurringScheduleUrlProvider"); }
-            if (recurringCartUrlProvider == null) { throw new ArgumentNullException("recurringCartUrlProvider"); }
-
-            ComposerContext = composerContext;
-            PaymentViewService = paymentViewService;
-            ImageService = imageService;
-            RecurringScheduleUrlProvider = recurringScheduleUrlProvider;
-            RecurringCartUrlProvider = recurringCartUrlProvider;
+            ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
+            PaymentViewService = paymentViewService ?? throw new ArgumentNullException(nameof(paymentViewService));
+            ImageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
+            RecurringScheduleUrlProvider = recurringScheduleUrlProvider ?? throw new ArgumentNullException(nameof(recurringScheduleUrlProvider));
+            RecurringCartUrlProvider = recurringCartUrlProvider ?? throw new ArgumentNullException(nameof(recurringCartUrlProvider));
         }
 
         /// <summary>
