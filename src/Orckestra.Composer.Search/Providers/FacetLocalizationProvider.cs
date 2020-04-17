@@ -10,12 +10,7 @@ namespace Orckestra.Composer.Search.Providers
     {
         public FacetLocalizationProvider(ILocalizationProvider localizationProvider)
         {
-            if (localizationProvider == null)
-            {
-                throw new ArgumentNullException("localizationProvider");
-            }
-
-            LocalizationProvider = localizationProvider;
+            LocalizationProvider = localizationProvider ?? throw new ArgumentNullException(nameof(localizationProvider));
         }
 
         private ILocalizationProvider LocalizationProvider { get; set; }
