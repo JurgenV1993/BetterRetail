@@ -8,9 +8,9 @@ using Orckestra.Composer.Product.Parameters;
 using Orckestra.Composer.Providers;
 using Orckestra.Composer.Providers.Localization;
 using Orckestra.Composer.Services;
-using Orckestra.Composer.Utils;
 using Orckestra.Composer.ViewModels;
 using Orckestra.Composer.ViewModels.Breadcrumb;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Product.Services
 {
@@ -22,13 +22,9 @@ namespace Orckestra.Composer.Product.Services
 
         public ProductBreadcrumbService(ICategoryViewService categoryViewService, ILocalizationProvider localizationProvider, ICategoryBrowsingUrlProvider categoryBrowsingUrlProvider)
         {
-            if (categoryViewService == null) { throw new ArgumentNullException("categoryViewService"); }
-            if (localizationProvider == null) { throw new ArgumentNullException("localizationProvider"); }
-            if (categoryBrowsingUrlProvider == null) { throw new ArgumentNullException("categoryBrowsingUrlProvider"); }
-
-            CategoryViewService = categoryViewService;
-            LocalizationProvider = localizationProvider;
-            CategoryBrowsingUrlProvider = categoryBrowsingUrlProvider;
+            CategoryViewService = categoryViewService ?? throw new ArgumentNullException(nameof(categoryViewService));
+            LocalizationProvider = localizationProvider ?? throw new ArgumentNullException(nameof(localizationProvider));
+            CategoryBrowsingUrlProvider = categoryBrowsingUrlProvider ?? throw new ArgumentNullException(nameof(categoryBrowsingUrlProvider));
         }
 
 
@@ -49,12 +45,13 @@ namespace Orckestra.Composer.Product.Services
 
         protected virtual void AssertParameters(GetProductBreadcrumbParam parameters)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("CultureInfo"), "parameters"); }
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
+            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
 
-            if (!string.IsNullOrWhiteSpace(parameters.CategoryId))
+            if (!string.IsNullOrWhiteSpace(parameters.CategoryId) && string.IsNullOrWhiteSpace(parameters.Scope))
             {
-                if (string.IsNullOrWhiteSpace(parameters.Scope)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("scope must not be null or whitespace if the category is defined."), "parameters"); }
+                throw new ArgumentException($"{nameof(parameters.Scope)} must not be null or whitespace if {nameof(parameters.CategoryId)} is defined.", 
+                    nameof(parameters));
             }
         }
 
