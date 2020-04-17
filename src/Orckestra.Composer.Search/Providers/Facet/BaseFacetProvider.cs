@@ -18,12 +18,7 @@ namespace Orckestra.Composer.Search.Providers.Facet
 
         protected BaseFacetProvider(IFacetLocalizationProvider facetLocalizationProvider)
         {
-            if (facetLocalizationProvider == null)
-            {
-                throw new ArgumentNullException("facetLocalizationProvider");
-            }
-
-            FacetLocalizationProvider = facetLocalizationProvider;
+            FacetLocalizationProvider = facetLocalizationProvider ?? throw new ArgumentNullException(nameof(facetLocalizationProvider));
         }
 
 
@@ -36,21 +31,20 @@ namespace Orckestra.Composer.Search.Providers.Facet
         /// <param name="cultureInfo">Culture in which the display names will be returned in</param>
         public virtual Facets.Facet CreateFacet(Overture.ServiceModel.Search.Facet facetResult, FacetSetting setting, IReadOnlyList<SearchFilter> selectedFacets, CultureInfo cultureInfo)
         {
-            if (facetResult == null)
-            {
-                throw new ArgumentNullException("facetResult");
-            }
-            if (setting == null)
-            {
-                throw new ArgumentNullException("setting");
-            }
+            if (facetResult == null) { throw new ArgumentNullException(nameof(facetResult)); }
+            if (setting == null) { throw new ArgumentNullException(nameof(setting)); }
+
             if (!setting.FieldName.Equals(facetResult.FieldName, StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException(string.Format("The specified setting is for the facet '{0}', whereas the facetResult is for the facet '{1}'", setting.FieldName, facetResult.FieldName), "setting");
+                throw new ArgumentException(
+                    string.Format("The specified setting is for the facet '{0}', whereas the facetResult is for the facet '{1}'", 
+                    setting.FieldName, facetResult.FieldName), nameof(setting));
             }
             if (setting.FacetType != FacetType)
             {
-                throw new ArgumentException(string.Format("The facetResult is defined as '{0}' which does not match '{1}'", setting.FacetType, FacetType), "setting");
+                throw new ArgumentException(
+                    string.Format("The facetResult is defined as '{0}' which does not match '{1}'", 
+                    setting.FacetType, FacetType), nameof(setting));
             }
 
             var selectedFacetValues = GetSelectedFacetValues(facetResult, selectedFacets);
