@@ -7,14 +7,13 @@ using Composite.Core;
 using Composite.Core.Routing;
 using Composite.Data;
 using Composite.Data.Types;
-using Orckestra.Composer.CompositeC1.Pages;
 using Orckestra.ExperienceManagement.Configuration;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.CompositeC1.Services
 {
     public class PageService : IPageService
     {
-
         protected ISiteConfiguration SiteConfiguration { get; private set; }
 
         public PageService()
@@ -60,10 +59,8 @@ namespace Orckestra.Composer.CompositeC1.Services
 
         public virtual string GetPageUrl(Guid pageId, CultureInfo cultureInfo = null, HttpContext httpContext = null)
         {
-            if (pageId == Guid.Empty)
-            {
-                throw new ArgumentException(nameof(pageId));
-            }
+            if (pageId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(), nameof(pageId)); }
+
             var page = GetPage(pageId, cultureInfo);
             if (page == null)
             {
