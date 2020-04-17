@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Orckestra.Composer.Search.ViewModels;
 using Orckestra.Composer.Services;
-using Orckestra.Composer.Utils;
 using Orckestra.Overture.ServiceModel.Search;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Search.Providers
 {
@@ -20,16 +20,14 @@ namespace Orckestra.Composer.Search.Providers
 
         public FromPriceProvider(IComposerContext composerContext)
         {
-            if (composerContext == null) { throw new ArgumentNullException(nameof(composerContext)); }
-
-            ComposerContext = composerContext;
+            ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
         }
 
         // https://tfs12.orckestra.com/overture%20solutions/WorkItemTracking/v1.0/AttachFileHandler.ashx?FileID=5412&FileName=SearchItemPrice.pdf
         public Task<ProductPriceSearchViewModel> GetPriceAsync(bool? hasVariants, ProductDocument document)
         {
-            if (document.PropertyBag == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(document.PropertyBag))); }            
             if (document == null) { throw new ArgumentNullException(nameof(document)); }
+            if (document.PropertyBag == null) { throw new ArgumentException(GetMessageOfNull(nameof(document.PropertyBag)), nameof(document)); }            
 
             var productPriceSearchViewModel = hasVariants.Value ?
                 GetProductPriceWithVariant(document) :
