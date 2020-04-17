@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Orckestra.Composer.Enums;
 using Orckestra.Composer.Parameters;
-using Orckestra.Composer.Product.Parameters;
 using Orckestra.Composer.Product.Requests;
 using Orckestra.Composer.Product.Services;
 using Orckestra.Composer.Product.ViewModels.Inventory;
@@ -30,10 +29,10 @@ namespace Orckestra.Composer.Product.Api
             IInventoryLocationProvider inventoryLocationProvider,
             IProductSettingsViewService productSettingsViewService)
         {
-            ComposerContext = composerContext ?? throw new ArgumentNullException("composerContext");
-            InventoryViewService = inventoryViewService ?? throw new ArgumentNullException("inventoryViewService");
-            InventoryLocationProvider = inventoryLocationProvider ?? throw new ArgumentNullException("inventoryLocationProvider");
-            ProductSettingsViewService = productSettingsViewService ?? throw new ArgumentNullException("productSettingsViewService");
+            ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
+            InventoryViewService = inventoryViewService ?? throw new ArgumentNullException(nameof(inventoryViewService));
+            InventoryLocationProvider = inventoryLocationProvider ?? throw new ArgumentNullException(nameof(inventoryLocationProvider));
+            ProductSettingsViewService = productSettingsViewService ?? throw new ArgumentNullException(nameof(productSettingsViewService));
         }
 
         [ActionName("findInventoryItems")]
