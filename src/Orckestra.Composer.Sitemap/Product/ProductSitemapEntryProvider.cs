@@ -1,17 +1,17 @@
-﻿using Orckestra.Composer.Providers;
-using Orckestra.Composer.Utils;
-using Orckestra.Overture;
-using Orckestra.Overture.ServiceModel.Requests.Search;
-using Orckestra.Overture.ServiceModel.Search;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Orckestra.Overture.ServiceModel;
 using Orckestra.Composer.Logging;
+using Orckestra.Composer.Providers;
 using Orckestra.Composer.Sitemap.Factory;
 using Orckestra.Composer.Sitemap.Models;
+using Orckestra.Overture;
+using Orckestra.Overture.ServiceModel;
+using Orckestra.Overture.ServiceModel.Requests.Search;
+using Orckestra.Overture.ServiceModel.Search;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Sitemap.Product
 {
@@ -30,20 +30,17 @@ namespace Orckestra.Composer.Sitemap.Product
 
         public ProductSitemapEntryProvider(IOvertureClient overtureClient, IProductUrlProvider productUrlProvider, IProductUrlParamFactory productUrlParamFactory)
         {
-            Guard.NotNull(overtureClient, nameof(overtureClient));
-            Guard.NotNull(productUrlProvider, nameof(productUrlProvider));
-
-            _overtureClient = overtureClient;
-            _productUrlProvider = productUrlProvider;
+            _overtureClient = overtureClient ?? throw new ArgumentNullException(nameof(overtureClient));
+            _productUrlProvider = productUrlProvider ?? throw new ArgumentNullException(nameof(productUrlProvider));
             _productUrlParamFactory = productUrlParamFactory;
         }
 
         public virtual async Task<IEnumerable<SitemapEntry>> GetEntriesAsync(SitemapParams sitemapParams, CultureInfo culture, int offset, int count)
         {
-            Guard.NotNull(sitemapParams, nameof(sitemapParams));
-            Guard.NotNullOrWhiteSpace(sitemapParams.BaseUrl, $"{nameof(sitemapParams)}.{nameof(sitemapParams.BaseUrl)}");
-            Guard.NotNullOrWhiteSpace(sitemapParams.Scope, $"{nameof(sitemapParams)}.{nameof(sitemapParams.Scope)}");
-            Guard.NotNull(culture, nameof(culture));
+            if (sitemapParams == null) { throw new ArgumentNullException(nameof(sitemapParams)); }
+            if (string.IsNullOrWhiteSpace(sitemapParams.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.BaseUrl)), nameof(sitemapParams)); }
+            if (string.IsNullOrWhiteSpace(sitemapParams.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.Scope)), nameof(sitemapParams)); }
+            if (culture == null) { throw new ArgumentNullException(nameof(culture)); }
 
             var request = new SearchProductRequest
             {
