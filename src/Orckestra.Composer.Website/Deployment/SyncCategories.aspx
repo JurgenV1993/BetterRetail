@@ -72,7 +72,7 @@
         string authHeader = Request.Headers["X-Auth"] ?? String.Empty;
         string token = ConfigurationManager.AppSettings["CC1.DeploymentToken"] ?? String.Empty;
         
-        var isEqual = String.Equals(authHeader, token, StringComparison.InvariantCultureIgnoreCase);
+        var isEqual = string.Equals(authHeader, token, StringComparison.InvariantCultureIgnoreCase);
         return isEqual;
     }
 
