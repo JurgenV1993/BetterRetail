@@ -21,13 +21,9 @@ namespace Orckestra.Composer.Cart.Services
         public VaultProfileViewService(IVaultProfileRepository vaultProfileRepository, IViewModelMapper viewModelMapper, 
             IPaymentProviderFactory paymentProviderFactory)
         {
-            if (vaultProfileRepository == null) { throw new ArgumentNullException("vaultProfileRepository"); }
-            if (viewModelMapper == null) { throw new ArgumentNullException("viewModelMapper"); }
-            if (paymentProviderFactory == null) { throw new ArgumentNullException("paymentProviderFactory"); }
-
-            VaultProfileRepository = vaultProfileRepository;
-            ViewModelMapper = viewModelMapper;
-            PaymentProviderFactory = paymentProviderFactory;
+            VaultProfileRepository = vaultProfileRepository ?? throw new ArgumentNullException(nameof(vaultProfileRepository));
+            ViewModelMapper = viewModelMapper ?? throw new ArgumentNullException(nameof(viewModelMapper));
+            PaymentProviderFactory = paymentProviderFactory ?? throw new ArgumentNullException(nameof(paymentProviderFactory));
         }
 
         public virtual async Task<MonerisAddVaultProfileViewModel> AddCreditCardAsync(AddCreditCardParam addCreditCardParam)
