@@ -12,6 +12,7 @@ using Orckestra.Composer.Providers;
 using Orckestra.Composer.Providers.Membership;
 using Orckestra.Composer.ViewModels;
 using Orckestra.Overture.ServiceModel.Customers;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.MyAccount.Services
 {
@@ -36,17 +37,12 @@ namespace Orckestra.Composer.MyAccount.Services
             ICustomerRepository customerRepository,
             ICartMergeProvider cartMergeProvider)
         {
-            if (myAccountUrlProvider == null) { throw new ArgumentNullException("myAccountUrlProvider"); }
-            if (viewModelMapper == null) { throw new ArgumentNullException("viewModelMapper"); }
-            if (customerRepository == null) { throw new ArgumentNullException("customerRepository"); }
-            if (cartMergeProvider == null) { throw new ArgumentNullException("cartMergeProvider"); }
+            MyAccountUrlProvider = myAccountUrlProvider ?? throw new ArgumentNullException(nameof(myAccountUrlProvider));
+            ViewModelMapper = viewModelMapper ?? throw new ArgumentNullException(nameof(viewModelMapper));
+            CustomerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+            CartMergeProvider = cartMergeProvider ?? throw new ArgumentNullException(nameof(cartMergeProvider));
 
             Membership = new StaticMembershipProxy();
-
-            MyAccountUrlProvider = myAccountUrlProvider;
-            ViewModelMapper = viewModelMapper;
-            CustomerRepository = customerRepository;
-            CartMergeProvider = cartMergeProvider;
         }
 
         /// <summary>
@@ -66,13 +62,13 @@ namespace Orckestra.Composer.MyAccount.Services
         /// </returns>
         public virtual async Task<CreateAccountViewModel> RegisterAsync(CreateUserParam createUserParam)
         {
-            if (createUserParam == null) { throw new ArgumentNullException("createUserParam"); }
-            if (createUserParam.CultureInfo == null) { throw new ArgumentException("createUserParam.CultureInfo"); }
-            if (string.IsNullOrWhiteSpace(createUserParam.Password)) { throw new ArgumentException("createUserParam.Password"); }
-            if (string.IsNullOrWhiteSpace(createUserParam.FirstName)) { throw new ArgumentException("createUserParam.FirstName"); }
-            if (string.IsNullOrWhiteSpace(createUserParam.LastName)) { throw new ArgumentException("createUserParam.LastName"); }
-            if (string.IsNullOrWhiteSpace(createUserParam.Email)) { throw new ArgumentException("createUserParam.Email"); }
-            if (string.IsNullOrWhiteSpace(createUserParam.Scope)) { throw new ArgumentException("createUserParam.Scope"); }
+            if (createUserParam == null) { throw new ArgumentNullException(nameof(createUserParam)); }
+            if (createUserParam.CultureInfo == null) {throw new ArgumentException(GetMessageOfNull(nameof(createUserParam.CultureInfo)), nameof(createUserParam)); }
+            if (string.IsNullOrWhiteSpace(createUserParam.Password)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(createUserParam.Password)), nameof(createUserParam)); }
+            if (string.IsNullOrWhiteSpace(createUserParam.FirstName)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(createUserParam.FirstName)), nameof(createUserParam)); }
+            if (string.IsNullOrWhiteSpace(createUserParam.LastName)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(createUserParam.LastName)), nameof(createUserParam)); }
+            if (string.IsNullOrWhiteSpace(createUserParam.Email)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(createUserParam.Email)), nameof(createUserParam)); }
+            if (string.IsNullOrWhiteSpace(createUserParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(createUserParam.Scope)), nameof(createUserParam)); }
 
             var termsAndConditionsUrl = MyAccountUrlProvider.GetTermsAndConditionsUrl(new BaseUrlParameter { CultureInfo = createUserParam.CultureInfo });
 
@@ -135,11 +131,11 @@ namespace Orckestra.Composer.MyAccount.Services
         /// </returns>
         public virtual async Task<LoginViewModel> LoginAsync(LoginParam loginParam)
         {
-            if (loginParam == null) { throw new ArgumentNullException("loginParam"); }
-            if (loginParam.CultureInfo == null) { throw new ArgumentException("loginParam.CultureInfo"); }
-            if (string.IsNullOrWhiteSpace(loginParam.Password)) { throw new ArgumentException("loginParam.Password"); }
-            if (string.IsNullOrWhiteSpace(loginParam.Username)) { throw new ArgumentException("loginParam.Username"); }
-            if (string.IsNullOrWhiteSpace(loginParam.Scope)) { throw new ArgumentException("loginParam.Scope"); }
+            if (loginParam == null) { throw new ArgumentNullException(nameof(loginParam)); }
+            if (loginParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(loginParam.CultureInfo)), nameof(loginParam)); }
+            if (string.IsNullOrWhiteSpace(loginParam.Password)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(loginParam.Password)), nameof(loginParam)); }
+            if (string.IsNullOrWhiteSpace(loginParam.Username)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(loginParam.Username)), nameof(loginParam)); }
+            if (string.IsNullOrWhiteSpace(loginParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(loginParam.Scope)), nameof(loginParam)); }
 
             var response = new CustomerAndStatus
             {
@@ -203,8 +199,8 @@ namespace Orckestra.Composer.MyAccount.Services
         /// <returns></returns>
         public virtual LoginViewModel GetLoginViewModel(GetLoginViewModelParam param)
         {
-            if (param == null) { throw new ArgumentNullException("loginParam"); }
-            if (param.CultureInfo == null) { throw new ArgumentException("loginParam.CultureInfo"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
 
             var viewModel = ViewModelMapper.MapTo<LoginViewModel>(param.Customer, param.CultureInfo) ?? new LoginViewModel();
 
@@ -269,10 +265,10 @@ namespace Orckestra.Composer.MyAccount.Services
         /// </returns>
         public virtual async Task<ForgotPasswordViewModel> ForgotPasswordAsync(ForgotPasswordParam forgotPasswordParam)
         {
-            if (forgotPasswordParam == null) { throw new ArgumentNullException("forgotPasswordParam"); }
-            if (string.IsNullOrWhiteSpace(forgotPasswordParam.Email)) { throw new ArgumentException("forgotPasswordParam.Email"); }
-            if (string.IsNullOrWhiteSpace(forgotPasswordParam.Scope)) { throw new ArgumentException("forgotPasswordParam.Scope"); }
-            if (forgotPasswordParam.CultureInfo == null) throw new ArgumentException("forgotPasswordParam.CultureInfo");
+            if (forgotPasswordParam == null) { throw new ArgumentNullException(nameof(forgotPasswordParam)); }
+            if (string.IsNullOrWhiteSpace(forgotPasswordParam.Email)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(forgotPasswordParam.Email)), nameof(forgotPasswordParam)); }
+            if (string.IsNullOrWhiteSpace(forgotPasswordParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(forgotPasswordParam.Scope)), nameof(forgotPasswordParam)); }
+            if (forgotPasswordParam.CultureInfo == null) throw new ArgumentException(GetMessageOfNull(nameof(forgotPasswordParam.CultureInfo)), nameof(forgotPasswordParam));
 
             try
             {
@@ -322,14 +318,15 @@ namespace Orckestra.Composer.MyAccount.Services
         /// </returns>
         public virtual async Task<ResetPasswordViewModel> ResetPasswordAsync(ResetPasswordParam resetPasswordParam)
         {
-            if (resetPasswordParam == null) { throw new ArgumentNullException("resetPasswordParam"); }
-            if (string.IsNullOrWhiteSpace(resetPasswordParam.Ticket)) { throw new ArgumentException("resetPasswordParam.Ticket"); }
-            if (resetPasswordParam.CultureInfo == null) { throw new ArgumentException("resetPasswordParam.CultureInfo"); }
-            if (string.IsNullOrWhiteSpace(resetPasswordParam.Scope)) { throw new ArgumentException("resetPasswordParam.Scope"); }
-            if (string.IsNullOrWhiteSpace(resetPasswordParam.NewPassword)) { throw new ArgumentException("resetPasswordParam.NewPassword"); }
+            if (resetPasswordParam == null) { throw new ArgumentNullException(nameof(resetPasswordParam)); }
+            if (string.IsNullOrWhiteSpace(resetPasswordParam.Ticket)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(resetPasswordParam.Ticket)), nameof(resetPasswordParam)); }
+            if (resetPasswordParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(resetPasswordParam.CultureInfo)), nameof(resetPasswordParam)); }
+            if (string.IsNullOrWhiteSpace(resetPasswordParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(resetPasswordParam.Scope)), nameof(resetPasswordParam)); }
+            if (string.IsNullOrWhiteSpace(resetPasswordParam.NewPassword)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(resetPasswordParam.NewPassword)), nameof(resetPasswordParam)); }
+
             if (string.IsNullOrWhiteSpace(resetPasswordParam.PasswordAnswer) && MembershipProvider.RequiresQuestionAndAnswer)
             {
-                throw new ArgumentException("resetPasswordParam.PasswordAnswer");
+                throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(resetPasswordParam.PasswordAnswer)), nameof(resetPasswordParam));
             }
 
             var forgotPasswordUrl = MyAccountUrlProvider.GetForgotPasswordUrl(
@@ -388,8 +385,8 @@ namespace Orckestra.Composer.MyAccount.Services
         /// </returns>
         public virtual async Task<ResetPasswordViewModel> GetCustomerByTicketResetPasswordViewModelAsync(GetResetPasswordByTicketViewModelParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.CultureInfo == null) { throw new ArgumentException("param.CultureInfo"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
 
             var forgotPasswordUrl = MyAccountUrlProvider.GetForgotPasswordUrl(new BaseUrlParameter { CultureInfo = param.CultureInfo });
 
@@ -416,12 +413,12 @@ namespace Orckestra.Composer.MyAccount.Services
         /// </returns>
         public virtual async Task<ChangePasswordViewModel> ChangePasswordAsync(ChangePasswordParam changePasswordParam)
         {
-            if (changePasswordParam == null) { throw new ArgumentNullException("changePasswordParam"); }
-            if (changePasswordParam.CultureInfo == null) { throw new ArgumentException("changePasswordParam.CultureInfo"); }
-            if (changePasswordParam.CustomerId == Guid.Empty) { throw new ArgumentException("changePasswordParam.CustomerId"); }
-            if (string.IsNullOrWhiteSpace(changePasswordParam.Scope)) { throw new ArgumentException("changePasswordParam.Scope"); }
-            if (string.IsNullOrWhiteSpace(changePasswordParam.NewPassword)) { throw new ArgumentException("changePasswordParam.NewPassword"); }
-            if (string.IsNullOrWhiteSpace(changePasswordParam.OldPassword)) { throw new ArgumentException("changePasswordParam.OldPassword"); }
+            if (changePasswordParam == null) { throw new ArgumentNullException(nameof(changePasswordParam)); }
+            if (changePasswordParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(changePasswordParam.CultureInfo)), nameof(changePasswordParam)); }
+            if (changePasswordParam.CustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(changePasswordParam.CustomerId)), nameof(changePasswordParam)); }
+            if (string.IsNullOrWhiteSpace(changePasswordParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(changePasswordParam.Scope)), nameof(changePasswordParam)); }
+            if (string.IsNullOrWhiteSpace(changePasswordParam.NewPassword)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(changePasswordParam.NewPassword)), nameof(changePasswordParam)); }
+            if (string.IsNullOrWhiteSpace(changePasswordParam.OldPassword)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(changePasswordParam.OldPassword)), nameof(changePasswordParam)); }
 
             var customer = await CustomerRepository.GetCustomerByIdAsync(new GetCustomerByIdParam
             {
@@ -465,10 +462,10 @@ namespace Orckestra.Composer.MyAccount.Services
         /// </returns>
         public virtual async Task<ChangePasswordViewModel> GetChangePasswordViewModelAsync(GetCustomerChangePasswordViewModelParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.CultureInfo == null) { throw new ArgumentException("param.CultureInfo"); }
-            if (param.CustomerId == Guid.Empty) { throw new ArgumentException("param.CustomerId"); }
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException("changePasswordParam.Scope"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (param.CustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.CustomerId)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
 
             var customer = await CustomerRepository.GetCustomerByIdAsync(new GetCustomerByIdParam
             {
