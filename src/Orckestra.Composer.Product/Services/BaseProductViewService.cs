@@ -141,10 +141,7 @@ namespace Orckestra.Composer.Product.Services
         /// </returns>
         protected virtual async Task<ProductWithVariant[]> RetrieveProductsAsync(GetRelatedProductsParam param)
         {
-            if (param == null)
-            {
-                throw new ArgumentNullException(nameof(param));
-            }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var productRequestTasks = new List<Task<ProductWithVariant>>();
 
@@ -248,7 +245,7 @@ namespace Orckestra.Composer.Product.Services
             ProductQuantityViewModel quantity = null;
 
             if (ProductConfiguration.IsQuantityDisplayed &&
-                ProductConfiguration.MinQuantity >= 1 &&
+                ProductConfiguration.MinQuantity > 0 &&
                 ProductConfiguration.MaxQuantity >= ProductConfiguration.MinQuantity)
             {
                 quantity = new ProductQuantityViewModel
@@ -326,7 +323,7 @@ namespace Orckestra.Composer.Product.Services
 
             if (baseProduct?.Variants != null)
             {
-                baseVariant = baseProduct.Variants.FirstOrDefault(variant => variant.Id == variantId);
+                baseVariant = baseProduct.Variants.Find(variant => variant.Id == variantId);
             }
 
             var productWithVariant = new ProductWithVariant { Product = baseProduct, Variant = baseVariant };
