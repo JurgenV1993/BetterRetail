@@ -17,9 +17,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
                 IWebsiteContext websiteContext,
                 ISiteConfiguration siteConfiguration)
         {
-            if (pageService == null) { throw new ArgumentNullException("pageService"); }
-
-            PageService = pageService;
+            PageService = pageService ?? throw new ArgumentNullException(nameof(pageService));
             WebsiteContext = websiteContext;
             SiteConfiguration = siteConfiguration;
         }
@@ -30,7 +28,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public virtual string GetMyAccountUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             var url = PageService.GetPageUrl(pagesConfiguration.MyAccountPageId, param.CultureInfo);
@@ -43,7 +41,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public virtual string GetTermsAndConditionsUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             var url = PageService.GetPageUrl(pagesConfiguration.TermsAndConditionsPageId, param.CultureInfo);
@@ -56,7 +54,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public virtual string GetCreateAccountUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
@@ -71,7 +69,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public virtual string GetLoginUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
@@ -86,7 +84,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public string GetForgotPasswordUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
@@ -101,7 +99,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public string GetNewPasswordUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
@@ -116,7 +114,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public string GetChangePasswordUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
@@ -131,7 +129,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public string GetAddressListUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
@@ -146,7 +144,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
         /// <returns>localized url</returns>
         public string GetAddAddressUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
@@ -157,7 +155,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public string GetUpdateAddressBaseUrl(BaseUrlParameter param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(param.CultureInfo, WebsiteContext.WebsiteId);
             if (pagesConfiguration == null) return null;
