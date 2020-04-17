@@ -4,15 +4,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Orckestra.Composer.Configuration;
-using Orckestra.Composer.Providers;
 using Orckestra.Composer.Store.Parameters;
-using Orckestra.Overture.ServiceModel.Customers.Stores;
 using Orckestra.Overture;
 using Orckestra.Overture.Caching;
 using Orckestra.Overture.ServiceModel.Customers;
+using Orckestra.Overture.ServiceModel.Customers.Stores;
 using Orckestra.Overture.ServiceModel.Queries;
 using Orckestra.Overture.ServiceModel.Requests.Customers.CustomProfiles;
 using Orckestra.Overture.ServiceModel.Requests.Customers.Stores;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Store.Repositories
 {
@@ -33,16 +33,13 @@ namespace Orckestra.Composer.Store.Repositories
             IOvertureClient overtureClient,
             ICacheProvider cacheProvider)
         {
-            if (overtureClient == null) { throw new ArgumentNullException("overtureClient"); }
-            if (cacheProvider == null) { throw new ArgumentNullException("cacheProvider"); }
-
-            OvertureClient = overtureClient;
-            CacheProvider = cacheProvider;
+            OvertureClient = overtureClient ?? throw new ArgumentNullException(nameof(overtureClient));
+            CacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
         }
 
         public virtual async Task<FindStoresQueryResult> GetStoresAsync(GetStoresParam getStoresParam)
         {
-            if (string.IsNullOrWhiteSpace(getStoresParam.Scope)) { throw new ArgumentException("scope"); }
+            if (string.IsNullOrWhiteSpace(getStoresParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(getStoresParam.Scope)), nameof(getStoresParam)); }
 
             var cacheKey = new CacheKey(CacheConfigurationCategoryNames.Store)
             {
@@ -115,8 +112,8 @@ namespace Orckestra.Composer.Store.Repositories
 
         public virtual async Task<Overture.ServiceModel.Customers.Stores.Store> GetStoreByNumberAsync(GetStoreParam param)
         {
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException("scope"); }
-            if (string.IsNullOrWhiteSpace(param.StoreNumber)) { throw new ArgumentException("storeNumber"); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.StoreNumber)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.StoreNumber)), nameof(param)); }
 
             var cacheKey = new CacheKey(CacheConfigurationCategoryNames.Store)
             {
@@ -137,8 +134,8 @@ namespace Orckestra.Composer.Store.Repositories
 
         public virtual async Task<FulfillmentSchedule> GetStoreScheduleAsync(GetStoreScheduleParam param)
         {
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException("scope"); }
-            if (param.FulfillmentLocationId == null) { throw new ArgumentException("fulfillmentLocationId"); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (param.FulfillmentLocationId == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.FulfillmentLocationId)), nameof(param)); }
 
             var cacheKey = new CacheKey(CacheConfigurationCategoryNames.StoreSchedule)
             {
