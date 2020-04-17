@@ -1,5 +1,6 @@
 ﻿using System;
 using Orckestra.Composer.Utils;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Cart.Utils
 {
@@ -14,9 +15,9 @@ namespace Orckestra.Composer.Cart.Utils
         /// <returns></returns>
         public static string GenerateOrderToken(OrderToken token)
         {
-            if (token == null) { throw new ArgumentNullException("token"); }
-            if (String.IsNullOrWhiteSpace(token.OrderNumber)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("OrderNumber"), "token"); }
-            if (String.IsNullOrWhiteSpace(token.Email)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("Email"), "token"); }
+            if (token == null) { throw new ArgumentNullException(nameof(token)); }
+            if (string.IsNullOrWhiteSpace(token.OrderNumber)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(token.OrderNumber)), nameof(token)); }
+            if (string.IsNullOrWhiteSpace(token.Email)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(token.Email)), nameof(token)); }
 
             var encryptor = new EncryptionUtility();
 
@@ -33,7 +34,7 @@ namespace Orckestra.Composer.Cart.Utils
         /// <returns></returns>
         public static OrderToken DecypherOrderToken(string token)
         {
-            if (String.IsNullOrWhiteSpace(token)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("token"), "token"); }
+            if (string.IsNullOrWhiteSpace(token)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(), nameof(token)); }
 
             if (!token.IsBase64String()) { return null; }
 
