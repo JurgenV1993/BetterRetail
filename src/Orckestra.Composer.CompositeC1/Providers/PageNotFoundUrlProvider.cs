@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Web;
 using Composite.Core;
 using Orckestra.Composer.CompositeC1.Services;
+using Orckestra.Composer.CompositeC1.Utils;
 using Orckestra.Composer.Providers;
 using Orckestra.ExperienceManagement.Configuration;
-using Orckestra.Composer.CompositeC1.Utils;
 
 namespace Orckestra.Composer.CompositeC1.Providers
 {
@@ -25,10 +23,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public virtual string Get404PageUrl(string requestedPath)
         {
-            if (requestedPath == null)
-            {
-                throw new ArgumentException("Requested Path is required", nameof(requestedPath));
-            }
+            if (requestedPath == null) { throw new ArgumentNullException(nameof(requestedPath)); }
 
             var pageUrlData = C1Helper.GetPageUrlDataFromUrl(requestedPath);
             var websiteId = C1Helper.GetWebsiteIdFromPageUrlData(pageUrlData);
