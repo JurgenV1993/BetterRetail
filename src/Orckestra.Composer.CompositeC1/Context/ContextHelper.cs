@@ -18,19 +18,15 @@ namespace Orckestra.Composer.CompositeC1.Context
         /// <returns></returns>
         public static bool IsInPreviewMode()
         {
-            return (PageRenderer.RenderingReason == RenderingReason.ScreenshotGeneration
+            return PageRenderer.RenderingReason == RenderingReason.ScreenshotGeneration
                     || PageRenderer.RenderingReason == RenderingReason.PreviewUnsavedChanges
-                    || PageRenderer.RenderingReason == RenderingReason.C1ConsoleBrowserPageView);
+                    || PageRenderer.RenderingReason == RenderingReason.C1ConsoleBrowserPageView;
         }
 
 
         public static T HandlePreviewMode<T>(Func<T> methodToExecuteInPreviewMode)
         {
-            if (IsInPreviewMode())
-            {
-                return methodToExecuteInPreviewMode();
-            }
-            return default(T);
+            return IsInPreviewMode() ? methodToExecuteInPreviewMode() : (default);
         }
     }
 }
