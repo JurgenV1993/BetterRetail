@@ -9,12 +9,11 @@ using Orckestra.Composer.Services;
 using Orckestra.Composer.Services.Lookup;
 using Orckestra.Composer.Store.Extentions;
 using Orckestra.Composer.Store.Factory;
-using Orckestra.Composer.Store.Models;
 using Orckestra.Composer.Store.Parameters;
 using Orckestra.Composer.Store.Repositories;
 using Orckestra.Composer.Store.ViewModels;
 using Orckestra.Overture.ServiceModel.Products.Inventory;
-
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Store.Services
 {
@@ -194,12 +193,11 @@ namespace Orckestra.Composer.Store.Services
 
         protected static void ValidateParam(GetStoreInventoryViewModelParam viewModelParam)
         {
-            if (viewModelParam == null) { throw new ArgumentNullException("param"); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentNullException("scope"); }
-            if (viewModelParam.CultureInfo == null) { throw new ArgumentNullException("cultureInfo"); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentNullException("baseUrl"); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.Sku)) { throw new ArgumentNullException("sku"); }
+            if (viewModelParam == null) { throw new ArgumentNullException(nameof(viewModelParam)); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.Scope)), nameof(viewModelParam)); }
+            if (viewModelParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(viewModelParam.CultureInfo)), nameof(viewModelParam)); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.BaseUrl)), nameof(viewModelParam)); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.Sku)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.Sku)), nameof(viewModelParam)); }
         }
-
     }
 }
