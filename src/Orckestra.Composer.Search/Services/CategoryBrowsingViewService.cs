@@ -17,6 +17,7 @@ using Orckestra.Composer.Services;
 using Orckestra.Composer.Utils;
 using Orckestra.Composer.ViewModels;
 using Orckestra.Overture.ServiceModel.Products;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Search.Services
 {
@@ -63,18 +64,15 @@ namespace Orckestra.Composer.Search.Services
             recurringOrdersSettings
             )
         {
-            if (categoryRepository == null) { throw new ArgumentNullException(nameof(categoryRepository)); }
-            if (categoryBrowsingUrlProvider == null) { throw new ArgumentNullException(nameof(categoryBrowsingUrlProvider)); }
-
-            CategoryRepository = categoryRepository;
-            CategoryBrowsingUrlProvider = categoryBrowsingUrlProvider;
+            CategoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
+            CategoryBrowsingUrlProvider = categoryBrowsingUrlProvider ?? throw new ArgumentNullException(nameof(categoryBrowsingUrlProvider));
         }
 
         public virtual async Task<CategoryBrowsingViewModel> GetCategoryBrowsingViewModelAsync(GetCategoryBrowsingViewModelParam param)
         {
             if (param == null) { throw new ArgumentNullException(nameof(param)); }
-            if (param.CategoryId == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("CategoryId")); }
-            if (param.SelectedFacets == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("SelectedFacets")); }
+            if (param.CategoryId == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CategoryId)), nameof(param)); }
+            if (param.SelectedFacets == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.SelectedFacets)), nameof(param)); }
 
             var node = await GetCurrentCategoryNodeAsync(param).ConfigureAwait(false);
             var landingPageUrls = GetLandingPageUrls(node, param);
@@ -250,7 +248,7 @@ namespace Orckestra.Composer.Search.Services
             //If the category has no URL, it probably means there is no item for it in the CMS yet...
             var childCategories = children
                 .Select(childCategory => CreateChildCategoryViewModel(childCategory.Value, param))
-                .Where(childCategory => !String.IsNullOrWhiteSpace(childCategory.Url)).ToList();
+                .Where(childCategory => !string.IsNullOrWhiteSpace(childCategory.Url)).ToList();
 
             return childCategories;
         }
@@ -313,7 +311,7 @@ namespace Orckestra.Composer.Search.Services
                 }
 
                 var categoryFilter = cloneParam.Criteria.SelectedFacets
-                    .FirstOrDefault(f => filter.Name == f.Name && filter.Value == f.Value);
+                    .Find(f => filter.Name == f.Name && filter.Value == f.Value);
 
                 if (categoryFilter != null)
                 {
