@@ -16,8 +16,7 @@ namespace Orckestra.Composer.CompositeC1.Services
 
         public BreadcrumbViewService(IPageService pageService, ISiteConfiguration siteConfiguration)
         {
-            if (pageService == null) { throw new ArgumentNullException(nameof(pageService)); }
-            _pageService = pageService;
+            _pageService = pageService ?? throw new ArgumentNullException(nameof(pageService));
             SiteConfiguration = siteConfiguration;
         }
 
@@ -30,7 +29,7 @@ namespace Orckestra.Composer.CompositeC1.Services
 
             if (page == null)
             {
-                throw new ArgumentException("Could not find any page matching this ID.", nameof(param.CurrentPageId));
+                throw new InvalidOperationException("Could not find any page matching this ID.");
             }
 
             var breadcrumbViewModel = new BreadcrumbViewModel
