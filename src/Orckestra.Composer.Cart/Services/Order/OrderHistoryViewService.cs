@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Orckestra.Composer.Cart.Factory.Order;
-using Orckestra.Composer.Cart.Parameters;
 using Orckestra.Composer.Cart.Parameters.Order;
 using Orckestra.Composer.Cart.Repositories.Order;
 using Orckestra.Composer.Cart.ViewModels.Order;
@@ -14,6 +13,7 @@ using Orckestra.Composer.Providers.Dam;
 using Orckestra.Composer.Services;
 using Orckestra.Composer.Services.Lookup;
 using Orckestra.Overture.ServiceModel.Orders;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Cart.Services.Order
 {
@@ -35,23 +35,17 @@ namespace Orckestra.Composer.Cart.Services.Order
             IImageService imageService,
             IShippingTrackingProviderFactory shippingTrackingProviderFactory)
         {
-            if (orderHistoryViewModelFactory == null) { throw new ArgumentNullException("orderHistoryViewModelFactory"); }
-            if (orderUrlProvider == null) { throw new ArgumentNullException("orderUrlProvider"); }
-            if (lookupService == null) { throw new ArgumentNullException("lookupService"); }
-            if (orderRepository == null) { throw new ArgumentNullException("orderRepository"); }
-            if (orderUrlProvider == null) { throw new ArgumentNullException("orderUrlProvider"); }
-            if (orderDetailsViewModelFactory == null) { throw new ArgumentNullException("orderDetailsViewModelFactory"); }
-            if (imageService == null) { throw new ArgumentNullException("imageService"); }
-            if (shippingTrackingProviderFactory == null) { throw new ArgumentNullException("shippingTrackingProviderFactory"); }
+            //Not used param
+            if (orderUrlProvider == null) { throw new ArgumentNullException(nameof(orderUrlProvider)); }
 
-            OrderHistoryViewModelFactory = orderHistoryViewModelFactory;
+            OrderHistoryViewModelFactory = orderHistoryViewModelFactory ?? throw new ArgumentNullException(nameof(orderHistoryViewModelFactory));
+            OrderUrlProvider = orderUrlProvider ?? throw new ArgumentNullException(nameof(orderUrlProvider));
+            LookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
+            OrderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             OrderUrlProvider = orderUrlProvider;
-            LookupService = lookupService;
-            OrderRepository = orderRepository;
-            OrderUrlProvider = orderUrlProvider;
-            OrderDetailsViewModelFactory = orderDetailsViewModelFactory;
-            ImageService = imageService;
-            ShippingTrackingProviderFactory = shippingTrackingProviderFactory;
+            OrderDetailsViewModelFactory = orderDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(orderDetailsViewModelFactory));
+            ImageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
+            ShippingTrackingProviderFactory = shippingTrackingProviderFactory ?? throw new ArgumentNullException(nameof(shippingTrackingProviderFactory));
         }
 
         /// <summary>
@@ -61,10 +55,10 @@ namespace Orckestra.Composer.Cart.Services.Order
         /// <returns></returns>
         public virtual async Task<OrderHistoryViewModel> GetOrderHistoryViewModelAsync(GetCustomerOrdersParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.CultureInfo == null) { throw new ArgumentException("param.CultureInfo"); }
-            if (param.CustomerId == null) { throw new ArgumentException("param.CustomerId"); }
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException("param.Scope"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (param.CustomerId == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CustomerId)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
 
             var orderDetailBaseUrl = OrderUrlProvider.GetOrderDetailsBaseUrl(param.CultureInfo);
 
@@ -131,13 +125,13 @@ namespace Orckestra.Composer.Cart.Services.Order
         /// <returns></returns>
         public virtual async Task<OrderDetailViewModel> GetOrderDetailViewModelAsync(GetCustomerOrderParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.CustomerId == null) { throw new ArgumentException("param.CustomerId"); }
-            if (param.CultureInfo == null) { throw new ArgumentException("param.CultureInfo"); }
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException("param.Scope"); }
-            if (string.IsNullOrWhiteSpace(param.OrderNumber)) { throw new ArgumentException("param.OrderNumber"); }
-            if (string.IsNullOrWhiteSpace(param.CountryCode)) { throw new ArgumentException("param.CountryCode"); }
-            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException("param.BaseUrl"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CustomerId == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CustomerId)), nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.OrderNumber)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.OrderNumber)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.CountryCode)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.CountryCode)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.BaseUrl)), nameof(param)); }
 
             var order = await OrderRepository.GetOrderAsync(param).ConfigureAwait(false);
 
@@ -159,13 +153,13 @@ namespace Orckestra.Composer.Cart.Services.Order
         /// <returns></returns>
         public virtual async Task<OrderDetailViewModel> GetOrderDetailViewModelForGuestAsync(GetOrderForGuestParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.CultureInfo == null) { throw new ArgumentException("param.CultureInfo"); }
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException("param.Scope"); }
-            if (string.IsNullOrWhiteSpace(param.OrderNumber)) { throw new ArgumentException("param.OrderNumber"); }
-            if (string.IsNullOrWhiteSpace(param.CountryCode)) { throw new ArgumentException("param.CountryCode"); }
-            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException("param.BaseUrl"); }
-            if (string.IsNullOrWhiteSpace(param.Email)) { throw new ArgumentException("param.Email"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.OrderNumber)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.OrderNumber)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.CountryCode)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.CountryCode)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.BaseUrl)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Email)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Email)), nameof(param)); }
 
             var order = await OrderRepository.GetOrderAsync(param).ConfigureAwait(false);
 
