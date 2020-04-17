@@ -23,7 +23,7 @@ namespace Orckestra.Composer.CompositeC1.Cache
 
         private bool IsQueryStringEmpty(string query)
         {
-            return String.IsNullOrWhiteSpace(query);
+            return string.IsNullOrWhiteSpace(query);
         }
     }
 }
