@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using Orckestra.Composer.MyAccount.Parameters;
 using Orckestra.Composer.MyAccount.Requests;
@@ -37,21 +35,13 @@ namespace Orckestra.Composer.MyAccount.Api
             IRecurringScheduleUrlProvider recurringScheduleUrlProvider,
             IRecurringCartUrlProvider recurringCartUrlProvider)
         {
-            if (composerContext == null) { throw new ArgumentNullException("composerContext"); }
-            if (myAccountUrlProvider == null) { throw new ArgumentNullException("myAccountUrlProvider"); }
-            if (customerViewService == null) { throw new ArgumentNullException("customerViewService"); }
-            if (customerAddressViewService == null) { throw new ArgumentNullException("customerAddressViewService"); }
-            if (cartUrlProvider == null) { throw new ArgumentNullException("cartUrlProvider"); }
-            if (recurringScheduleUrlProvider == null) { throw new ArgumentNullException("recurringScheduleUrlProvider"); }
-            if (recurringCartUrlProvider == null) { throw new ArgumentNullException("recurringCartUrlProvider"); }
-
-            ComposerContext = composerContext;
-            MyAccountUrlProvider = myAccountUrlProvider;
-            CustomerViewService = customerViewService;
-            CustomerAddressViewService = customerAddressViewService;
-            CartUrlProvider = cartUrlProvider;
-            RecurringScheduleUrlProvider = recurringScheduleUrlProvider;
-            RecurringCartUrlProvider = recurringCartUrlProvider;
+            ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
+            MyAccountUrlProvider = myAccountUrlProvider ?? throw new ArgumentNullException(nameof(myAccountUrlProvider));
+            CustomerViewService = customerViewService ?? throw new ArgumentNullException(nameof(customerViewService));
+            CustomerAddressViewService = customerAddressViewService ?? throw new ArgumentNullException(nameof(customerAddressViewService));
+            CartUrlProvider = cartUrlProvider ?? throw new ArgumentNullException(nameof(cartUrlProvider));
+            RecurringScheduleUrlProvider = recurringScheduleUrlProvider ?? throw new ArgumentNullException(nameof(recurringScheduleUrlProvider));
+            RecurringCartUrlProvider = recurringCartUrlProvider ?? throw new ArgumentNullException(nameof(recurringCartUrlProvider));
         }
 
         [HttpPost]
