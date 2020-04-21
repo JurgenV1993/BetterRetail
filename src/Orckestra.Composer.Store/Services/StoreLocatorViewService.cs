@@ -50,7 +50,7 @@ namespace Orckestra.Composer.Store.Services
                     CultureInfo = viewModelParam.CultureInfo
                 });
 
-            var stores = overtureStores.Results;
+            IEnumerable<Overture.ServiceModel.Customers.Stores.Store> stores = overtureStores.Results;
 
             var index = 1;
 
