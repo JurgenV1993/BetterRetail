@@ -18,11 +18,11 @@ using Orckestra.Composer.Providers.Dam;
 using Orckestra.Composer.Repositories;
 using Orckestra.Composer.Services;
 using Orckestra.Composer.Services.Lookup;
-using Orckestra.Composer.Utils;
 using Orckestra.Composer.ViewModels;
 using Orckestra.Overture.ServiceModel;
 using Orckestra.Overture.ServiceModel.Customers;
 using Orckestra.Overture.ServiceModel.Orders;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Cart.Services
 {
@@ -41,7 +41,7 @@ namespace Orckestra.Composer.Cart.Services
         protected ILookupService LookupService { get; private set; }
         protected IAddressRepository AddressRepository { get; private set; }
         protected IShippingMethodViewService ShippingMethodViewService { get; private set; }
-        protected IImageService ImageService{ get; private set; }
+        protected IImageService ImageService { get; private set; }
         protected IFulfillmentMethodRepository FulfillmentMethodRepository { get; private set; }
         protected IViewModelMapper ViewModelMapper { get; private set; }
         protected ILineItemViewModelFactory LineItemViewModelFactory { get; private set; }
@@ -63,7 +63,7 @@ namespace Orckestra.Composer.Cart.Services
         /// <param name="lineItemViewModelFactory"></param>
         /// <param name="paymentRepository"></param>
         public CheckoutService(
-            ICartRepository cartRepository, 
+            ICartRepository cartRepository,
             ICartService cartService,
             IComposerJsonSerializer composerJsonSerializer,
             ICartViewModelFactory cartViewModelFactory,
@@ -76,31 +76,18 @@ namespace Orckestra.Composer.Cart.Services
             ILineItemViewModelFactory lineItemViewModelFactory,
             IPaymentRepository paymentRepository)
         {
-            if (cartRepository == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(cartRepository))); }
-            if (cartService == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(cartService))); }
-            if (composerJsonSerializer == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(ComposerJsonSerializer))); }
-            if (cartViewModelFactory == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(cartViewModelFactory))); }
-            if (lookupService == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(LookupService))); }
-            if (addressRepository == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(addressRepository))); }
-            if (shippingMethodViewService == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(shippingMethodViewService))); }
-            if (imageService == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(imageService))); }
-            if (fulfillmentMethodRepository == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(fulfillmentMethodRepository))); }
-            if (viewModelMapper == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(viewModelMapper))); }
-            if (lineItemViewModelFactory == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(lineItemViewModelFactory)));}
-            if (paymentRepository == null) { throw new ArgumentNullException(ArgumentNullMessageFormatter.FormatErrorMessage(nameof(paymentRepository))); }
-
-            CartRepository = cartRepository;
-            CartService = cartService;
-            ComposerJsonSerializer = composerJsonSerializer;
-            CartViewModelFactory = cartViewModelFactory;
-            LookupService = lookupService;
-            AddressRepository = addressRepository;
-            ShippingMethodViewService = shippingMethodViewService;
-            ImageService = imageService;
-            FulfillmentMethodRepository = fulfillmentMethodRepository;
-            ViewModelMapper = viewModelMapper;
-            LineItemViewModelFactory = lineItemViewModelFactory;
-            PaymentRepository = paymentRepository;
+            CartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
+            CartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
+            ComposerJsonSerializer = composerJsonSerializer ?? throw new ArgumentNullException(nameof(composerJsonSerializer));
+            CartViewModelFactory = cartViewModelFactory ?? throw new ArgumentNullException(nameof(cartViewModelFactory));
+            LookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
+            AddressRepository = addressRepository ?? throw new ArgumentNullException(nameof(addressRepository));
+            ShippingMethodViewService = shippingMethodViewService ?? throw new ArgumentNullException(nameof(shippingMethodViewService));
+            ImageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
+            FulfillmentMethodRepository = fulfillmentMethodRepository ?? throw new ArgumentNullException(nameof(fulfillmentMethodRepository));
+            ViewModelMapper = viewModelMapper ?? throw new ArgumentNullException(nameof(viewModelMapper));
+            LineItemViewModelFactory = lineItemViewModelFactory ?? throw new ArgumentNullException(nameof(lineItemViewModelFactory));
+            PaymentRepository = paymentRepository ?? throw new ArgumentNullException(nameof(paymentRepository));
 
             _updateOperations = new Dictionary<string, UpdateOperation>();
 
@@ -114,15 +101,15 @@ namespace Orckestra.Composer.Cart.Services
 
         public virtual async Task<CompleteCheckoutViewModel> CompleteCheckoutAsync(CompleteCheckoutParam param)
         {
-            if (param == null) { throw new ArgumentNullException(nameof(param), "param"); }
-            if (param.CultureInfo == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("CultureInfo"), nameof(param)); }
-            if (string.IsNullOrWhiteSpace(param.CartName)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("CartName"), nameof(param)); }
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("Scope"), nameof(param)); }
-            if (param.CustomerId == Guid.Empty) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("CustomerId"), nameof(param)); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.CartName)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.CartName)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (param.CustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.CustomerId)), nameof(param)); }
 
             var order = await CartRepository.CompleteCheckoutAsync(param).ConfigureAwait(false);
 
-            return MapOrderToCompleteCheckoutViewModel(order, param.CultureInfo); 
+            return MapOrderToCompleteCheckoutViewModel(order, param.CultureInfo);
         }
 
         protected virtual CompleteCheckoutViewModel MapOrderToCompleteCheckoutViewModel(Overture.ServiceModel.Orders.Order order, CultureInfo cultureInfo)
@@ -178,7 +165,8 @@ namespace Orckestra.Composer.Cart.Services
                 viewModel.BrandId = brandProperty;
                 viewModel.Brand = brand;
                 viewModel.CategoryId = li.ProductSummary.PrimaryParentCategoryId;
-                viewModel.KeyVariantAttributesList = LineItemViewModelFactory.GetKeyVariantAttributes(new GetKeyVariantAttributesParam {
+                viewModel.KeyVariantAttributesList = LineItemViewModelFactory.GetKeyVariantAttributes(new GetKeyVariantAttributesParam
+                {
                     KvaValues = li.KvaValues,
                     KvaDisplayValues = li.KvaDisplayValues
                 }).ToList();
@@ -195,9 +183,9 @@ namespace Orckestra.Composer.Cart.Services
         /// <param name="param">UpdateCheckoutCartParam</param>
         public virtual async Task<UpdateCartResultViewModel> UpdateCheckoutCartAsync(UpdateCheckoutCartParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.GetCartParam == null) { throw new ArgumentException("param"); }
-            if (param.UpdateValues == null) { throw new ArgumentException("UpdateValues"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.GetCartParam == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.GetCartParam)), nameof(param)); }
+            if (param.UpdateValues == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.UpdateValues)), nameof(param)); }
 
             var cart = await CartRepository.GetCartAsync(param.GetCartParam).ConfigureAwait(false);
 
@@ -213,7 +201,7 @@ namespace Orckestra.Composer.Cart.Services
                 await operation.Invoke(cart);
             }
 
-            var updatedCart = await CartRepository.UpdateCartAsync(UpdateCartParamFactory.Build(cart)).ConfigureAwait(false);
+            var updatedCart = await CartRepository.UpdateCartAsync(UpdateCartParamFactory.Build(cart));
 
             var createCartViewModelParam = new CreateCartViewModelParam
             {
@@ -222,11 +210,12 @@ namespace Orckestra.Composer.Cart.Services
                 BaseUrl = param.GetCartParam.BaseUrl
             };
 
-            var cartViewModel = await CreateCartViewModelAsync(createCartViewModelParam).ConfigureAwait(false);
+            var cartViewModel = await CreateCartViewModelAsync(createCartViewModelParam);
 
             var updateCartResultViewModel = new UpdateCartResultViewModel
             {
-                HasErrors = updatedCart.Messages != null && updatedCart.Messages.Any(m => m.Severity == ExecutionMessageSeverity.Error || m.Severity == ExecutionMessageSeverity.Failure),
+                HasErrors = updatedCart.Messages != null && updatedCart.Messages
+                .Any(m => m.Severity == ExecutionMessageSeverity.Error || m.Severity == ExecutionMessageSeverity.Failure),
                 Cart = cartViewModel
             };
 
@@ -251,24 +240,18 @@ namespace Orckestra.Composer.Cart.Services
 
         private static void SetCustomerType(bool isGuest, Overture.ServiceModel.Orders.Cart cart)
         {
-            if (cart.Customer == null)
+            if (cart.Customer == null || !isGuest)
             {
                 cart.Customer = new CustomerSummary();
             }
-
-            if (!isGuest)
-            {
-                cart.Customer = new CustomerSummary();
-            }
-
             cart.Customer.Type = isGuest ? CustomerType.Guest : CustomerType.Registered;
         }
 
         protected virtual async Task<CartViewModel> CreateCartViewModelAsync(CreateCartViewModelParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.Cart == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("Cart"), "param"); }
-            if (param.BaseUrl == null) { throw new ArgumentException(ArgumentNullMessageFormatter.FormatErrorMessage("BaseUrl"), "param"); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.Cart == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.Cart)), nameof(param)); }
+            if (param.BaseUrl == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.BaseUrl)), nameof(param)); }
 
             param.ProductImageInfo = new ProductImageInfo
             {
@@ -280,7 +263,7 @@ namespace Orckestra.Composer.Cart.Services
                 CultureInfo = param.CultureInfo,
                 LookupType = LookupType.Order,
                 LookupName = "PaymentMethodType",
-            }).ConfigureAwait(false);
+            });
 
             param.PaymentMethodDisplayNames = methodDisplayNames;
 
@@ -296,8 +279,8 @@ namespace Orckestra.Composer.Cart.Services
         /// <param name="order">Order in which the operation must be performed.</param>
         public virtual void RegisterCartUpdateOperation<TViewModel>(string operationName, Func<Overture.ServiceModel.Orders.Cart, TViewModel, Task> updateAction, int? order)
         {
-            if (string.IsNullOrEmpty(operationName)) { throw new ArgumentNullException("operationName"); }
-            if (updateAction == null) { throw new ArgumentNullException("updateAction"); }
+            if (string.IsNullOrEmpty(operationName)) { throw new ArgumentException(GetMessageOfNullEmpty(), nameof(operationName)); }
+            if (updateAction == null) { throw new ArgumentNullException(nameof(updateAction)); }
 
             var operation = new Func<Overture.ServiceModel.Orders.Cart, object, Task>((cart, viewModel) => updateAction(cart, ParseJson<TViewModel>(viewModel)));
             _updateOperations[operationName] = order == null ? new UpdateOperation(operation) : new UpdateOperation(order.Value, operation);
@@ -305,11 +288,7 @@ namespace Orckestra.Composer.Cart.Services
 
         protected TViewModel ParseJson<TViewModel>(object viewModel)
         {
-            var jsonValue = viewModel as string;
-            if (jsonValue == null)
-            {
-                throw new InvalidDataException("Value must be a string");
-            }
+            var jsonValue = viewModel as string ?? throw new InvalidDataException("Value must be a string");
 
             var deserializedJson = ComposerJsonSerializer.Deserialize<TViewModel>(jsonValue);
             ValidateViewModel(deserializedJson);
@@ -402,16 +381,9 @@ namespace Orckestra.Composer.Cart.Services
             }).ConfigureAwait(false);
         }
 
-
-
         protected virtual async Task UpdateShippingMethod(Overture.ServiceModel.Orders.Cart cart, ShippingMethodViewModel shippingMethodViewModel)
         {
-            if (shippingMethodViewModel == null)
-            {
-                return;
-            }
-
-            if (string.IsNullOrEmpty(shippingMethodViewModel.Name))
+            if (string.IsNullOrEmpty(shippingMethodViewModel?.Name))
             {
                 return;
             }
@@ -437,7 +409,7 @@ namespace Orckestra.Composer.Cart.Services
 
             var fulfillmentMethods = await FulfillmentMethodRepository.GetCalculatedFulfillmentMethods(param);
 
-            var fulfillmentMethod = fulfillmentMethods.FirstOrDefault(method =>
+            var fulfillmentMethod = fulfillmentMethods.Find(method =>
                 method.Name == shippingMethodViewModel.Name &&
                 method.ShippingProviderId == shippingMethodViewModel.ShippingProviderId);
 
@@ -445,7 +417,7 @@ namespace Orckestra.Composer.Cart.Services
             {
                 throw new ComposerException(new ErrorViewModel
                 {
-                    ErrorCode = "",
+                    ErrorCode = string.Empty,
                     ErrorMessage = "Unable to find any shipment provider matching the provided parameters."
                 });
             }
@@ -542,12 +514,7 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual async Task UpdateRegisteredShippingAddress(Overture.ServiceModel.Orders.Cart cart, RegisteredShippingAddressViewModel registeredShippingAddressViewModel)
         {
-            if (registeredShippingAddressViewModel == null)
-            {
-                return;
-            }
-
-            if (registeredShippingAddressViewModel.ShippingAddressId == Guid.Empty)
+            if (registeredShippingAddressViewModel == null || registeredShippingAddressViewModel.ShippingAddressId == Guid.Empty)
             {
                 return;
             }
@@ -576,7 +543,7 @@ namespace Orckestra.Composer.Cart.Services
                 CultureInfo = CultureInfo.GetCultureInfo(cart.CultureName), //TODO: Fix me
                 ForceUpdate = isShippingChanged
 
-            }).ConfigureAwait(false);
+            });
         }
 
         protected virtual bool IsEqual(Address firstAddress, Address secondAddress)
@@ -633,14 +600,7 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual Payment GetPayment(Overture.ServiceModel.Orders.Cart cart)
         {
-            var payments = cart.Payments;
-
-            if (payments == null || payments.All(payment => payment.IsVoided()))
-            {
-                throw new InvalidOperationException("No valid payment was found in the cart.");
-            }
-
-            return payments.First(payment => !payment.IsVoided());
+            return cart.Payments.Find(x => !x.IsVoided()) ?? throw new InvalidOperationException("No valid payment was found in the cart.");
         }
     }
 }
