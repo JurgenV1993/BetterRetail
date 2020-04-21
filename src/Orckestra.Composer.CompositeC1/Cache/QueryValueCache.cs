@@ -15,11 +15,10 @@ namespace Orckestra.Composer.CompositeC1.Cache
 		private Func<TDataType, TPropertyType> _compiledPropertyExpression;
 		private Func<TDataType, TValueType> _compiledValueExpression;
 		private readonly bool _typeIsLocalizable;
+		private readonly object _locker = new object();
 
 		public QueryCacheValue(Expression<Func<TDataType, TPropertyType>> propertyGetter, Expression<Func<TDataType, TValueType>> valueGetter) :
-			this("Unnamed cache", propertyGetter, valueGetter, 1000)
-		{
-		}
+			this("Unnamed cache", propertyGetter, valueGetter, 1000) { }
 
 		public QueryCacheValue(string name, Expression<Func<TDataType, TPropertyType>> propertyGetter, Expression<Func<TDataType, TValueType>> valueGetter, int size)
 		{
@@ -36,14 +35,13 @@ namespace Orckestra.Composer.CompositeC1.Cache
 
 		private void OnDataChanged(object sender, DataEventArgs dataeventargs)
 		{
-			var data = dataeventargs.Data as TDataType;
-			if (data == null)
+			if (!(dataeventargs.Data is TDataType data))
 			{
 				return;
 			}
 
 			string cacheKey = GetCacheKey(GetKey(data));
-			lock (this)
+			lock (_locker)
 			{
 				_innerCache.Remove(cacheKey);
 			}
@@ -61,7 +59,7 @@ namespace Orckestra.Composer.CompositeC1.Cache
 				result = cacheRecord.Value;
 			}
 			else
-				lock (this)
+				lock (_locker)
 				{
 					cacheRecord = _innerCache.Get(cacheKey);
 					if (cacheRecord != null)
@@ -103,7 +101,8 @@ namespace Orckestra.Composer.CompositeC1.Cache
 		private TValueType GetValue(TDataType dataItem)
 		{
 			if (dataItem == default(TDataType))
-				return default(TValueType);
+				return default;
+
 			if (_compiledValueExpression == null)
 			{
 				_compiledValueExpression = _valueGetter.Compile();
