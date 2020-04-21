@@ -99,7 +99,7 @@ namespace Orckestra.Composer.Cart.Tests.Repositories
             var sut = Container.CreateInstance<CartRepository>();
 
             //Act
-            Expression<Func<Task>> expression = GetExpression(() => sut.RemoveCouponsAsync(p));
+            Expression<Func<Task>> expression = () => sut.RemoveCouponsAsync(p);
             var exception = Assert.ThrowsAsync<ArgumentException>(() => expression.Compile().Invoke());
 
             exception.ParamName.Should().BeEquivalentTo(GetParamsInfo(expression)[0].Name);

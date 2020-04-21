@@ -175,7 +175,7 @@ namespace Orckestra.Composer.Cart.Tests.Repositories
             };
 
             // Act
-            Expression<Func<Task<ProcessedCart>>> expression = GetExpression(() => _repository.GetCartAsync(param));
+            Expression<Func<Task<ProcessedCart>>> expression = () => _repository.GetCartAsync(param);
             var exception = Assert.ThrowsAsync<ArgumentException>(() => expression.Compile().Invoke());
 
             //Assert

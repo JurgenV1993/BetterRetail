@@ -160,7 +160,7 @@ namespace Orckestra.Composer.Cart.Tests.Repositories
             };
 
             // Act
-            Expression<Func<Task<ProcessedCart>>> expression = GetExpression(() => cartRepository.RemoveLineItemAsync(param));
+            Expression<Func<Task<ProcessedCart>>> expression = () => cartRepository.RemoveLineItemAsync(param);
             var exception = Assert.ThrowsAsync<ArgumentException>(() => expression.Compile().Invoke());
 
             //Assert
@@ -184,7 +184,7 @@ namespace Orckestra.Composer.Cart.Tests.Repositories
             };
 
             // Act
-            var expression = GetExpression(() => cartRepository.RemoveLineItemAsync(param));
+            Expression<Func<Task<ProcessedCart>>> expression = () => cartRepository.RemoveLineItemAsync(param);
             var exception = Assert.ThrowsAsync<ArgumentException>(() => expression.Compile().Invoke());
 
             //Assert
