@@ -11,6 +11,7 @@ using Orckestra.Composer.Parameters;
 using Orckestra.Composer.Providers;
 using Orckestra.Overture.ServiceModel.Marketing;
 using Orckestra.Overture.ServiceModel.Orders;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Cart.Providers.CartMerge
 {
@@ -32,11 +33,10 @@ namespace Orckestra.Composer.Cart.Providers.CartMerge
         /// <returns></returns>
         public virtual async Task MergeCartAsync(CartMergeParam param)
         {
-            if (param == null) { throw new ArgumentNullException("param"); }
-            if (param.GuestCustomerId == Guid.Empty) { throw new ArgumentException("param.GuestCustomerId"); }
-            if (param.LoggedCustomerId == Guid.Empty) { throw new ArgumentException("param.LoggedCustomerId"); }
-            if (string.IsNullOrEmpty(param.Scope)) { throw new ArgumentException("param.Scope"); }
-
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.GuestCustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.GuestCustomerId)), nameof(param)); }
+            if (param.LoggedCustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.LoggedCustomerId)), nameof(param)); }
+            if (string.IsNullOrEmpty(param.Scope)) { throw new ArgumentException(GetMessageOfNullEmpty(nameof(param.Scope)), nameof(param)); }
             if (param.GuestCustomerId == param.LoggedCustomerId) { return; }
 
             var getLoggedCustomerCartTask = CartRepository.GetCartAsync(new GetCartParam
@@ -61,58 +61,89 @@ namespace Orckestra.Composer.Cart.Providers.CartMerge
             var guestCustomerCart = result[1];
 
             var guestCustomerLineItems = guestCustomerCart.GetLineItems();
-            var loggedCustomerLineItems = loggedCustomerCart.GetLineItems();
 
             if (!guestCustomerLineItems.Any())
             {
                 return;
             }
 
+            var loggedCustomerLineItems = loggedCustomerCart.GetLineItems();
             loggedCustomerCart.Shipments.First().LineItems = MergeLineItems(guestCustomerLineItems, loggedCustomerLineItems);
             loggedCustomerCart.Coupons = MergeCoupons(guestCustomerCart.Coupons, loggedCustomerCart.Coupons);
 
             var cart = await CartRepository.UpdateCartAsync(UpdateCartParamFactory.Build(loggedCustomerCart)).ConfigureAwait(false);
 
             await FixCartService.FixCartAsync(new FixCartParam
-             {
-                 Cart = cart
-             });
+            {
+                Cart = cart
+            });
         }
 
         protected virtual List<Coupon> MergeCoupons(List<Coupon> guestCoupons, List<Coupon> loggedCustomerCoupons)
         {
-            if (guestCoupons == null) { return loggedCustomerCoupons; }
+            var dictionary = new Dictionary<string, Coupon>();
 
-            foreach (var guestCoupon in guestCoupons)
+            if (loggedCustomerCoupons != null)
             {
-                if (loggedCustomerCoupons.All(c => c.CouponCode != guestCoupon.CouponCode))
+                foreach (var loggedCustomerCoupon in loggedCustomerCoupons)
                 {
-                    loggedCustomerCoupons.Add(guestCoupon);
+                    if (dictionary.ContainsKey(loggedCustomerCoupon.CouponCode))
+                    {
+                        continue;
+                    }
+                    dictionary.Add(loggedCustomerCoupon.CouponCode, loggedCustomerCoupon);
                 }
             }
 
-            return loggedCustomerCoupons;
+            if (guestCoupons != null)
+            {
+                foreach (var guestCoupon in guestCoupons)
+                {
+                    if (dictionary.ContainsKey(guestCoupon.CouponCode))
+                    {
+                        continue;
+                    }
+                    dictionary.Add(guestCoupon.CouponCode, guestCoupon);
+                }
+            }
+            return dictionary.Values.ToList();
         }
 
         protected virtual List<LineItem> MergeLineItems(List<LineItem> guestLineItems, List<LineItem> loggedLineItems)
         {
-            var mergedLineItems = new List<LineItem>();
+            var dictionary = new Dictionary<(string, string), LineItem>();
 
-            foreach (var lineItem in guestLineItems.Concat(loggedLineItems))
+            if (guestLineItems != null)
             {
-                var mergeLineItem = mergedLineItems.FirstOrDefault(x => x.ProductId == lineItem.ProductId && x.VariantId == lineItem.VariantId);
-
-                if (mergeLineItem == null)
+                foreach (var guestLineItem in guestLineItems)
                 {
-                    mergedLineItems.Add(lineItem);
-                }
-                else
-                {
-                    mergeLineItem.Quantity += lineItem.Quantity;
+                    if (dictionary.ContainsKey((guestLineItem.ProductId, guestLineItem.VariantId)))
+                    {
+                        dictionary[(guestLineItem.ProductId, guestLineItem.VariantId)].Quantity += guestLineItem.Quantity;
+                    }
+                    else
+                    {
+                        dictionary.Add((guestLineItem.ProductId, guestLineItem.VariantId), guestLineItem);
+                    }
                 }
             }
 
-            return mergedLineItems;
+            if (loggedLineItems != null)
+            {
+                foreach (var loggedLineItem in loggedLineItems)
+                {
+                    if (dictionary.ContainsKey((loggedLineItem.ProductId, loggedLineItem.VariantId)))
+                    {
+                        dictionary[(loggedLineItem.ProductId, loggedLineItem.VariantId)].Quantity += loggedLineItem.Quantity;
+                    }
+                    else
+                    {
+                        dictionary.Add((loggedLineItem.ProductId, loggedLineItem.VariantId), loggedLineItem);
+                    }
+                }
+            }
+
+            return dictionary.Values.ToList();
         }
     }
 }
