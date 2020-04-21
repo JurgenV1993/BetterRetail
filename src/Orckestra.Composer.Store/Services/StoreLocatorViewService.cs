@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Orckestra.Composer.Store.Extentions;
 using Orckestra.Composer.Store.Factory;
 using Orckestra.Composer.Store.Parameters;
 using Orckestra.Composer.Store.Providers;
 using Orckestra.Composer.Store.Repositories;
 using Orckestra.Composer.Store.ViewModels;
-using System.Linq;
-using Orckestra.Composer.Store.Extentions;
-using Orckestra.Composer.Store.Models;
 using Orckestra.Overture.ServiceModel.Customers;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.Store.Services
 {
@@ -33,10 +33,10 @@ namespace Orckestra.Composer.Store.Services
         }
         public virtual async Task<StoreLocatorViewModel> GetStoreLocatorViewModelAsync(GetStoreLocatorViewModelParam viewModelParam)
         {
-            if (viewModelParam == null) { throw new ArgumentNullException("param"); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentNullException("scope"); }
-            if (viewModelParam.CultureInfo == null) { throw new ArgumentNullException("cultureInfo"); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentNullException("baseUrl"); }
+            if (viewModelParam == null) { throw new ArgumentNullException(nameof(viewModelParam)); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.Scope)), nameof(viewModelParam)); }
+            if (viewModelParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(viewModelParam.CultureInfo)), nameof(viewModelParam)); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.BaseUrl)), nameof(viewModelParam)); }
 
             var overtureStores =
                await
@@ -53,23 +53,23 @@ namespace Orckestra.Composer.Store.Services
             var stores = overtureStores.Results;
 
             var index = 1;
-            if (viewModelParam.SearchPoint != null)
-            {
-                stores = stores.OrderBy(s => s.CalculateDestination(viewModelParam.SearchPoint)).ToList();
-                model.NearestStoreCoordinate = new StoreGeoCoordinate(stores.FirstOrDefault());
-            }
-            var storeIndexes = stores.ToDictionary(d => d.Number, d => index++);
 
             if (viewModelParam.MapBounds != null)
             {
-                stores = stores.Where(st => st.InBounds(viewModelParam.MapBounds)).ToList();
+                stores = stores.Where(st => st.InBounds(viewModelParam.MapBounds));
             }
+
+            if (viewModelParam.SearchPoint != null)
+            {
+                stores = stores.OrderBy(s => s.CalculateDestination(viewModelParam.SearchPoint));
+                model.NearestStoreCoordinate = new StoreGeoCoordinate(stores.FirstOrDefault());
+            }
+            var storeIndexes = stores.ToDictionary(d => d.Number, d => index++);
 
             var storesForCurrentPage =
                 stores.Skip((viewModelParam.PageNumber - 1) * viewModelParam.PageSize)
                     .Take(viewModelParam.PageSize)
                     .ToList();
-
 
             var schedules = await GetStoreSchedules(storesForCurrentPage, viewModelParam);
 
@@ -95,12 +95,12 @@ namespace Orckestra.Composer.Store.Services
 
             if (viewModelParam.IncludeMarkers)
             {
-                model.Markers = GetMarkers(viewModelParam, stores, storeIndexes);
+                model.Markers = GetMarkers(viewModelParam, stores.ToList(), storeIndexes);
             }
 
             model.NextPage = StoreViewModelFactory.BuildNextPage(new GetStorePageViewModelParam
             {
-                Total = stores.Count,
+                Total = stores.Count(),
                 PageSize = viewModelParam.PageSize,
                 CurrentPageNumber = viewModelParam.PageNumber
             });
@@ -145,8 +145,8 @@ namespace Orckestra.Composer.Store.Services
 
         public virtual StoreLocatorViewModel GetEmptyStoreLocatorViewModel(GetEmptyStoreLocatorViewModelParam viewModelParam)
         {
-            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException("baseUrl"); }
-            if (viewModelParam.CultureInfo == null) { throw new ArgumentNullException("cultureInfo"); }
+            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.BaseUrl)), nameof(viewModelParam)); }
+            if (viewModelParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(viewModelParam.CultureInfo)), nameof(viewModelParam)); }
 
             var model = new StoreLocatorViewModel
             {
@@ -160,6 +160,5 @@ namespace Orckestra.Composer.Store.Services
             };
             return model;
         }
-
     }
 }
