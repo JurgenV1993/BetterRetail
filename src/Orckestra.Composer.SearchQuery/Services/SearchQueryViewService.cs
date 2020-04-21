@@ -1,4 +1,10 @@
-﻿using Orckestra.Composer.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using Orckestra.Composer.Configuration;
 using Orckestra.Composer.Parameters;
 using Orckestra.Composer.Providers;
 using Orckestra.Composer.Providers.Dam;
@@ -23,12 +29,6 @@ using Orckestra.Overture.ServiceModel;
 using Orckestra.Overture.ServiceModel.Products.Inventory;
 using Orckestra.Overture.ServiceModel.Search;
 using Orckestra.Overture.ServiceModel.Search.Pricing;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Orckestra.Composer.SearchQuery.Services
 {
@@ -74,11 +74,8 @@ namespace Orckestra.Composer.SearchQuery.Services
              scopeViewService,
              recurringOrdersSettings)
         {
-            if (searchQueryRepository == null) { throw new ArgumentNullException("searchQueryRepository"); }
-            if (searchQueryUrlProvider == null) { throw new ArgumentNullException("searchQuerySearchRepository"); }
-
-            SearchQueryRepository = searchQueryRepository;
-            SearchQueryUrlProvider = searchQueryUrlProvider;
+            SearchQueryRepository = searchQueryRepository ?? throw new ArgumentNullException(nameof(searchQueryRepository));
+            SearchQueryUrlProvider = searchQueryUrlProvider ?? throw new ArgumentNullException(nameof(searchQueryUrlProvider));
             ProductSettingsRepository = productSettingsRepository;
             InventoryRepository = inventoryRepository;
         }
@@ -204,9 +201,13 @@ namespace Orckestra.Composer.SearchQuery.Services
             if (documents == null) throw new ArgumentNullException(nameof(documents));
             if (inventoryLocations == null) throw new ArgumentNullException(nameof(inventoryLocations));
 
+            var lookup = inventoryLocations
+                .Where(x=> x.Identifier != null)
+                .ToLookup(el => el.Identifier?.Sku, el => el, StringComparer.OrdinalIgnoreCase);
+
             foreach (var productDocument in documents)
             {
-                productDocument.InventoryLocationStatuses = inventoryLocations.Where(d => d.Identifier != null && d.Identifier.Sku == productDocument.Sku).ToList();
+                productDocument.InventoryLocationStatuses = lookup[productDocument.Sku].ToList();
             }
         }
 
@@ -215,37 +216,35 @@ namespace Orckestra.Composer.SearchQuery.Services
             var productSettings = await ProductSettingsRepository.GetProductSettings(scope).ConfigureAwait(false);
             if (productSettings.IsInventoryEnabled)
             {
-
                 var result = new List<ProductDocument>();
+                var availableInventoryStatuses = new HashSet<InventoryStatus>();
 
-                var availableInventoryStatuses = new List<InventoryStatus>();
                 foreach (var s in productSettings.AvailableInventoryStatuses.Split('|'))
                 {
-                    InventoryStatus status;
-                    if (Enum.TryParse(s, out status))
+                    if (Enum.TryParse(s, out InventoryStatus status))
                     {
                         availableInventoryStatuses.Add(status);
                     }
                 }
 
-
-
                 foreach (var productDocument in documents)
                 {
-                    var isAvailableInventoryStatus = (
-                        from inventoryLocationStatus in productDocument.InventoryLocationStatuses
-                        from inventoryItemStatuse in inventoryLocationStatus.Statuses
-                        select inventoryItemStatuse.Status)
-                       .Any(inventoryItemStatus => availableInventoryStatuses
-                       .Any(availableStatusForSell => availableStatusForSell == inventoryItemStatus));
-
-                    if (isAvailableInventoryStatus)
+                    bool nextDocument = false;
+                    foreach(var inventoryLocationStatus in productDocument.InventoryLocationStatuses)
                     {
-                        result.Add(productDocument);
+                        foreach(var inventoryItemStatus in inventoryLocationStatus.Statuses)
+                        {
+                            if (availableInventoryStatuses.Contains(inventoryItemStatus.Status))
+                            {
+                                result.Add(productDocument);
+                                nextDocument = true;
+                                break;
+                            }
+                        }
+                        if (nextDocument) break;
                     }
                 }
-
-                return result.ToList();
+                return result;
             }
             else
             {
@@ -257,7 +256,7 @@ namespace Orckestra.Composer.SearchQuery.Services
         protected virtual async Task<SelectedFacets> GetSelectedFacetsAsync(SearchParam param)
         {
             var selectedFacets = param.Criteria.SelectedFacets;
-            return FlattenFilterList(selectedFacets, param.Criteria.CultureInfo);
+            return await Task.FromResult(FlattenFilterList(selectedFacets, param.Criteria.CultureInfo));
         }
 
         public ProductDocument ToProductDocument(Document document)
@@ -331,9 +330,7 @@ namespace Orckestra.Composer.SearchQuery.Services
                 return false;
             }
 
-            object variantCountObject;
-
-            if (!resultItem.PropertyBag.TryGetValue("GroupCount", out variantCountObject))
+            if (!resultItem.PropertyBag.TryGetValue("GroupCount", out object variantCountObject))
             {
                 return false;
             }
@@ -345,9 +342,7 @@ namespace Orckestra.Composer.SearchQuery.Services
 
             var variantCountString = variantCountObject.ToString();
 
-            int result;
-
-            int.TryParse(variantCountString, out result);
+            int.TryParse(variantCountString, out int result);
 
             return result > 1; // If the document has only one variant then server returns EntityPrice instead of GroupPrice
         }
