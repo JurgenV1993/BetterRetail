@@ -26,8 +26,6 @@ namespace Orckestra.Composer.Cart.Services
 
             var invalidLineItems = lineItems.Where(lineItem => !LineItemValidationProvider.ValidateLineItem(cart, lineItem)).ToList();
             return invalidLineItems;
-        }
-
-      
+        }    
     }
 }
