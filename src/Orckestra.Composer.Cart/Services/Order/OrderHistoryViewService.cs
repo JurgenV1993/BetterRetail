@@ -27,7 +27,8 @@ namespace Orckestra.Composer.Cart.Services.Order
         protected virtual IImageService ImageService { get; private set; }
         protected virtual IShippingTrackingProviderFactory ShippingTrackingProviderFactory { get; private set; }
 
-        public OrderHistoryViewService(IOrderHistoryViewModelFactory orderHistoryViewModelFactory,
+        public OrderHistoryViewService(
+            IOrderHistoryViewModelFactory orderHistoryViewModelFactory,
             IOrderRepository orderRepository,
             IOrderUrlProvider orderUrlProvider,
             ILookupService lookupService,
@@ -35,9 +36,6 @@ namespace Orckestra.Composer.Cart.Services.Order
             IImageService imageService,
             IShippingTrackingProviderFactory shippingTrackingProviderFactory)
         {
-            //Not used param
-            if (orderUrlProvider == null) { throw new ArgumentNullException(nameof(orderUrlProvider)); }
-
             OrderHistoryViewModelFactory = orderHistoryViewModelFactory ?? throw new ArgumentNullException(nameof(orderHistoryViewModelFactory));
             OrderUrlProvider = orderUrlProvider ?? throw new ArgumentNullException(nameof(orderUrlProvider));
             LookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
@@ -92,7 +90,8 @@ namespace Orckestra.Composer.Cart.Services.Order
             return viewModel;
         }
 
-        protected virtual async Task<Dictionary<Guid, TrackingInfoViewModel>> GetShipmentsTrackingInfoViewModels(OrderQueryResult orderQueryResult,
+        protected virtual async Task<Dictionary<Guid, TrackingInfoViewModel>> GetShipmentsTrackingInfoViewModels(
+            OrderQueryResult orderQueryResult,
             GetCustomerOrdersParam param)
         {
             var shipmentsTrackingInfos = new Dictionary<Guid, TrackingInfoViewModel>();
@@ -136,10 +135,7 @@ namespace Orckestra.Composer.Cart.Services.Order
             var order = await OrderRepository.GetOrderAsync(param).ConfigureAwait(false);
 
             //Check if order is one of the current customer.
-            if (order == null || Guid.Parse(order.CustomerId) != param.CustomerId)
-            {
-                return null;
-            }
+            if (order == null || Guid.Parse(order.CustomerId) != param.CustomerId) { return null; }
 
             var viewModel = await BuildOrderDetailViewModelAsync(order, param).ConfigureAwait(false);
 
@@ -163,10 +159,7 @@ namespace Orckestra.Composer.Cart.Services.Order
 
             var order = await OrderRepository.GetOrderAsync(param).ConfigureAwait(false);
 
-            if (order == null || order.Cart.Customer.Email != param.Email)
-            {
-                return null;
-            }
+            if (order == null || order.Cart.Customer.Email != param.Email) { return null; }
 
             var viewModel = await BuildOrderDetailViewModelAsync(order, param).ConfigureAwait(false);
 
@@ -178,7 +171,12 @@ namespace Orckestra.Composer.Cart.Services.Order
             GetOrderParam getOrderParam)
         {
             var shipmentsNotes = await GetShipmentsNotes(order.Cart.Shipments, getOrderParam.Scope).ConfigureAwait(false);
-            var orderChanges = await OrderRepository.GetOrderChangesAsync(new GetOrderChangesParam{ OrderNumber = getOrderParam.OrderNumber, Scope = getOrderParam.Scope }).ConfigureAwait(false);
+
+            var orderChanges = await OrderRepository.GetOrderChangesAsync(new GetOrderChangesParam
+            { 
+                OrderNumber = getOrderParam.OrderNumber, 
+                Scope = getOrderParam.Scope 
+            }).ConfigureAwait(false);
 
             var orderStatuses = await LookupService.GetLookupDisplayNamesAsync(new GetLookupDisplayNamesParam
             {
