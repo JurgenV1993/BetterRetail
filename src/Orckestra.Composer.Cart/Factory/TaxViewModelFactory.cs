@@ -24,10 +24,7 @@ namespace Orckestra.Composer.Cart.Factory
 
         public virtual IEnumerable<TaxViewModel> CreateTaxViewModels(IEnumerable<Tax> taxes, CultureInfo cultureInfo)
         {
-            if (taxes == null)
-            {
-                yield break;
-            }
+            if (taxes == null) { yield break; }
 
             var taxesByCodes = taxes.Where(x=>x.TaxTotal.HasValue && x.TaxTotal.Value > 0).GroupBy(t => t.DisplayName);
 
