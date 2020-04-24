@@ -42,6 +42,7 @@ namespace Orckestra.Composer.Cart.Providers.LineItemValidation
             if (group != null &&
                 (lineItem.Status == null || !lineItem.Status.Equals(InStockLineItemStatus, StringComparison.OrdinalIgnoreCase)))
             {
+                AddErrorsToLineItem(lineItem, group);
                 isValid = false;
             }
 
@@ -85,7 +86,6 @@ namespace Orckestra.Composer.Cart.Providers.LineItemValidation
         /// </summary>
         /// <param name="lineItem">LineItem that was detected invalid.</param>
         /// <param name="messages">Messages found for given LineItem.</param>
-        [Obsolete("This method should not be used")]
         protected virtual void AddErrorsToLineItem(LineItem lineItem, IEnumerable<ExecutionMessage> messages)
         {
             //Provided as hook for customers. Not actually used in the implementation.
