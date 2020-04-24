@@ -7,8 +7,7 @@ namespace Orckestra.Composer.Cart.Helper
 {
     public static class RecurringOrderCartHelper
     {
-  
-        static RecurringOrderCartHelper(){}
+        static RecurringOrderCartHelper() { }
 
         public static bool IsCartContainsRecurringOrderItems(Overture.ServiceModel.Orders.Cart cart)
         {
@@ -18,8 +17,7 @@ namespace Orckestra.Composer.Cart.Helper
                 {
                     foreach (var lineitem in shipment.LineItems ?? Enumerable.Empty<LineItem>())
                     {
-                        if (IsRecurringOrderLineItemValid(lineitem))
-                            return true;
+                        if (IsRecurringOrderLineItemValid(lineitem)) { return true; }          
                     }
                 }
             }
@@ -43,8 +41,7 @@ namespace Orckestra.Composer.Cart.Helper
             {
                 foreach (var lineitem in lineitems)
                 {
-                    if (IsRecurringOrderLineItemValid(lineitem))
-                        return true;
+                    if (IsRecurringOrderLineItemValid(lineitem)) { return true; }
                 }
             }
             return false;
