@@ -1,14 +1,12 @@
-﻿using Composite.Core;
-using Orckestra.Composer.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Composite.Core;
 using Orckestra.Composer.SearchQuery.Parameters;
 using Orckestra.Composer.SearchQuery.Repositories;
 using Orckestra.ExperienceManagement.Configuration;
 using Orckestra.Overture.ServiceModel.SearchQueries;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
 
 namespace Orckestra.Composer.C1CMS.Queries
 {
@@ -35,6 +33,7 @@ namespace Orckestra.Composer.C1CMS.Queries
                     return queries.SearchQueries.Select(d => d.Name).ToList();
                 }
             }
+            //TODO: add catch processing
             catch
             {
                 // ignored
