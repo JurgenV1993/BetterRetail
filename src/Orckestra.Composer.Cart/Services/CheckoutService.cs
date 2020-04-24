@@ -135,10 +135,7 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual List<CouponViewModel> MapCoupons(Overture.ServiceModel.Orders.Order order, CultureInfo cultureInfo)
         {
-            if (order?.Cart == null)
-            {
-                return new List<CouponViewModel>();
-            }
+            if (order?.Cart == null) { return new List<CouponViewModel>(); }
 
             var couponsViewModel = CartViewModelFactory.GetCouponsViewModel(order.Cart, cultureInfo, false);
 
@@ -161,6 +158,7 @@ namespace Orckestra.Composer.Cart.Services
                     Value = li.ProductSummary.Brand,
                     CultureInfo = cultureInfo
                 }).Result;
+
                 viewModel.Name = li.ProductSummary.DisplayName;
                 viewModel.BrandId = brandProperty;
                 viewModel.Brand = brand;
@@ -240,10 +238,7 @@ namespace Orckestra.Composer.Cart.Services
 
         private static void SetCustomerType(bool isGuest, Overture.ServiceModel.Orders.Cart cart)
         {
-            if (cart.Customer == null || !isGuest)
-            {
-                cart.Customer = new CustomerSummary();
-            }
+            if (cart.Customer == null || !isGuest) { cart.Customer = new CustomerSummary(); }
             cart.Customer.Type = isGuest ? CustomerType.Guest : CustomerType.Registered;
         }
 
@@ -316,10 +311,7 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual void UpdateStepInfo(Overture.ServiceModel.Orders.Cart cart, int lastCompletedCheckoutStep)
         {
-            if (cart.PropertyBag == null)
-            {
-                cart.PropertyBag = new PropertyBag();
-            }
+            if (cart.PropertyBag == null) { cart.PropertyBag = new PropertyBag(); }
 
             if (cart.PropertyBag.ContainsKey(CartConfiguration.CartPropertyBagLastCheckoutStep))
             {
@@ -333,15 +325,9 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual Task UpdateCustomer(Overture.ServiceModel.Orders.Cart cart, CustomerSummaryViewModel customerSummaryViewModel)
         {
-            if (customerSummaryViewModel == null)
-            {
-                return Task.FromResult(0);
-            }
+            if (customerSummaryViewModel == null) { return Task.FromResult(0); }
 
-            if (cart.Customer == null)
-            {
-                cart.Customer = new CustomerSummary();
-            }
+            if (cart.Customer == null) { cart.Customer = new CustomerSummary(); }
 
             cart.Customer.LastName = null;
             cart.Customer.FirstName = null;
@@ -354,17 +340,11 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual async Task UpdateShippingAddress(Overture.ServiceModel.Orders.Cart cart, AddressViewModel addressViewModel)
         {
-            if (addressViewModel == null)
-            {
-                return;
-            }
+            if (addressViewModel == null) { return; }
 
             var shipment = cart.Shipments.FirstOrDefault();
 
-            if (shipment == null)
-            {
-                return;
-            }
+            if (shipment == null) { return; }
 
             var newAddress = CreateAddressFromViewModel(addressViewModel);
 
@@ -377,22 +357,16 @@ namespace Orckestra.Composer.Cart.Services
                 Cart = cart,
                 CultureInfo = CultureInfo.GetCultureInfo(cart.CultureName), //TODO: Fix me
                 ForceUpdate = isShippingChanged
-
             }).ConfigureAwait(false);
         }
 
         protected virtual async Task UpdateShippingMethod(Overture.ServiceModel.Orders.Cart cart, ShippingMethodViewModel shippingMethodViewModel)
         {
-            if (string.IsNullOrEmpty(shippingMethodViewModel?.Name))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(shippingMethodViewModel?.Name)) { return; }
 
             var shipment = cart.Shipments.FirstOrDefault();
-            if (shipment == null)
-            {
-                return;
-            }
+
+            if (shipment == null) { return; }
 
             shipment.FulfillmentMethod = await GetFulfillmentMethodAsync(cart, shippingMethodViewModel);
         }
@@ -427,26 +401,17 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual Task UpdateBillingAddress(Overture.ServiceModel.Orders.Cart cart, BillingAddressViewModel billingAddressViewModel)
         {
-            if (billingAddressViewModel == null)
-            {
-                return Task.FromResult(0);
-            }
+            if (billingAddressViewModel == null) { return Task.FromResult(0); }
 
             var payment = GetPayment(cart);
 
-            if (payment == null)
-            {
-                return Task.FromResult(0);
-            }
+            if (payment == null) { return Task.FromResult(0); }
 
             if (billingAddressViewModel.UseShippingAddress)
             {
                 var shipment = cart.Shipments.FirstOrDefault();
 
-                if (shipment?.Address == null)
-                {
-                    return Task.FromResult(0);
-                }
+                if (shipment?.Address == null) { return Task.FromResult(0); }
 
                 payment.BillingAddress = shipment.Address.Clone();
             }
@@ -467,17 +432,11 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual async Task UpdateRegisteredBillingAddress(Overture.ServiceModel.Orders.Cart cart, RegisteredBillingAddressViewModel registeredBillingAddressViewModel)
         {
-            if (registeredBillingAddressViewModel == null)
-            {
-                return;
-            }
+            if (registeredBillingAddressViewModel == null) { return; }
 
             var payment = cart.Payments.FirstOrDefault();
 
-            if (payment == null)
-            {
-                return;
-            }
+            if (payment == null) { return; }
 
             if (registeredBillingAddressViewModel.UseShippingAddress)
             {
@@ -495,10 +454,7 @@ namespace Orckestra.Composer.Cart.Services
             }
             else
             {
-                if (registeredBillingAddressViewModel.BillingAddressId == Guid.Empty)
-                {
-                    return;
-                }
+                if (registeredBillingAddressViewModel.BillingAddressId == Guid.Empty) { return; }
 
                 var newAddress = await AddressRepository.GetAddressByIdAsync(registeredBillingAddressViewModel.BillingAddressId).ConfigureAwait(false);
                 var isBillingChanged = payment.BillingAddress == null || !IsEqual(payment.BillingAddress, newAddress);
@@ -514,17 +470,11 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual async Task UpdateRegisteredShippingAddress(Overture.ServiceModel.Orders.Cart cart, RegisteredShippingAddressViewModel registeredShippingAddressViewModel)
         {
-            if (registeredShippingAddressViewModel == null || registeredShippingAddressViewModel.ShippingAddressId == Guid.Empty)
-            {
-                return;
-            }
+            if (registeredShippingAddressViewModel == null || registeredShippingAddressViewModel.ShippingAddressId == Guid.Empty) { return; }
 
             var shipment = cart.Shipments.FirstOrDefault();
 
-            if (shipment == null)
-            {
-                return;
-            }
+            if (shipment == null) { return; }
 
             var newAddress = await AddressRepository.GetAddressByIdAsync(registeredShippingAddressViewModel.ShippingAddressId).ConfigureAwait(false);
             var isShippingChanged = shipment.Address == null || !IsEqual(shipment.Address, newAddress);
@@ -542,7 +492,6 @@ namespace Orckestra.Composer.Cart.Services
                 Cart = cart,
                 CultureInfo = CultureInfo.GetCultureInfo(cart.CultureName), //TODO: Fix me
                 ForceUpdate = isShippingChanged
-
             });
         }
 
