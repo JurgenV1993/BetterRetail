@@ -43,9 +43,7 @@ namespace Orckestra.Composer.Cart.Services
         {
             if(coupons == null) { return Enumerable.Empty<string>(); }
 
-            return from c in coupons
-                where c.CouponState != CouponState.Ok
-                select c.CouponCode;
+            return from c in coupons where c.CouponState != CouponState.Ok select c.CouponCode;
         }
 
         /// <summary>
