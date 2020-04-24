@@ -32,16 +32,12 @@ namespace Orckestra.Composer.Cart.Factory
             CultureInfo cultureInfo,
             params RewardLevel[] rewardLevels)
         {
-            if (rewards == null)
-            {
-                yield break;
-            }
+            if (rewards == null) { yield break; }
 
             var eligibleRewards = ((rewardLevels == null || rewardLevels.Length == 0)
                 ? rewards
                 : rewards
-                .Where(d => rewardLevels.Contains(d.Level)))
-                .Where(d => !string.IsNullOrWhiteSpace(d.Description));
+                .Where(d => rewardLevels.Contains(d.Level) && !string.IsNullOrWhiteSpace(d.Description)));
 
             var comparer = new RewardEqualityComparer();
 
