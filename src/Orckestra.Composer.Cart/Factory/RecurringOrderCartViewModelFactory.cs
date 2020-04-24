@@ -67,7 +67,6 @@ namespace Orckestra.Composer.Cart.Factory
             FillRecurringScheduleUrl(roCartVm, param.CultureInfo);
 
             roCartVm.Name = param.Cart.Name;
-
             vm.Context["Name"] = roCartVm.Name;           
 
             return vm;
@@ -132,11 +131,7 @@ namespace Orckestra.Composer.Cart.Factory
                         if (frequency != null)
                         {
                             var localization = frequency.Localizations.Find(l => string.Equals(l.CultureIso, culture.Name, StringComparison.OrdinalIgnoreCase));
-
-                            if (localization != null)
-                                lineitem.RecurringOrderFrequencyDisplayName = localization.DisplayName;
-                            else
-                                lineitem.RecurringOrderFrequencyDisplayName = frequency.RecurringOrderFrequencyName;
+                            lineitem.RecurringOrderFrequencyDisplayName = localization != null ? localization.DisplayName : frequency.RecurringOrderFrequencyName;
                         }
                     }
                 }
@@ -173,13 +168,12 @@ namespace Orckestra.Composer.Cart.Factory
 
             vm.IsAuthenticated = ComposerContext.IsAuthenticated;
 
-            return vm;
-            
+            return vm;   
         }
 
         protected virtual string GetRecurringCartDetailUrl(CultureInfo cultureInfo, string cartName)
         {
-            string recurringCartsPageUrl = RecurringCartUrlProvider.GetRecurringCartsUrl(new GetRecurringCartsUrlParam
+            _ = RecurringCartUrlProvider.GetRecurringCartsUrl(new GetRecurringCartsUrlParam
             {
                 CultureInfo = cultureInfo
             });
