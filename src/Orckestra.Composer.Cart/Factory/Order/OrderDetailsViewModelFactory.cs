@@ -117,11 +117,7 @@ namespace Orckestra.Composer.Cart.Factory.Order
         protected virtual List<OrderChangeViewModel> GetOrderChangesViewModel(IEnumerable<OrderHistoryItem> orderChanges, CultureInfo cultureInfo, params string[] historyCategories)
         {
             var history = new List<OrderChangeViewModel>();
-            var hashSet = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (var el in historyCategories)
-            {
-                hashSet.Add(el);
-            }
+            var hashSet = new HashSet<string>(historyCategories, StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var change in orderChanges)
             {
@@ -139,10 +135,7 @@ namespace Orckestra.Composer.Cart.Factory.Order
         {
             Shipment shipment = GetActiveShipments(param.Order).FirstOrDefault();
 
-            if (shipment == null)
-            {
-                return new AddressViewModel();
-            }
+            if (shipment == null) { return new AddressViewModel(); }
 
             // ReSharper disable once PossibleNullReferenceException (The address can be null we will create one)
             return CartViewModelFactory.GetAddressViewModel(shipment.Address, param.CultureInfo);
@@ -179,6 +172,7 @@ namespace Orckestra.Composer.Cart.Factory.Order
             var shipmentVm = new OrderShipmentDetailViewModel();
 
             var index = param.Order.Cart.Shipments.IndexOf(shipment);
+
             if (index >= 0)
             {
                 shipmentVm.Index = (index + 1).ToString();
@@ -186,7 +180,8 @@ namespace Orckestra.Composer.Cart.Factory.Order
 
             if (shipment.FulfillmentScheduledTimeBeginDate.HasValue)
             {
-                shipmentVm.ScheduledShipDate = LocalizationHelper.LocalizedFormat("General", "ShortDateFormat", shipment.FulfillmentScheduledTimeBeginDate.Value, param.CultureInfo);
+                shipmentVm.ScheduledShipDate = 
+                    LocalizationHelper.LocalizedFormat("General", "ShortDateFormat", shipment.FulfillmentScheduledTimeBeginDate.Value, param.CultureInfo);
             }
 
             shipmentVm.LineItems = LineItemViewModelFactory.CreateViewModel(new CreateListOfLineItemDetailViewModelParam
@@ -220,9 +215,28 @@ namespace Orckestra.Composer.Cart.Factory.Order
                     shipmentVm.ShipmentStatus = shipmentStatusLookup;
                 }
 
-                if (shipmentVm.History.Any(h => h.NewValue.Equals(shipment.Status)))
+                string shipmentStatusDate = null;
+                foreach(var el in shipmentVm.History)
                 {
-                    shipmentVm.ShipmentStatusDate = shipmentVm.History.OrderByDescending(x => x.Date).First(h => h.NewValue.Equals(shipment.Status)).Date;
+                    if (!el.NewValue.Equals(shipment.Status)) { continue; }
+
+                    if (shipmentStatusDate == null)
+                    {
+                        shipmentStatusDate = el.Date;
+                    }
+                    else
+                    {
+                        int cIndex = string.Compare(shipmentStatusDate, el.Date);
+                        if (cIndex < 0)
+                        {
+                            shipmentStatusDate = el.Date;
+                        }
+                    }
+                }
+
+                if (shipmentStatusDate != null)
+                {
+                    shipmentVm.ShipmentStatusDate = shipmentStatusDate;
                 }
             }
             else
@@ -251,10 +265,7 @@ namespace Orckestra.Composer.Cart.Factory.Order
         {
             if (param.Order.Cart.Shipments == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.Order.Cart.Shipments)), nameof(param)); }
 
-            if (shipment == null)
-            {
-                return new OrderShippingMethodViewModel();
-            }
+            if (shipment == null) { return new OrderShippingMethodViewModel(); }
 
             var shippingMethodVm = ViewModelMapper.MapTo<OrderShippingMethodViewModel>(shipment.FulfillmentMethod, param.CultureInfo);
 
@@ -266,6 +277,7 @@ namespace Orckestra.Composer.Cart.Factory.Order
                     Key = "L_Free",
                     CultureInfo = param.CultureInfo
                 });
+
                 shippingMethodVm.Cost = freeLabel;
             }
 
