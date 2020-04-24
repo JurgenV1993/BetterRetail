@@ -66,10 +66,7 @@ namespace Orckestra.Composer.Cart.Repositories
 			if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
 			if (param.ProviderNames == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.ProviderNames)), nameof(param)); }
 
-			if (!param.ProviderNames.Any())
-			{
-				return new List<PaymentMethod>();
-			}
+			if (!param.ProviderNames.Any()) { return new List<PaymentMethod>(); }
 
 			var tasks = param.ProviderNames.Select(pName => GetPaymentMethodForProviderAsync(param, pName)).ToArray();
 			await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -84,8 +81,7 @@ namespace Orckestra.Composer.Cart.Repositories
 		/// <param name="param">Parameters used to make the request.</param>
 		/// <param name="providerName">Provider to use in the request.</param>
 		/// <returns></returns>
-		protected virtual Task<List<PaymentMethod>> GetPaymentMethodForProviderAsync(GetPaymentMethodsParam param,
-			string providerName)
+		protected virtual Task<List<PaymentMethod>> GetPaymentMethodForProviderAsync(GetPaymentMethodsParam param, string providerName)
 		{
 			var cacheKey = BuildPaymentMethodCacheKey(param.Scope, param.CartName, param.CustomerId, providerName);
 
@@ -266,9 +262,9 @@ namespace Orckestra.Composer.Cart.Repositories
 
 			return OvertureClient.SendAsync(getCustomerPaymentMethodsRequest);
 		}
+
 		public virtual Task<Payment> GetPaymentAsync(GetPaymentParam param)
 		{
-
 			if (param == null) { throw new ArgumentNullException(nameof(param)); }
 			if (param.CustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.CustomerId)), nameof(param)); }
 			if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
@@ -401,7 +397,5 @@ namespace Orckestra.Composer.Cart.Repositories
 
 			return cacheKey;
 		}
-
-
 	}
 }
