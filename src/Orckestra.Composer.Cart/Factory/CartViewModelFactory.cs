@@ -189,6 +189,7 @@ namespace Orckestra.Composer.Cart.Factory
            Overture.ServiceModel.Orders.Cart cart, CultureInfo cultureInfo)
         {
             var activeShipments = cart.GetActiveShipments();
+
             var shipments = activeShipments.Any() ?
                 activeShipments.Where(x => x.FulfillmentMethod != null) :
                 cart.Shipments.Where(x => x.FulfillmentMethod != null); //cancelled orders
@@ -204,6 +205,7 @@ namespace Orckestra.Composer.Cart.Factory
                 Key = "L_ShippingBasedOn",
                 CultureInfo = cultureInfo
             });
+
             var formatNonTaxable = LocalizationProvider.GetLocalizedString(new GetLocalizedParam
             {
                 Category = "ShoppingCart",
@@ -240,10 +242,19 @@ namespace Orckestra.Composer.Cart.Factory
             orderSummary.IsShippingTaxable = activeShipments.FirstOrDefault().IsShippingTaxable(); //used in the cart/checkout
             orderSummary.HasReward = cart.DiscountTotal.HasValue && cart.DiscountTotal.Value > 0;
             orderSummary.CheckoutRedirectAction = GetCheckoutRedirectAction(cart);
-            orderSummary.Rewards = RewardViewModelFactory.CreateViewModel(activeShipments.SelectMany(x => x.Rewards), cultureInfo, RewardLevel.FulfillmentMethod, RewardLevel.Shipment).ToList();
-            var allLineItems = activeShipments.SelectMany(x => x.LineItems);
+
+            List<Reward> rewards = new List<Reward>();
+            List<LineItem> lineItems = new List<LineItem>();
+            foreach (var el in activeShipments)
+            {
+                rewards.AddRange(el.Rewards);
+                lineItems.AddRange(el.LineItems);
+            }
+
+            orderSummary.Rewards = RewardViewModelFactory.CreateViewModel(rewards, cultureInfo, RewardLevel.FulfillmentMethod, RewardLevel.Shipment).ToList();
+
             decimal sumAllLineItemsSavings =
-                Math.Abs(allLineItems.Sum(
+                Math.Abs(lineItems.Sum(
                     l => decimal.Multiply(decimal.Subtract(l.CurrentPrice.GetValueOrDefault(0), l.DefaultPrice.GetValueOrDefault(0)), Convert.ToDecimal(l.Quantity))));
 
             decimal savingsTotal = decimal.Add(cart.DiscountTotal.GetValueOrDefault(0), sumAllLineItemsSavings);
