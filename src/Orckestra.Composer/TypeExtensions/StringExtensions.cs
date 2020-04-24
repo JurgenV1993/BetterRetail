@@ -2,7 +2,6 @@
 using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 // ReSharper disable once CheckNamespace
 
-
 namespace System
 {
     public static class StringExtensions

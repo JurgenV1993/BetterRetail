@@ -154,15 +154,18 @@ namespace Orckestra.Composer.Cart.Factory
 
             var dictionary = new Dictionary<(string, bool), decimal>();
 
-            foreach (var el in lineItemDetailViewModels.SelectMany(x=> x.AdditionalFees))
+            foreach (var el in lineItemDetailViewModels)
             {
-                if (dictionary.ContainsKey((el.DisplayName, el.Taxable)))
+                foreach(var l in el.AdditionalFees)
                 {
-                    dictionary[(el.DisplayName, el.Taxable)] += el.TotalAmount;
-                }
-                else
-                {
-                    dictionary.Add((el.DisplayName, el.Taxable), el.TotalAmount);
+                    if (dictionary.ContainsKey((l.DisplayName, l.Taxable)))
+                    {
+                        dictionary[(l.DisplayName, l.Taxable)] += l.TotalAmount;
+                    }
+                    else
+                    {
+                        dictionary.Add((l.DisplayName, l.Taxable), l.TotalAmount);
+                    }
                 }
             }
 
@@ -190,7 +193,7 @@ namespace Orckestra.Composer.Cart.Factory
                 activeShipments.Where(x => x.FulfillmentMethod != null) :
                 cart.Shipments.Where(x => x.FulfillmentMethod != null); //cancelled orders
 
-            if (!shipments.Any() || !shipments.Where(x => x.FulfillmentMethod != null).Any())
+            if (!shipments.Any())
             {
                 return new List<OrderShippingMethodViewModel>();
             }

@@ -49,7 +49,7 @@ namespace Orckestra.Composer.Cart.Api
             var creditCartTrustImage = ImageViewService.GetCheckoutTrustImageViewModel(ComposerContext.CultureInfo);
             var viewModel = await VaultProfileViewService.AddCreditCardAsync(addCreditCardParam);
 
-            if (viewModel != null && viewModel.ActivePayment != null)
+            if (viewModel?.ActivePayment != null)
             {
                 viewModel.ActivePayment.CreditCardTrustImage = creditCartTrustImage;
 

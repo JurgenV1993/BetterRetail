@@ -43,7 +43,6 @@ namespace Orckestra.Composer.Cart.Api
                 WorkflowToExecute = CartConfiguration.WishListWorkflowToExecute,
                 BaseUrl = RequestUtils.GetBaseUrl(Request).ToString(),
                 //WebsiteId = SiteConfiguration.GetWebsiteId()
-
             });
 
             return Ok(viewModel);
