@@ -48,7 +48,7 @@ namespace Orckestra.Composer.Cart.Factory.Order
 
             OrderHistoryViewModel viewModel = null;
 
-            if (param.OrderResult != null && param.OrderResult.Results != null)
+            if (param.OrderResult?.Results != null)
             {
                 viewModel = new OrderHistoryViewModel
                 {
@@ -64,7 +64,6 @@ namespace Orckestra.Composer.Cart.Factory.Order
                 foreach (var rawOrder in param.OrderResult.Results)
                 {
                     var order = BuildLightOrderDetailViewModel(rawOrder, param);
-
                     viewModel.Orders.Add(order);
                 }
             }
