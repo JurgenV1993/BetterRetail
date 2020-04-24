@@ -60,10 +60,7 @@ namespace Orckestra.Composer.Cart.Factory
         /// </summary>
         public virtual IEnumerable<LineItemDetailViewModel> CreateViewModel(CreateListOfLineItemDetailViewModelParam param)
         {
-            if (param.LineItems == null)
-            {
-                yield break;
-            }
+            if (param.LineItems == null) { yield break; }
 
             var imgDictionary = LineItemHelper.BuildImageDictionaryFor(param.ImageInfo.ImageUrls);
 
@@ -136,7 +133,7 @@ namespace Orckestra.Composer.Cart.Factory
             vm.AdditionalFees = MapLineItemAdditionalFeeViewModel(lineItem, param.CultureInfo).ToList();
 
             //Because the whole class is not async, we call a .Result here
-            var map = MapRecurringOrderFrequencies(vm, lineItem, param.CultureInfo).Result;
+            _ = MapRecurringOrderFrequencies(vm, lineItem, param.CultureInfo).Result;
 
             return vm;
         }
@@ -166,24 +163,19 @@ namespace Orckestra.Composer.Cart.Factory
             {
                 if (program != null)
                 {
-                    var frequency = program.Frequencies.Find(f => string.Equals(f.RecurringOrderFrequencyName, lineItem.RecurringOrderFrequencyName, StringComparison.OrdinalIgnoreCase));
+                    var frequency = program.Frequencies
+                        .Find(f => string.Equals(f.RecurringOrderFrequencyName, lineItem.RecurringOrderFrequencyName, StringComparison.OrdinalIgnoreCase));
 
                     if (frequency != null)
                     {
                         var localization = frequency.Localizations.Find(l => string.Equals(l.CultureIso, cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
-
-                        if (localization != null)
-                            return localization.DisplayName;
-                        else
-                            return frequency.RecurringOrderFrequencyName;
+                        return localization != null ? localization.DisplayName : frequency.RecurringOrderFrequencyName;
                     }
                 }
             }
             return string.Empty;
         }
         
-
-
         /// <summary>
         /// Gets the KeyVariant attributes from a line item.
         /// </summary>
@@ -206,10 +198,7 @@ namespace Orckestra.Composer.Cart.Factory
 
         protected virtual IEnumerable<AdditionalFeeViewModel> MapLineItemAdditionalFeeViewModel(LineItem lineItem, CultureInfo cultureInfo)
         {
-            if (lineItem.AdditionalFees == null)
-            {
-                yield break;
-            }
+            if (lineItem.AdditionalFees == null) { yield break; }
 
             foreach (var lineItemAdditionalFee in lineItem.AdditionalFees)
             {
@@ -231,10 +220,7 @@ namespace Orckestra.Composer.Cart.Factory
 
         public virtual IEnumerable<LightLineItemDetailViewModel> CreateLightViewModel(CreateLightListOfLineItemDetailViewModelParam param)
         {
-            if (param.LineItems == null)
-            {
-                yield break;
-            }
+            if (param.LineItems == null) { yield break; }
 
             var imgDictionary = LineItemHelper.BuildImageDictionaryFor(param.ImageInfo.ImageUrls);
 
