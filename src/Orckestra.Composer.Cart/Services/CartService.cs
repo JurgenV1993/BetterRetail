@@ -38,7 +38,6 @@ namespace Orckestra.Composer.Cart.Services
         protected IRegionCodeProvider RegionCodeProvider { get; private set; }
         protected IImageService ImageService { get; private set; }
 
-
         /// <summary>
         /// CartService constructor
         /// </summary>
@@ -64,9 +63,6 @@ namespace Orckestra.Composer.Cart.Services
             IRegionCodeProvider regionCodeProvider,
             IImageService imageService)
         {
-            //damProvider is not used in this constructor
-            if (damProvider == null) { throw new ArgumentNullException(nameof(damProvider)); }
-
             CartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
             CartViewModelFactory = cartViewModelFactory ?? throw new ArgumentNullException(nameof(cartViewModelFactory));
             CouponViewService = couponViewService ?? throw new ArgumentNullException(nameof(couponViewService));
@@ -366,12 +362,7 @@ namespace Orckestra.Composer.Cart.Services
 
             }).ConfigureAwait(false);
 
-            if (cart.Shipments == null || !cart.Shipments.Any())
-            {
-                throw new InvalidOperationException("No shipment was found in the cart.");
-            }
-
-            Shipment shipment = cart.Shipments.First();
+            var shipment = cart?.Shipments.FirstOrDefault() ?? throw new InvalidOperationException("No shipment was found in the cart.");
 
             await MapShippingAddressPostalCodeToShipmentAsync(param, shipment);
 
