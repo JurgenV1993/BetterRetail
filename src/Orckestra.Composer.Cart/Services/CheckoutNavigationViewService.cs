@@ -40,6 +40,5 @@ namespace Orckestra.Composer.Cart.Services
             viewModel.Context["Steps"] = viewModel.Steps;
             return viewModel;
         }
-
     }
 }
