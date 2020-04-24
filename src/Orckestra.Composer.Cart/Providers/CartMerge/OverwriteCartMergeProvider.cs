@@ -60,10 +60,7 @@ namespace Orckestra.Composer.Cart.Providers.CartMerge
 
             var guestCustomerLineItems = guestCustomerCart.GetLineItems();
 
-            if (!guestCustomerLineItems.Any())
-            {
-                return;
-            }
+            if (!guestCustomerLineItems.Any()) { return; }
 
             loggedCustomerCart.Shipments.First().LineItems = guestCustomerLineItems;
             loggedCustomerCart.Coupons = guestCustomerCart.Coupons;
