@@ -40,12 +40,16 @@ namespace Orckestra.Composer.Cart.Services
         private static ILog Log = LogProvider.GetCurrentClassLogger();
         protected IRecurringOrdersSettings RecurringOrdersSettings { get; private set; }
 
-        public PaymentViewService(IPaymentRepository paymentRepository, ICartViewModelFactory cartViewModelFactory, ICartRepository cartRepository,
-         ILookupService lookupService, IViewModelMapper viewModelMapper, IPaymentProviderFactory paymentProviderFactory,
-         IRecurringOrderTemplatesViewService recurringOrderTemplatesViewService,
-         IRecurringOrderCartsViewService recurringOrderCartsViewService,
-         IRecurringOrdersSettings recurringOrdersSettings
-         )
+        public PaymentViewService(
+            IPaymentRepository paymentRepository, 
+            ICartViewModelFactory cartViewModelFactory, 
+            ICartRepository cartRepository,
+            ILookupService lookupService, 
+            IViewModelMapper viewModelMapper, 
+            IPaymentProviderFactory paymentProviderFactory,
+            IRecurringOrderTemplatesViewService recurringOrderTemplatesViewService,
+            IRecurringOrderCartsViewService recurringOrderCartsViewService,
+            IRecurringOrdersSettings recurringOrdersSettings)
         {
             PaymentRepository = paymentRepository ?? throw new ArgumentNullException(nameof(paymentRepository));
             CartViewModelFactory = cartViewModelFactory ?? throw new ArgumentNullException(nameof(cartViewModelFactory));
@@ -94,20 +98,16 @@ namespace Orckestra.Composer.Cart.Services
             var availableProvidersDic = new Dictionary<string, Overture.ServiceModel.Providers.Provider>(StringComparer.OrdinalIgnoreCase);
             foreach (var el in availableProviders)
             {
-                if (!el.IsActive || availableProvidersDic.ContainsKey(el.ImplementationTypeName))
-                {
-                    continue;
-                }
+                if (!el.IsActive || availableProvidersDic.ContainsKey(el.ImplementationTypeName)) { continue; }
+
                 availableProvidersDic.Add(el.ImplementationTypeName, el);
             }
 
             var availablePaymentProvidersDic = new Dictionary<Guid, Overture.ServiceModel.Providers.PaymentProviderInfo>();
             foreach (var el in availablePaymentProviders)
             {
-                if (availablePaymentProvidersDic.ContainsKey(el.Id))
-                {
-                    continue;
-                }
+                if (availablePaymentProvidersDic.ContainsKey(el.Id)) { continue; } 
+                
                 availablePaymentProvidersDic.Add(el.Id, el);
             }
 
@@ -116,16 +116,14 @@ namespace Orckestra.Composer.Cart.Services
             foreach (var provider in providers)
             {
                 availableProvidersDic.TryGetValue(provider.ProviderType, out var availableProvider);
-                if (availableProvider == null)
-                    continue;
+                if (availableProvider == null) { continue; }
 
                 availablePaymentProvidersDic.TryGetValue(availableProvider.Id, out var availablePaymentProvider);
-                if (availablePaymentProvider == null)
-                    continue;
+                if (availablePaymentProvider == null) { continue; }
 
                 var supportedCultureIds = availablePaymentProvider.SupportedCultureIds.Split(',').Select(c => c.Trim());
-                if (!supportedCultureIds.Any(c => c.Equals(param.CultureInfo.Name, StringComparison.OrdinalIgnoreCase)))
-                    continue;
+
+                if (!supportedCultureIds.Any(c => c.Equals(param.CultureInfo.Name, StringComparison.OrdinalIgnoreCase))) { continue; }
 
                 result.Add(provider);
             }
@@ -135,8 +133,7 @@ namespace Orckestra.Composer.Cart.Services
 
         protected virtual PaymentProviderViewModel MapPaymentProviderViewModel(IPaymentProvider paymentProvider, CultureInfo cultureInfo)
         {
-            var vm = ViewModelMapper.MapTo<PaymentProviderViewModel>(paymentProvider, cultureInfo);
-            return vm;
+            return ViewModelMapper.MapTo<PaymentProviderViewModel>(paymentProvider, cultureInfo);
         }
 
         /// <summary>
@@ -185,7 +182,8 @@ namespace Orckestra.Composer.Cart.Services
             return vm;
         }
 
-        protected virtual async Task<List<IPaymentMethodViewModel>> MapPaymentMethodsViewModel(IEnumerable<PaymentMethod> paymentMethods,
+        protected virtual async Task<List<IPaymentMethodViewModel>> MapPaymentMethodsViewModel(
+            IEnumerable<PaymentMethod> paymentMethods,
             CultureInfo cultureInfo,
             Guid customerId,
             string scope)
@@ -216,14 +214,15 @@ namespace Orckestra.Composer.Cart.Services
             return paymentMethodViewModels;
         }
 
-        protected virtual async Task<IPaymentMethodViewModel> IsSavedCardUsedInRecurringOrders(IPaymentMethodViewModel methodViewModel,
+        protected virtual async Task<IPaymentMethodViewModel> IsSavedCardUsedInRecurringOrders(
+            IPaymentMethodViewModel methodViewModel,
             CultureInfo cultureInfo,
             Guid customerId,
             string scope)
         {
             if (methodViewModel is SavedCreditCardPaymentMethodViewModel vm)
             {
-                vm.IsUsedInRecurringOrders = await RecurringOrderTemplatesViewService.GetIsPaymentMethodUsedInRecurringOrders(new GetIsPaymentMethodUsedInRecurringOrdersRequest()
+                vm.IsUsedInRecurringOrders = await RecurringOrderTemplatesViewService.GetIsPaymentMethodUsedInRecurringOrders(new GetIsPaymentMethodUsedInRecurringOrdersRequest
                 {
                     CultureInfo = cultureInfo,
                     CustomerId = customerId,
@@ -487,7 +486,8 @@ namespace Orckestra.Composer.Cart.Services
         /// <param name="updatePaymentMethodParam">Parameters passed to the UpdatePaymentMethodAsync method.</param>
         /// <returns>Instance of the <see cref="InitializePaymentParam"/> that will be used to make the call.</returns>
         /// <remarks>It may be useful to override this method to augment the request with AdditionalData or Options for the request.</remarks>
-        protected virtual InitializePaymentParam BuildInitializePaymentParam(Overture.ServiceModel.Orders.Cart cart,
+        protected virtual InitializePaymentParam BuildInitializePaymentParam(
+            Overture.ServiceModel.Orders.Cart cart,
             UpdatePaymentMethodParam updatePaymentMethodParam)
         {
             var param = new InitializePaymentParam
