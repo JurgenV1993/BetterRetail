@@ -15,11 +15,8 @@ namespace Orckestra.Composer.CompositeC1.Services
     public class PageService : IPageService
     {
         protected ISiteConfiguration SiteConfiguration { get; private set; }
+        public PageService() { }
 
-        public PageService()
-        {
-
-        }
         /// <summary>
         /// Returns a page in the given locale.
         /// </summary>
@@ -62,15 +59,11 @@ namespace Orckestra.Composer.CompositeC1.Services
             if (pageId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(), nameof(pageId)); }
 
             var page = GetPage(pageId, cultureInfo);
-            if (page == null)
-            {
-                return null;
-            }
-
-            if (httpContext != null)
-                return PageUrls.BuildUrl(page, UrlKind.Public, new UrlSpace(httpContext));
-            else
-                return PageUrls.BuildUrl(page);
+            return page == null
+                ? null
+                : httpContext != null 
+                    ? PageUrls.BuildUrl(page, UrlKind.Public, new UrlSpace(httpContext)) 
+                    : PageUrls.BuildUrl(page);
         }
 
         public virtual string GetPageUrl(IPage page)
