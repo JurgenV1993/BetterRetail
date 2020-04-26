@@ -27,10 +27,7 @@ namespace Orckestra.Composer.SearchQuery.Context
         {
             if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
-            if (ViewModel != null)
-            {
-                return ViewModel;
-            }
+            if (ViewModel != null) { return ViewModel; }
 
             param.Scope = ComposerContext.Scope;
             param.CultureInfo = ComposerContext.CultureInfo;
