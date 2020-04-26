@@ -187,6 +187,5 @@ namespace Orckestra.Composer.Search.Api
             };
             return Ok(vm);
         }
-     
     }
 }
