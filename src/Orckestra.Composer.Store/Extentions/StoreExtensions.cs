@@ -46,34 +46,20 @@ namespace Orckestra.Composer.Store.Extentions
 
         public static double GetLatitude(this Overture.ServiceModel.Customers.Stores.Store store)
         {
-            var address = store.FulfillmentLocation?.Addresses.FirstOrDefault();
+            var address = store.FulfillmentLocation?.Addresses.FirstOrDefault() 
+                ?? throw new ArgumentException(GetMessageOfNullEmpty(nameof(store.FulfillmentLocation.Addresses)), nameof(store));
 
-            if (address == null)
-            {
-                throw new NullReferenceException(nameof(address));
-            }
-
-            if (!address.Latitude.HasValue)
-            {
-                throw new InvalidOperationException(nameof(address.Latitude));
-            }
+            if (!address.Latitude.HasValue) { throw new InvalidOperationException(nameof(address.Latitude)); }
 
             return address.Latitude.Value;
         }
 
         public static double GetLongitude(this Overture.ServiceModel.Customers.Stores.Store store)
         {
-            var address = store.FulfillmentLocation?.Addresses.FirstOrDefault();
+            var address = store.FulfillmentLocation?.Addresses.FirstOrDefault()
+                ?? throw new ArgumentException(GetMessageOfNullEmpty(nameof(store.FulfillmentLocation.Addresses)), nameof(store));
 
-            if (address == null)
-            {
-                throw new NullReferenceException(nameof(address));
-            }
-
-            if (!address.Longitude.HasValue)
-            {
-                throw new InvalidOperationException(nameof(address.Longitude));
-            }
+            if (!address.Longitude.HasValue) { throw new InvalidOperationException(nameof(address.Longitude)); }
 
             return address.Longitude.Value;
         }
@@ -81,22 +67,18 @@ namespace Orckestra.Composer.Store.Extentions
         public static bool InBounds(this Overture.ServiceModel.Customers.Stores.Store store, Bounds bound)
         {
             var address = store.FulfillmentLocation?.Addresses.FirstOrDefault();
-            if (address != null)
-            {
-                return address.Latitude.HasValue && address.Longitude.HasValue
-                       && bound.Contains(address.Latitude.Value, address.Longitude.Value);
-            }
-            return false;
+            return address != null
+                ? address.Latitude.HasValue && address.Longitude.HasValue 
+                    && bound.Contains(address.Latitude.Value, address.Longitude.Value)
+                : false;
         }
 
         public static double CalculateDestination(this Overture.ServiceModel.Customers.Stores.Store store, Coordinate searchPoint)
         {
-            if (store.HasLocation())
-            {
-                return Math.Round(GeoCodeCalculator.CalcDistance(store.GetLatitude(), store.GetLongitude(),
-                    searchPoint.Lat, searchPoint.Lng, EarthRadiusMeasurement.Kilometers), 2);
-            }
-            return double.MaxValue;
+            return store.HasLocation()
+                ? Math.Round(GeoCodeCalculator.CalcDistance(store.GetLatitude(), store.GetLongitude(),
+                    searchPoint.Lat, searchPoint.Lng, EarthRadiusMeasurement.Kilometers), 2)
+                : double.MaxValue;
         }
     }
 }
