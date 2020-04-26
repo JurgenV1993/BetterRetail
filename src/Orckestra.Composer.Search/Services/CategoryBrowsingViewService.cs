@@ -61,8 +61,7 @@ namespace Orckestra.Composer.Search.Services
             composerContext,
             productSettings,
             scopeViewService,
-            recurringOrdersSettings
-            )
+            recurringOrdersSettings)
         {
             CategoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
             CategoryBrowsingUrlProvider = categoryBrowsingUrlProvider ?? throw new ArgumentNullException(nameof(categoryBrowsingUrlProvider));
@@ -90,8 +89,7 @@ namespace Orckestra.Composer.Search.Services
             return viewModel;
         }
 
-        protected virtual List<string> GetLandingPageUrls(TreeNode<Category> startNode,
-            GetCategoryBrowsingViewModelParam param)
+        protected virtual List<string> GetLandingPageUrls(TreeNode<Category> startNode, GetCategoryBrowsingViewModelParam param)
         {
             var urlStack = new Stack<string>();
             var currentNode = startNode;
@@ -99,7 +97,7 @@ namespace Orckestra.Composer.Search.Services
             while (currentNode != null && !IsCategoryFacetSystem(currentNode.Value, currentNode.GetLevel()))
             {
                 var url = GetParentPageUrl(currentNode, param);
-                urlStack.Push(url ?? String.Empty);
+                urlStack.Push(url ?? string.Empty);
 
                 currentNode = currentNode.Parent;
             }
@@ -134,8 +132,7 @@ namespace Orckestra.Composer.Search.Services
         protected virtual async Task<SelectedFacets> GetSelectedFacetsAsync(GetCategoryBrowsingViewModelParam param)
         {
             List<SearchFilter> selectedCategories = await GetSelectedCategoriesAsync(param).ConfigureAwait(false);
-            List<SearchFilter> selectedFacets = param.SelectedFacets;
-            List<SearchFilter> allFacets = selectedCategories.Concat(selectedFacets).ToList();
+            List<SearchFilter> allFacets = selectedCategories.Concat(param.SelectedFacets).ToList();
 
             return FlattenFilterList(allFacets, param.CultureInfo);
         }
@@ -146,7 +143,7 @@ namespace Orckestra.Composer.Search.Services
 
             return selectedCategories.Select((category, i) => new SearchFilter
             {
-                Name = String.Format("CategoryLevel{0}_Facet", i + 1),
+                Name = string.Format("CategoryLevel{0}_Facet", i + 1),
                 Value = category.DisplayName.GetLocalizedValue(ComposerContext.CultureInfo.Name),
                 IsSystem = IsCategoryFacetSystem(category, i)
             }).ToList();
@@ -179,12 +176,9 @@ namespace Orckestra.Composer.Search.Services
                 Scope = ComposerContext.Scope
             }).ConfigureAwait(false);
 
-            if (tree.ContainsKey(param.CategoryId))
-            {
-                return tree[param.CategoryId];
-            }
+            if (tree.ContainsKey(param.CategoryId)) { return tree[param.CategoryId]; }
 
-            throw new InvalidOperationException(String.Format("{0} does not exist in the retrieved category tree", param.CategoryId));
+            throw new InvalidOperationException(string.Format("{0} does not exist in the retrieved category tree", param.CategoryId));
         }
 
         protected virtual async Task<ProductSearchResultsViewModel> GetProductSearchResultsAsync(GetCategoryBrowsingViewModelParam param)
@@ -305,10 +299,7 @@ namespace Orckestra.Composer.Search.Services
         {
             foreach (var filter in cloneParam.CategoryFilters)
             {
-                if (filter == null)
-                {
-                    continue;
-                }
+                if (filter == null) { continue; }
 
                 var categoryFilter = cloneParam.Criteria.SelectedFacets
                     .Find(f => filter.Name == f.Name && filter.Value == f.Value);
