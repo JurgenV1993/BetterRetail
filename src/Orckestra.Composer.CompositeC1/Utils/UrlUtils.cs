@@ -35,10 +35,7 @@ namespace Orckestra.Composer.CompositeC1.Utils
 
         public static string ToAbsolute(string url)
         {
-            if (IsAbsoluteUrl(url))
-            {
-                return url;
-            }
+            if (IsAbsoluteUrl(url)) { return url; }
 
             Uri absoluteUrl = RequestUtils.GetBaseUrl(HttpContext.Current.Request.Url);
             string relativeUrl = VirtualPathUtility.ToAbsolute(url);
