@@ -35,12 +35,8 @@ namespace Orckestra.Composer.Product.Services
             if (param.Skus == null || !param.Skus.Any()) { throw new ArgumentException(GetMessageOfNullEmpty(nameof(param.Skus)), nameof(param)); }
             if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
 
-            var inventoryItemsAvailability = await InventoryRepository.FindInventoryItemStatus(param).ConfigureAwait(false);
-
-            if (inventoryItemsAvailability == null)
-            {
+            var inventoryItemsAvailability = await InventoryRepository.FindInventoryItemStatus(param).ConfigureAwait(false) ??
                 throw new NullReferenceException("Inventory is not properly configured. Make sure Enable Inventory Management is set to True");
-            }
 
             var inventoryItemsAvailabilityViewModel = new List<InventoryItemAvailabilityViewModel>();
 
