@@ -70,8 +70,7 @@ namespace Orckestra.Composer.Product.Api
 
         protected virtual async Task<List<InventoryItemAvailabilityViewModel>> FindInventoryItemStatus(List<string> skus)
         {
-            var inventoryItemsAvailabilityViewModel = await InventoryViewService.FindInventoryItemStatus(
-                new FindInventoryItemStatusParam
+            var inventoryItemsAvailabilityViewModel = await InventoryViewService.FindInventoryItemStatus(new FindInventoryItemStatusParam
             {
                 CultureInfo = ComposerContext.CultureInfo,
                 Scope = ComposerContext.Scope,
@@ -88,10 +87,9 @@ namespace Orckestra.Composer.Product.Api
             IEnumerable<InventoryItemAvailabilityViewModel> inventoryItemsAvailabilityViewModel)
         {
             return from inventoryItemAvailabilityViewModel
-                     in inventoryItemsAvailabilityViewModel
+                   in inventoryItemsAvailabilityViewModel
                    let firstStatus = inventoryItemAvailabilityViewModel.Statuses.FirstOrDefault()
-                   where firstStatus != null
-                   where availableInventoryStatuses.Contains(firstStatus.Status)
+                   where firstStatus != null && availableInventoryStatuses.Contains(firstStatus.Status)
                    select inventoryItemAvailabilityViewModel.Identifier.Sku;
         }
 
