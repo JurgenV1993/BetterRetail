@@ -30,15 +30,13 @@ namespace Orckestra.Composer.CompositeC1.Providers
            var categoryBaseUrl = CacheProvider.GetOrAdd(cacheKey, () => GetPageUrl(itemId, param.CultureInfo));
 
             // Category page is not found
-            if (categoryBaseUrl == null)
-            {
-                return null;
-            }
+            if (categoryBaseUrl == null) { return null; }
 
             var finalUrl = UrlFormatter.AppendQueryString(categoryBaseUrl, BuildSearchQueryString(new BuildSearchUrlParam
             {
                 SearchCriteria = param.Criteria
             }));
+
             return finalUrl;
         }
 
