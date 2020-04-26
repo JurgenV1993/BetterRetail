@@ -39,9 +39,8 @@ namespace Orckestra.Composer.Search.Providers.SelectedFacet
             if (!setting.FieldName.Equals(filter.Name, StringComparison.OrdinalIgnoreCase))
             {
                 throw new ArgumentException(
-                    string.Format(
-                        "The specified setting is for the facet '{0}', whereas the filter is for the facet '{1}'",
-                        setting.FieldName, filter.Name), nameof(setting));
+                    string.Format("The specified setting is for the facet '{0}', whereas the filter is for the facet '{1}'",
+                    setting.FieldName, filter.Name), nameof(setting));
             }
 
             if (setting.FacetType != FacetType)
