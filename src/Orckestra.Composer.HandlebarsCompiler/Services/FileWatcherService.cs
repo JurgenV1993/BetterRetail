@@ -33,7 +33,10 @@ namespace Orckestra.Composer.HandlebarsCompiler.Services
             foreach (var file in files.Skip(1))
             {
                 DateTime lastUpdatedUtc = File.GetLastWriteTimeUtc(file);
-                if (lastUpdatedUtc > result) result = lastUpdatedUtc;
+                if (lastUpdatedUtc > result)
+                {
+                    result = lastUpdatedUtc;
+                }
             }
 
             return result;
