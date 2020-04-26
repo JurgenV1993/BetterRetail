@@ -44,10 +44,7 @@ namespace Orckestra.Composer.Product.Services
             if (param.Product == null) throw new ArgumentException(GetMessageOfNull(nameof(param.Product)), nameof(param));
             if (param.ProductDefinition == null) throw new ArgumentException(GetMessageOfNull(nameof(param.ProductDefinition)), nameof(param));
 
-            if (IsInheritedSpecification(param))
-            {
-                return null;
-            }
+            if (IsInheritedSpecification(param)) { return null; }
 
             var vm = new SpecificationsViewModel
             {
@@ -117,8 +114,7 @@ namespace Orckestra.Composer.Product.Services
         {
             var variant = param.Product.Variants.FirstOrDefault(v => v.Id == param.VariantId);
 
-            if (variant == null)
-                return false;
+            if (variant == null) return false;
 
             var allPropertyNames = param.ProductDefinition.PropertyGroups
                 .Where(group => @group.IsIncluded())
