@@ -75,8 +75,8 @@ namespace Orckestra.Composer.Product.Providers
             var location = GetMatchingLocation(locations, defaultLocationId);
             if (location == null)
             {
-                throw new ArgumentException(string.Format("Could not find any active fulfillment location in the scope '{0}' to support the Inventory Location Id '{1}'",
-                    param.Scope, defaultLocationId), "param");
+                throw new InvalidOperationException($"Could not find any active fulfillment location in the scope '{param.Scope}' " +
+                    $"to support the Inventory Location Id '{defaultLocationId}'");
             }
 
             return location;
