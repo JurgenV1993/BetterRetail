@@ -16,10 +16,7 @@ namespace Orckestra.Composer.Search.Providers.FacetPredicate
             if (filter == null) { throw new ArgumentNullException(nameof(filter)); }
             if (string.IsNullOrWhiteSpace(filter.Name)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(filter.Name)), nameof(filter)); }
 
-            if (string.IsNullOrWhiteSpace(filter.Value))
-            {
-                return null;
-            }
+            if (string.IsNullOrWhiteSpace(filter.Value)) { return null; }
 
             var valueRanges = filter.Value.Split(SearchConfiguration.FacetRangeValueSplitter);
 
@@ -29,9 +26,7 @@ namespace Orckestra.Composer.Search.Providers.FacetPredicate
 
             // TODO: A SEG request (#2259) was sent to Overture to fix this as a range facet predicate always needs the maximum value to be set.
             // In the meantime, we have to pass "*" if the maximum value is not set in the search filter
-            var maximumValue = valueRanges.Length > 1 && !string.IsNullOrWhiteSpace(valueRanges[1])
-                ? valueRanges[1]
-                : "*";
+            var maximumValue = valueRanges.Length > 1 && !string.IsNullOrWhiteSpace(valueRanges[1]) ? valueRanges[1] : "*";
 
             var facetPredicate = new Overture.ServiceModel.Search.FacetPredicate
             {
