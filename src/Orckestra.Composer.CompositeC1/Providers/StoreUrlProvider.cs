@@ -38,7 +38,10 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
         public virtual string GetStoreUrl(GetStoreUrlParam parameters)
         {
-            Assert(parameters);
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
+            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.BaseUrl)), nameof(parameters)); }
+            if (string.IsNullOrWhiteSpace(parameters.StoreNumber)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.StoreNumber)), nameof(parameters)); }
+            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
             // Because of ConfigureAwait(false), we lost context here.
             // Therefore we need to re-initialize C1 context because getting the Url.
             using (ThreadDataManager.EnsureInitialize())
@@ -60,7 +63,8 @@ namespace Orckestra.Composer.CompositeC1.Providers
             {
                 var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(parameters.CultureInfo, WebsiteContext.WebsiteId);
                 var url = PageService.GetPageUrl(pagesConfiguration.StoreListPageId, parameters.CultureInfo);
-                if(string.IsNullOrEmpty(url)) {
+                if(string.IsNullOrEmpty(url)) 
+                {
                     Log.LogError("StoreUrlProvider", "StoreList PageId is not configured");
                     return string.Empty;
                 }
@@ -81,14 +85,6 @@ namespace Orckestra.Composer.CompositeC1.Providers
                     queryString.Add("page", parameters.Page.ToString());
                 return UrlFormatter.AppendQueryString(urlBuilder.ToString(), queryString);
             }
-        }
-
-        private void Assert(GetStoreUrlParam parameters)
-        {
-            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
-            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.BaseUrl)), nameof(parameters)); }
-            if (string.IsNullOrWhiteSpace(parameters.StoreNumber)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.StoreNumber)), nameof(parameters)); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
         }
     }
 }
