@@ -16,7 +16,6 @@ namespace Orckestra.Composer.ContentSearch.Services
     public class ContentSearchViewService : IContentSearchViewService
     {
         private readonly Dictionary<string, System.Type> KnowTypes = DataFacade.GetAllInterfaces().ToDictionary(t => t.FullName);
-
         protected IMediaService MediaService { get; private set; }
         public ContentSearchViewService(IMediaService mediaService)
         {
@@ -26,10 +25,7 @@ namespace Orckestra.Composer.ContentSearch.Services
         public virtual ContentSearchViewModel GetContentSearchViewModel(GetContentSearchParameter param)
         {
             var contentTabs = DataFacade.GetData<IContentTab>().Where(c => !string.IsNullOrEmpty(c.DataTypes)).OrderBy(t => t.Order).ToList();
-            if (contentTabs == null || contentTabs.Count == 0)
-            {
-                return null;
-            }
+            if (contentTabs == null || contentTabs.Count == 0) { return null; }
 
             var vm = new ContentSearchViewModel();
 
@@ -99,7 +95,7 @@ namespace Orckestra.Composer.ContentSearch.Services
 
         protected virtual string GetSearchEntryDesc(SearchResultEntry entry)
         {
-            var desc = entry.FieldValues.ContainsKey("desc") ? entry.FieldValues["desc"] : null;
+            entry.FieldValues.TryGetValue("desc", out var desc);
             return desc?.ToString();
         }
 
@@ -132,10 +128,8 @@ namespace Orckestra.Composer.ContentSearch.Services
 
                     vm.Add(facet);
                 }
-
                 return vm;
             }
-
             return null;
         }
 
@@ -208,7 +202,6 @@ namespace Orckestra.Composer.ContentSearch.Services
             // keywords
             var sq = searchQuery == "*" ? "*:*" : searchQuery;
             string[] keywords = sq.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
 
             // datatypes
             var tabTypes = tab.DataTypes.Split(',').ToList();
