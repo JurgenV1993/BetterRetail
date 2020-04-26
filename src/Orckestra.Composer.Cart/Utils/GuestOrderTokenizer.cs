@@ -21,7 +21,7 @@ namespace Orckestra.Composer.Cart.Utils
 
             var encryptor = new EncryptionUtility();
 
-            var rawToken = String.Join(TokenSeparator, token.OrderNumber, token.Email);
+            var rawToken = string.Join(TokenSeparator, token.OrderNumber, token.Email);
             var encryptedToken = encryptor.Encrypt(rawToken);
 
             return encryptedToken;
@@ -44,10 +44,7 @@ namespace Orckestra.Composer.Cart.Utils
             var splittedTokens = rawToken.Split(new[] { TokenSeparator }, 2, StringSplitOptions.None);
 
             //Invalid token.
-            if (splittedTokens.Length != 2)
-            {
-                return null;
-            }
+            if (splittedTokens.Length != 2) { return null; }
 
             var data = new OrderToken
             {
