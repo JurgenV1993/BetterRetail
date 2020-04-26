@@ -13,7 +13,6 @@ namespace Orckestra.Composer.CompositeC1.Services
         protected IPageService _pageService;
         protected ISiteConfiguration SiteConfiguration { get; private set; }
 
-
         public BreadcrumbViewService(IPageService pageService, ISiteConfiguration siteConfiguration)
         {
             _pageService = pageService ?? throw new ArgumentNullException(nameof(pageService));
@@ -25,12 +24,8 @@ namespace Orckestra.Composer.CompositeC1.Services
             if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
             var pageId = new Guid(param.CurrentPageId);
-            var page = _pageService.GetPage(pageId, param.CultureInfo);
-
-            if (page == null)
-            {
+            var page = _pageService.GetPage(pageId, param.CultureInfo) ?? 
                 throw new InvalidOperationException("Could not find any page matching this ID.");
-            }
 
             var breadcrumbViewModel = new BreadcrumbViewModel
             {
@@ -75,7 +70,6 @@ namespace Orckestra.Composer.CompositeC1.Services
 
             return itemVM;
         }
-
 
         protected virtual IEnumerable<BreadcrumbItemViewModel> UnrollStack(Stack<BreadcrumbItemViewModel> breadcrumbStack)
         {
