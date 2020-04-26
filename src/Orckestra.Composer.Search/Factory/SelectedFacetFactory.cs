@@ -35,10 +35,7 @@ namespace Orckestra.Composer.Search.Factory
             var setting = FacetConfigContext.GetFacetSettings()
                 .Find(s => s.FieldName.Equals(filter.Name, StringComparison.OrdinalIgnoreCase));
 
-            if (setting == null)
-            {
-                return Enumerable.Empty<SelectedFacet>();
-            }
+            if (setting == null) { return Enumerable.Empty<SelectedFacet>(); }
 
             Type factoryType = SelectedFacetProviderRegistry.ResolveProviderType(setting.FacetType.ToString());
 
