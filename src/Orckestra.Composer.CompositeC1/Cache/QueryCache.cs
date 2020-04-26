@@ -33,8 +33,7 @@ namespace Orckestra.Composer.CompositeC1.Cache
 
 		private void OnDataChanged(object sender, DataEventArgs dataeventargs)
 		{
-			var data = dataeventargs.Data as TDataType;
-			if (data == null) { return; }
+			if (!(dataeventargs.Data is TDataType data)) { return; }
 
 			string cacheKey = GetCacheKey(GetKey(data));
 			lock (_locker)
