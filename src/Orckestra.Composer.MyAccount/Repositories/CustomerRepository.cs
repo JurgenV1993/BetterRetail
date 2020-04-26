@@ -107,7 +107,7 @@ namespace Orckestra.Composer.MyAccount.Repositories
                 PasswordQuestion = createUserParam.PasswordQuestion,
                 PasswordAnswer = createUserParam.PasswordAnswer,
                 Language = createUserParam.CultureInfo.Name,
-                ScopeId = createUserParam.Scope,
+                ScopeId = createUserParam.Scope
             };
 
             var createdCustomer = await OvertureClient.SendAsync(request).ConfigureAwait(false);
@@ -154,10 +154,7 @@ namespace Orckestra.Composer.MyAccount.Repositories
             };
 
             var response = await OvertureClient.SendAsync(request).ConfigureAwait(false);
-            if (response.Success)
-            {
-                return;
-            }
+            if (response.Success) { return; }
 
             throw new ComposerException(errorCode: "SendResetPasswordInstructionsFailed");
         }
@@ -184,10 +181,7 @@ namespace Orckestra.Composer.MyAccount.Repositories
             };
 
             var response = await OvertureClient.SendAsync(request).ConfigureAwait(false);
-            if (response.Success)
-            {
-                return;
-            }
+            if (response.Success) { return; }
 
             throw new ComposerException(errorCode: "ResetPasswordFailed");
         }
@@ -214,10 +208,7 @@ namespace Orckestra.Composer.MyAccount.Repositories
             };
 
             var response = await OvertureClient.SendAsync(request).ConfigureAwait(false);
-            if (response.Success)
-            {
-                return;
-            }
+            if (response.Success) { return; }
 
             throw new ComposerException(errorCode: "ChangePasswordFailed");
         }
