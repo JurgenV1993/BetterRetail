@@ -28,9 +28,7 @@ namespace Orckestra.Composer.Product.Services
             IInventoryLocationProvider inventoryLocationProvider,
             IRecurringOrdersSettings recurringOrdersSettings)
 
-            : base(productRepository, damProvider, productUrlProvider, viewModelMapper, localizationProvider, relationshipRepository, inventoryLocationProvider, recurringOrdersSettings)
-        {          
-        }
+            : base(productRepository, damProvider, productUrlProvider, viewModelMapper, localizationProvider, relationshipRepository, inventoryLocationProvider, recurringOrdersSettings) { }
 
         protected override async Task<IEnumerable<ProductIdentifier>> GetProductIdentifiersAsync(GetProductIdentifiersParam param)
         {
