@@ -18,7 +18,6 @@ namespace Orckestra.Composer.Store.Repositories
 {
     public class StoreRepository : IStoreRepository
     {
-
         protected IOvertureClient OvertureClient { get; private set; }
         protected ICacheProvider CacheProvider { get; private set; }
 
@@ -29,27 +28,25 @@ namespace Orckestra.Composer.Store.Repositories
         public static readonly string StoreTypePropertyName = ((MemberExpression)((Expression<Func<Overture.ServiceModel.Customers.Stores.Store, StoreType>>)(s => s.StoreType)).Body).Member.Name;
         public static readonly string StoreActivePropertyName = ((MemberExpression)((Expression<Func<Overture.ServiceModel.Customers.Stores.Store, bool>>)(s => s.IsActive)).Body).Member.Name;
 
-        public StoreRepository(
-            IOvertureClient overtureClient,
-            ICacheProvider cacheProvider)
+        public StoreRepository(IOvertureClient overtureClient, ICacheProvider cacheProvider)
         {
             OvertureClient = overtureClient ?? throw new ArgumentNullException(nameof(overtureClient));
             CacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
         }
 
-        public virtual async Task<FindStoresQueryResult> GetStoresAsync(GetStoresParam getStoresParam)
+        public virtual async Task<FindStoresQueryResult> GetStoresAsync(GetStoresParam param)
         {
-            if (string.IsNullOrWhiteSpace(getStoresParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(getStoresParam.Scope)), nameof(getStoresParam)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
 
             var cacheKey = new CacheKey(CacheConfigurationCategoryNames.Store)
             {
-                Scope = getStoresParam.Scope
+                Scope = param.Scope
             };
             cacheKey.AppendKeyParts(GETSTORES_CACHE_KEYPART);
 
             var request = new FindStoresRequest
             {
-                ScopeId = getStoresParam.Scope,
+                ScopeId = param.Scope,
                 Query = new Query
                 {
                     StartingIndex = 0,
@@ -62,8 +59,7 @@ namespace Orckestra.Composer.Store.Repositories
                 }
             };
 
-            var stores = await CacheProvider.GetOrAddAsync(cacheKey, () => OvertureClient.SendAsync(request))
-                    .ConfigureAwait(false);
+            var stores = await CacheProvider.GetOrAddAsync(cacheKey, () => OvertureClient.SendAsync(request)).ConfigureAwait(false);
 
             // TODO: Remove this as soon as the FindStoresRequest returns localized display names.
             if (stores.Results.Any(s => s.DisplayName != null))
@@ -71,10 +67,10 @@ namespace Orckestra.Composer.Store.Repositories
                 return stores;
             }
             // Try get DisplayNames
-            if (getStoresParam.IncludeExtraInfo)
+            if (param.IncludeExtraInfo)
             {
                 var ids = stores.Results.Select(x => x.Id).ToList();
-                var extraStoresInfo = await GetExtraStoresInfoAsync(ids, getStoresParam).ConfigureAwait(false);
+                var extraStoresInfo = await GetExtraStoresInfoAsync(ids, param).ConfigureAwait(false);
 
                 for (var index = 0; index < stores.Results.Count; index++)
                 {
@@ -141,6 +137,7 @@ namespace Orckestra.Composer.Store.Repositories
             {
                 Scope = param.Scope
             };
+
             cacheKey.AppendKeyParts(param.FulfillmentLocationId.ToString());
 
             var request = new GetScheduleRequest
@@ -150,9 +147,7 @@ namespace Orckestra.Composer.Store.Repositories
                 ScheduleType = ScheduleType.OpeningHours
             };
 
-            return
-                await
-                    CacheProvider.GetOrAddAsync(cacheKey, () => OvertureClient.SendAsync(request)).ConfigureAwait(false);
+            return await CacheProvider.GetOrAddAsync(cacheKey, () => OvertureClient.SendAsync(request)).ConfigureAwait(false);
         }
 
         protected virtual List<Filter> GetStoreFilters()
