@@ -5,10 +5,7 @@ namespace Orckestra.Composer.CompositeC1.Cache
     public sealed class CategoryPageExclusion: CacheExclusion
     {
         public CategoryPageExclusion(params string[] urlPatterns)
-            :base(urlPatterns)
-        {
-            
-        }
+            :base(urlPatterns) { }
 
         /// <summary>
         /// Determines if the page accessed with URI should be cached or not.
