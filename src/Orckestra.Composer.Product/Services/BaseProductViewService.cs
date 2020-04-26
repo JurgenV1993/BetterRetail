@@ -84,10 +84,7 @@ namespace Orckestra.Composer.Product.Services
         {
             if (param == null) { throw new ArgumentNullException(nameof(param)); }
 
-            if (!param.ProductIds.Any())
-            {
-                return new RelatedProductsViewModel();
-            }
+            if (!param.ProductIds.Any()) { return new RelatedProductsViewModel(); }
 
             var products = await RetrieveProductsAsync(param).ConfigureAwait(false);
 
@@ -278,15 +275,9 @@ namespace Orckestra.Composer.Product.Services
             // there may be multiple copies of the product if this is a variant, just take the first
             var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
 
-            if (price == null)
-            {
-                return null;
-            }
+            if (price == null) { return null; }
 
-            if (variant == null)
-            {
-                return price.DefaultPrice;
-            }
+            if (variant == null) { return price.DefaultPrice; }
 
             var variantPrice = price.VariantPrices.SingleOrDefault(vp => vp.VariantId == variant.Id);
 
@@ -316,10 +307,7 @@ namespace Orckestra.Composer.Product.Services
 
             Variant baseVariant = null;
 
-            if (baseProduct == null)
-            {
-                return null;
-            }
+            if (baseProduct == null) { return null; }
 
             if (baseProduct?.Variants != null)
             {
