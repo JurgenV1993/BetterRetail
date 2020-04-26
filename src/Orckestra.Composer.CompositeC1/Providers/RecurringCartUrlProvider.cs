@@ -12,7 +12,6 @@ namespace Orckestra.Composer.CompositeC1.Providers
     public class RecurringCartUrlProvider : IRecurringCartUrlProvider
     {
         protected IPageService PageService { get; private set; }
-    
         protected IRecurringOrdersSettings RecurringOrdersSettings { get; private set; }
 
         public RecurringCartUrlProvider(IPageService pageService, IRecurringOrdersSettings recurringOrdersSettings)
