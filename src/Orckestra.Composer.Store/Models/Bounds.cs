@@ -2,7 +2,6 @@ namespace Orckestra.Composer.Store.Models
 {
     public class Bounds
     {
-
         public Bounds()
         {
             SouthWest = new Coordinate();
@@ -35,10 +34,9 @@ namespace Orckestra.Composer.Store.Models
         {
             if (NorthEast.Lng > SouthWest.Lng)
             {
-                if (lng < SouthWest.Lng || lng > NorthEast.Lng)
-                    return false;
+                if (lng < SouthWest.Lng || lng > NorthEast.Lng) return false;
             }
-            else if(lng < SouthWest.Lng && lng > NorthEast.Lng) // from 149 to -3
+            else if (lng < SouthWest.Lng && lng > NorthEast.Lng) // from 149 to -3
             {
                 return false;
             }
