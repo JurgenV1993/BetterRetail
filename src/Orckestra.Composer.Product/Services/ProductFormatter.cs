@@ -22,7 +22,6 @@ namespace Orckestra.Composer.Product.Services
         private const string BasePropertyTypeBooleanTrueResourceKey = "BasePropertyTypeBooleanTrue";
         private const string BasePropertyTypeBooleanFalseResourceKey = "BasePropertyTypeBooleanFalse";
 
-
         private readonly ILocalizationProvider _localizationProvider;
         private readonly ILookupService _lookupService;
 
@@ -34,14 +33,13 @@ namespace Orckestra.Composer.Product.Services
 
         public virtual string FormatValue(ProductPropertyDefinition property, object value, CultureInfo cultureInfo)
         {
-            var valueText = string.Empty;
-
+            string valueText;
             switch (property.DataType)
             {
                 case PropertyDataType.Boolean:
-                    if (value is bool)
+                    if (value is bool boolValue)
                     {
-                        if ((bool)value)
+                        if (boolValue)
                         {
                             valueText = FormatValueByType(value, string.Format("{0}True", property.PropertyName),
                                 BasePropertyTypeBooleanTrueResourceKey, cultureInfo);
@@ -68,9 +66,9 @@ namespace Orckestra.Composer.Product.Services
                     valueText = FormatValueByType(value, property.PropertyName, BasePropertyTypeNumberResourceKey, cultureInfo);
                     break;
                 case PropertyDataType.DateTime:
-                    if (value is DateTime)
+                    if (value is DateTime dateTimeValue)
                     {
-                        valueText = ((DateTime)value).ToShortDateString();
+                        valueText = dateTimeValue.ToShortDateString();
                     }
                     else
                     {
@@ -79,9 +77,9 @@ namespace Orckestra.Composer.Product.Services
                     valueText = FormatValueByType(valueText, property.PropertyName, BasePropertyTypeDateTimeResourceKey, cultureInfo);
                     break;
                 case PropertyDataType.Text:
-                    if (property.Localizable && value is LocalizedString)
+                    if (property.Localizable && value is LocalizedString localizedStringValue)
                     {
-                        valueText = FormatValueByType(((LocalizedString)value).GetLocalizedValue(cultureInfo.Name),
+                        valueText = FormatValueByType(localizedStringValue.GetLocalizedValue(cultureInfo.Name),
                             property.PropertyName, BasePropertyTypeTextResourceKey, cultureInfo);
                     }
                     else
