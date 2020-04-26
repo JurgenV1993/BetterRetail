@@ -92,13 +92,15 @@ namespace Orckestra.Composer.Sitemap
                                             }
                                         }
                                     }
-                                    catch (Exception e) {
+                                    catch (Exception e) 
+                                    {
                                         Log.Error(e.ToString());
                                     }
 
                                 }));
                             }
                         }
+                        //TODO: process exeption
                         catch (ArgumentException) { }
                     }
 
