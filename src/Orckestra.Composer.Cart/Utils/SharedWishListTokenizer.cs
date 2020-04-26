@@ -49,10 +49,7 @@ namespace Orckestra.Composer.Cart.Utils
             var splittedTokens = rawToken.Split(new[] { TokenSeparator }, 2, StringSplitOptions.None);
 
             //Invalid token.
-            if (splittedTokens.Length != 2)
-            {
-                return null;
-            }
+            if (splittedTokens.Length != 2) { return null; }
 
             if (Guid.TryParse(splittedTokens[0], out Guid customerId))
             {
