@@ -64,17 +64,11 @@ namespace Orckestra.Composer.CompositeC1.Controllers
 
         public ActionResult SharedWishList(string id, XhtmlDocument emptyWishListContent)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return HttpNotFound();
-            }
+            if (string.IsNullOrEmpty(id)) { return HttpNotFound(); }
 
             var param = SharedWishListTokenizer.DecryptToken(id);
 
-            if (param == null)
-            {
-                return HttpNotFound();
-            }
+            if (param == null) { return HttpNotFound(); }
 
             var customerStatus = CustomerViewService.GetAccountStatusViewModelAsync(new GetAccountStatusViewModelParam
                 {
@@ -83,10 +77,7 @@ namespace Orckestra.Composer.CompositeC1.Controllers
                     CustomerId = param.CustomerId
                 }).Result;
 
-            if (customerStatus == null || customerStatus.Status == AccountStatusEnum.Inactive)
-            {
-                return HttpNotFound();
-            }
+            if (customerStatus == null || customerStatus.Status == AccountStatusEnum.Inactive) { return HttpNotFound(); }
 
             var vm = WishLisViewService.GetWishListViewModelAsync(new GetCartParam
             {
@@ -104,17 +95,11 @@ namespace Orckestra.Composer.CompositeC1.Controllers
 
         public ActionResult SharedWishListTitle(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return View("SharedWishListHeaderBlade");
-            }
+            if (string.IsNullOrEmpty(id)) { return View("SharedWishListHeaderBlade"); }
 
             var param = SharedWishListTokenizer.DecryptToken(id);
 
-            if (param == null)
-            {
-                return HttpNotFound();
-            }
+            if (param == null) { return HttpNotFound(); }
 
             var vm = CustomerViewService.GetAccountHeaderViewModelAsync(new GetAccountHeaderViewModelParam
             {
