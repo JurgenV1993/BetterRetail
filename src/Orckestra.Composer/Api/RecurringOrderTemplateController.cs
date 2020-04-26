@@ -17,13 +17,9 @@ namespace Orckestra.Composer.Api
         protected IRecurringOrderTemplatesViewService RecurringOrderTemplatesViewService { get; private set; }
         protected IComposerContext ComposerContext { get; private set; }
 
-        public RecurringOrderTemplateController(
-            IRecurringOrderTemplatesViewService recurringOrderTemplatesViewService,
-            IComposerContext composerContext)
+        public RecurringOrderTemplateController(IRecurringOrderTemplatesViewService recurringOrderTemplatesViewService, IComposerContext composerContext)
         {
-            RecurringOrderTemplatesViewService = recurringOrderTemplatesViewService 
-                ?? throw new ArgumentNullException(nameof(recurringOrderTemplatesViewService));
-
+            RecurringOrderTemplatesViewService = recurringOrderTemplatesViewService ?? throw new ArgumentNullException(nameof(recurringOrderTemplatesViewService));
             ComposerContext = composerContext ?? throw new ArgumentNullException(nameof(composerContext));
         }
 
@@ -91,8 +87,7 @@ namespace Orckestra.Composer.Api
             if (request.LineItemsIds.Count == 0) { return BadRequest("Invalid lineItemsIds"); }
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var results = await RecurringOrderTemplatesViewService
-                .RemoveRecurringOrderTemplatesLineItemsAsync(new RemoveRecurringOrderTemplateLineItemsParam
+            var results = await RecurringOrderTemplatesViewService.RemoveRecurringOrderTemplatesLineItemsAsync(new RemoveRecurringOrderTemplateLineItemsParam
             {
                 Culture = ComposerContext.CultureInfo,
                 ScopeId = ComposerContext.Scope,
