@@ -17,7 +17,6 @@ namespace Orckestra.Composer.Cart.Services
         protected IViewModelMapper ViewModelMapper { get; private set; }
         protected IPaymentProviderFactory PaymentProviderFactory { get; private set; }
 
-
         public VaultProfileViewService(IVaultProfileRepository vaultProfileRepository, IViewModelMapper viewModelMapper, 
             IPaymentProviderFactory paymentProviderFactory)
         {
@@ -34,8 +33,7 @@ namespace Orckestra.Composer.Cart.Services
             return vm;
         }
 
-        protected virtual MonerisAddVaultProfileViewModel MapModelToViewModel(VaultProfileCreationResult model,
-            CultureInfo cultureInfo)
+        protected virtual MonerisAddVaultProfileViewModel MapModelToViewModel(VaultProfileCreationResult model, CultureInfo cultureInfo)
         {
             var vm = ViewModelMapper.MapTo<MonerisAddVaultProfileViewModel>(model, cultureInfo);
 
