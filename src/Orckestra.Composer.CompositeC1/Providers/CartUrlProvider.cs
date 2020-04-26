@@ -50,10 +50,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
             var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(parameters.CultureInfo, WebsiteContext.WebsiteId);
             var signInPath = PageService.GetPageUrl(pagesConfiguration.CheckoutSignInPageId, parameters.CultureInfo);
 
-            if (string.IsNullOrWhiteSpace(parameters.ReturnUrl))
-            {
-                return signInPath;
-            }
+            if (string.IsNullOrWhiteSpace(parameters.ReturnUrl)) { return signInPath; }
 
             var urlBuilder = new UrlBuilder(signInPath);
             urlBuilder["ReturnUrl"] = GetReturnUrl(parameters); // url builder will encode the query string value
@@ -95,10 +92,9 @@ namespace Orckestra.Composer.CompositeC1.Providers
 
             Dictionary<int, CheckoutStepPageInfo> stepUrls = CacheProvider.Get< Dictionary<int, CheckoutStepPageInfo>>(cacheKey);
 
-            if (stepUrls != null)
-                return stepUrls;
+            if (stepUrls != null) return stepUrls;
 
-            stepUrls = new Dictionary<int, CheckoutStepPageInfo>();
+            var sortedDictionary = new SortedDictionary<int, CheckoutStepPageInfo>();
 
             var items = PageService.GetCheckoutStepPages(WebsiteContext.WebsiteId, parameters.CultureInfo);
             var navItems = PageService.GetCheckoutNavigationPages(WebsiteContext.WebsiteId, parameters.CultureInfo);
@@ -106,7 +102,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
             foreach (var checkoutStepItem in items)
             {
                 var pageGuid = Guid.Parse(checkoutStepItem);
-                stepUrls.Add(index, new CheckoutStepPageInfo
+                sortedDictionary.Add(index, new CheckoutStepPageInfo
                 {
                     Url = PageService.GetPageUrl(pageGuid, parameters.CultureInfo),
                     IsDisplayedInHeader = navItems != null && navItems.Contains(checkoutStepItem),
@@ -115,11 +111,10 @@ namespace Orckestra.Composer.CompositeC1.Providers
                 });
                 index++;
             }
-
-            stepUrls = stepUrls.OrderBy(x => x.Key).ToDictionary(x => x.Key, y => y.Value);
+            stepUrls = new Dictionary<int, CheckoutStepPageInfo>(sortedDictionary);
 
             CacheProvider.Set(cacheKey, stepUrls);
-
+            
             return stepUrls;
         }
 
@@ -147,8 +142,7 @@ namespace Orckestra.Composer.CompositeC1.Providers
          
             var url = PageService.GetPageUrl(WebsiteContext.WebsiteId, param.CultureInfo);
             ///TODO - fix this
-            if (string.IsNullOrWhiteSpace(url))
-                return url;
+            if (string.IsNullOrWhiteSpace(url)) return url;
 
             return UrlProviderHelper.BuildUrlWithParams(url, param.ReturnUrl);
         }
