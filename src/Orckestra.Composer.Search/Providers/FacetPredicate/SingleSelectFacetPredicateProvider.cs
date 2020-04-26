@@ -17,10 +17,7 @@ namespace Orckestra.Composer.Search.Providers.FacetPredicate
             if (filter == null) { throw new ArgumentNullException(nameof(filter)); }
             if (string.IsNullOrWhiteSpace(filter.Name)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(filter.Name)), nameof(filter));}
 
-            if (string.IsNullOrWhiteSpace(filter.Value))
-            {
-                return null;
-            }
+            if (string.IsNullOrWhiteSpace(filter.Value)) { return null; }
 
             var facetPredicate = new Overture.ServiceModel.Search.FacetPredicate
             {
