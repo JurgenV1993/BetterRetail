@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using Composite.Core.Configuration;
@@ -25,10 +21,7 @@ namespace Orckestra.Composer.CompositeC1
 
         private void context_AcquireRequestState(object sender, EventArgs e)
         {
-            if (!SystemSetupFacade.IsSystemFirstTimeInitialized)
-            {
-                return;
-            }
+            if (!SystemSetupFacade.IsSystemFirstTimeInitialized) { return; }
 
             HttpContext httpContext = (sender as HttpApplication).Context;
 
@@ -40,10 +33,7 @@ namespace Orckestra.Composer.CompositeC1
 
         private static void CheckThatPathInfoHasBeenUsed(HttpContext httpContext, Page page)
         {
-            if (C1PageRoute.PathInfoUsed)
-            {
-                return;
-            }
+            if (C1PageRoute.PathInfoUsed) { return; }
 
             if (!ServeCustomPageNotFoundPage(httpContext))
             {
@@ -59,10 +49,7 @@ namespace Orckestra.Composer.CompositeC1
             var customPageNotFoundProvider = ComposerHost.Current.Resolve<IPageNotFoundUrlProvider>();
             var customPageNotFoundUrl = customPageNotFoundProvider.Get404PageUrl(rawUrl);
 
-            if (string.IsNullOrEmpty(customPageNotFoundUrl))
-            {
-                return false;
-            }
+            if (string.IsNullOrEmpty(customPageNotFoundUrl)) { return false; }
             if (rawUrl == customPageNotFoundUrl || httpContext.Request.Url.PathAndQuery == customPageNotFoundUrl)
             {
                 throw new HttpException(404, "'Page not found' wasn't handled. Url: '{0}'".FormatWith(rawUrl));
@@ -77,8 +64,6 @@ namespace Orckestra.Composer.CompositeC1
             throw new InvalidOperationException("This code should not be reachable");
         }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }
