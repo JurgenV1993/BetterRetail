@@ -123,10 +123,8 @@ namespace Orckestra.Composer.Cart.Services
             foreach(var el in lineItems)
             {
                 var programName = el.RecurringOrderProgramName;
-                if (string.IsNullOrEmpty(programName) || programTasks.ContainsKey(programName))
-                {
-                    continue;
-                }
+                if (string.IsNullOrEmpty(programName) || programTasks.ContainsKey(programName)) { continue; }
+
                 programTasks.Add(programName, RecurringOrdersRepository.GetRecurringOrderProgram(ComposerContext.Scope, programName));
             }
 
@@ -163,12 +161,10 @@ namespace Orckestra.Composer.Cart.Services
 
             if (recurringLineItem == null) return string.Empty;
 
-            var id = recurringLineItem.RecurringOrderLineItemId;
-
             var url = RecurringScheduleUrlProvider.GetRecurringScheduleDetailsUrl(new GetRecurringScheduleDetailsUrlParam()
             {
                 CultureInfo = culture,
-                RecurringScheduleId = id.ToString()
+                RecurringScheduleId = recurringLineItem.RecurringOrderLineItemId.ToString()
             });
 
             return url;
@@ -176,8 +172,7 @@ namespace Orckestra.Composer.Cart.Services
 
         public virtual async Task<LightRecurringOrderCartsViewModel> GetLightRecurringOrderCartListViewModelAsync(GetLightRecurringOrderCartListViewModelParam param)
         {
-            if (!RecurringOrdersSettings.Enabled)
-                return new LightRecurringOrderCartsViewModel();
+            if (!RecurringOrdersSettings.Enabled) return new LightRecurringOrderCartsViewModel();
 
             var carts = await CartRepository.GetRecurringCartsAsync(new GetRecurringOrderCartsViewModelParam
             {
@@ -220,11 +215,9 @@ namespace Orckestra.Composer.Cart.Services
         {
             var emptyVm = new CartViewModel();
 
-            if (!RecurringOrdersSettings.Enabled)
-                return emptyVm;
+            if (!RecurringOrdersSettings.Enabled) return emptyVm;
 
-            if (string.Equals(param.CartName, CartConfiguration.ShoppingCartName, StringComparison.OrdinalIgnoreCase))
-                return emptyVm;
+            if (string.Equals(param.CartName, CartConfiguration.ShoppingCartName, StringComparison.OrdinalIgnoreCase)) return emptyVm;
 
             var cart = await CartRepository.GetCartAsync(new GetCartParam
             {
@@ -249,8 +242,7 @@ namespace Orckestra.Composer.Cart.Services
 
         public virtual async Task<CartViewModel> UpdateRecurringOrderCartShippingAddressAsync(UpdateRecurringOrderCartShippingAddressParam param)
         {
-            if (!RecurringOrdersSettings.Enabled)
-                return new CartViewModel();
+            if (!RecurringOrdersSettings.Enabled) return new CartViewModel();
 
             if (param == null) throw new ArgumentNullException(nameof(param));
             if (param.ShippingAddressId == null) throw new ArgumentException(GetMessageOfNull(nameof(param.ShippingAddressId)), nameof(param));
@@ -267,12 +259,10 @@ namespace Orckestra.Composer.Cart.Services
             var shipment = cart.Shipments.First();
             var newAddress = await AddressRepository.GetAddressByIdAsync(param.ShippingAddressId) 
                 ?? throw new InvalidOperationException("Address not found");
-                
             
             shipment.Address = newAddress;
 
-            var payment = cart.Payments.FirstOrDefault() 
-                ?? throw new InvalidOperationException("No payment"); ;          
+            var payment = cart.Payments.FirstOrDefault() ?? throw new InvalidOperationException("No payment");     
 
             if (param.UseSameForShippingAndBilling)
             {
@@ -374,29 +364,24 @@ namespace Orckestra.Composer.Cart.Services
                 {
                     foreach (var lineitem in shipment.LineItems)
                     {
-                        if (string.IsNullOrEmpty(lineitem.RecurringOrderFrequencyName) || string.IsNullOrEmpty(lineitem.RecurringOrderProgramName))
-                        {
-                            continue;
-                        }
+                        if (string.IsNullOrEmpty(lineitem.RecurringOrderFrequencyName) 
+                            || string.IsNullOrEmpty(lineitem.RecurringOrderProgramName)) { continue; }
 
                         var recurringOrderLineitem = lookup[lineitem.ProductId]?.FirstOrDefault(x => x.VariantId == lineitem.VariantId);
-                        if (recurringOrderLineitem == null)
-                        {
-                            continue;
-                        }
+                        if (recurringOrderLineitem == null) { continue; }
 
                         //V: Kept the same logic just for case, but think checking a guid was provided to figure out, have we found an object or not
                         if (recurringOrderLineitem.RecurringOrderLineItemId != Guid.Empty)
                         {
                             var nextOccurenceWithTime = recurringOrderLineitem.NextOccurence;
+
                             newDate = new DateTime(newDate.Year, newDate.Month, newDate.Day,
                                 nextOccurenceWithTime.Hour, nextOccurenceWithTime.Minute, nextOccurenceWithTime.Second, DateTimeKind.Utc);
                         }
                         continueShipment = false;
                         break;
                     }
-                    if (!continueShipment)
-                        break;
+                    if (!continueShipment) break;
                 }
             }
 
