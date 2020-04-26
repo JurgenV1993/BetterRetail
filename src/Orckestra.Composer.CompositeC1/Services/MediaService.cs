@@ -36,22 +36,22 @@ namespace Orckestra.Composer.CompositeC1.Services
 
         public virtual string GetMediaUrl(string mediaPath)
         {
-            if (string.IsNullOrEmpty(mediaPath))
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrEmpty(mediaPath)) { return string.Empty; }
 
             string[] parts = mediaPath.Split(new[] { ':' });
 
             string mediaStore = parts[0];
             Guid mediaId = new Guid(parts[1]);
 
-            string mediaUrl = MediaUrls.BuildUrl(new MediaUrlData { MediaStore = mediaStore, MediaId = mediaId, QueryParameters = new NameValueCollection() },
-                                                 UrlKind.Public);
+            string mediaUrl = MediaUrls.BuildUrl(new MediaUrlData 
+            { 
+                MediaStore = mediaStore, 
+                MediaId = mediaId, 
+                QueryParameters = new NameValueCollection() 
+            }, UrlKind.Public);
 
             // Allows media player to receive a nice url with an extension
             return new Regex("_[^_]").Replace(mediaUrl, "$");
         }
-
     }
 }
