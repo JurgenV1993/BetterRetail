@@ -58,8 +58,7 @@ namespace Orckestra.Composer.CompositeC1.Services.Facet
             {
                 facetConfiguration = GetDefaultFacetConfiguration();
 
-                if (facetConfiguration == null) // no facet configs exist
-                    return result;
+                if (facetConfiguration == null) return result; // no facet configs exist
             }
 
             var facetsIds = GetIds(facetConfiguration.Facets);
@@ -143,8 +142,7 @@ namespace Orckestra.Composer.CompositeC1.Services.Facet
 
         private Dictionary<Guid, IPromotedFacetValueSetting> LoadPromotedFacetValues(List<Guid> allPromotedIds)
         {
-            if (allPromotedIds.Count == 0)
-                return new Dictionary<Guid, IPromotedFacetValueSetting>();
+            if (allPromotedIds.Count == 0) return new Dictionary<Guid, IPromotedFacetValueSetting>();
 
             return DataQueryService.Get<IPromotedFacetValueSetting>().Where(f => allPromotedIds.Contains(f.Id)).ToDictionary(f => f.Id, f => f);
         }
