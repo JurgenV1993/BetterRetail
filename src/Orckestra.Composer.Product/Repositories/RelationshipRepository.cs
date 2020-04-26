@@ -73,10 +73,7 @@ namespace Orckestra.Composer.Product.Repositories
 
         protected virtual QuerySorting BuildQuerySortings(string sortBy, string sortDirection)
         {
-            if (string.IsNullOrWhiteSpace(sortBy))
-            {
-                return null;
-            }
+            if (string.IsNullOrWhiteSpace(sortBy)) { return null; }
 
             var sortDirectionEnum =
                 string.IsNullOrWhiteSpace(sortDirection) ||
