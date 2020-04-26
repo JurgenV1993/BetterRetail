@@ -81,6 +81,5 @@ namespace Orckestra.Composer.CompositeC1.Services
             entry.ShortDisplayName = entryCulture.TwoLetterISOLanguageName;
             entry.CultureName = entryCulture.Name;
         }
-
     }
 }
