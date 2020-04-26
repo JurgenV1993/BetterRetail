@@ -37,7 +37,6 @@ namespace Orckestra.Composer.CompositeC1.Sitemap
             var result = new List<Guid>();
             using (var conn = new DataConnection(culture))
             {
-
                 var byType = _siteConfigurationPagesToExcludesFromConfig.Select(r => r.Split(new[] { '|' }))
                 .Select(parts => new { Type = parts[0], Prop = parts[1] })
                 .GroupBy(r => r.Type);
