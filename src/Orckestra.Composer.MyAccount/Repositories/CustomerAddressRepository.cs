@@ -44,7 +44,6 @@ namespace Orckestra.Composer.MyAccount.Repositories
         public virtual async Task<Address> CreateAddressAsync(Guid customerId, Address address, string scope)
         {
             //TODO: We can get rid of the await by using the extension method ExecuteAndSet on CacheProvider.
-
             var request = new AddAddressToCustomerRequest(customerId, address, scope)
             {
                 //TODO: Remove this when the bug #3694 is fixed:
