@@ -29,6 +29,7 @@ using Orckestra.Overture.ServiceModel;
 using Orckestra.Overture.ServiceModel.Products.Inventory;
 using Orckestra.Overture.ServiceModel.Search;
 using Orckestra.Overture.ServiceModel.Search.Pricing;
+using static Orckestra.Composer.Utils.MessagesHelper.ArgumentException;
 
 namespace Orckestra.Composer.SearchQuery.Services
 {
@@ -86,10 +87,11 @@ namespace Orckestra.Composer.SearchQuery.Services
         {
             SearchQueryViewModel viewModel;
 
-            Debug.Assert(param.CultureInfo != null, "param.CultureInfo != null");
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo != null) { throw new ArgumentException($"Value of {nameof(param.CultureInfo)} should be null", nameof(param)); }
+            if (param.Criteria != null) { throw new ArgumentException($"Value of {nameof(param.Criteria)} should be null", nameof(param)); }
 
-            var searchQueryProducts =
-                await SearchQueryRepository.SearchQueryProductAsync(new SearchQueryProductParams()
+            var searchQueryProducts = await SearchQueryRepository.SearchQueryProductAsync(new SearchQueryProductParams
                 {
                     CultureName = param.CultureInfo.Name,
                     QueryName = param.QueryName,
@@ -131,7 +133,7 @@ namespace Orckestra.Composer.SearchQuery.Services
 
             var imageUrls = await DamProvider.GetProductMainImagesAsync(getImageParam).ConfigureAwait(false);
 
-            Debug.Assert(param.Criteria != null, "param.Criteria != null");
+            
 
             var newCriteria = param.Criteria.Clone();
 
