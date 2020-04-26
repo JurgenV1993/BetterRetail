@@ -165,14 +165,10 @@ namespace Orckestra.Composer.Search.Repositories
 
         protected virtual QuerySorting BuildQuerySortings(SearchCriteria criteria)
         {
-            if (string.IsNullOrWhiteSpace(criteria.SortBy))
-            {
-                return null;
-            }
+            if (string.IsNullOrWhiteSpace(criteria.SortBy)) { return null; }
 
-            var sortDirection =
-                (string.IsNullOrWhiteSpace(criteria.SortDirection) ||
-                criteria.SortDirection.Equals("asc", StringComparison.InvariantCultureIgnoreCase))
+            var sortDirection = 
+                string.IsNullOrWhiteSpace(criteria.SortDirection) || criteria.SortDirection.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
                 ? SortDirection.Ascending
                 : SortDirection.Descending;
 
