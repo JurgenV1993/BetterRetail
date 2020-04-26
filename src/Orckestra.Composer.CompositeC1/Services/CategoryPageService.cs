@@ -49,9 +49,7 @@ namespace Orckestra.Composer.CompositeC1.Services
 		    var categories = CategoryRepository
 		        .GetCategoriesTreeAsync(new GetCategoriesParam {Scope = ScopeProvider.DefaultScope}).Result;
 			
-            CategoryPageData categoryPageData = null;
-			categoryPageData = GetCategoryPages();
-
+            CategoryPageData categoryPageData = GetCategoryPages();
 			EnsureCategoryPages(categories["Root"], categoryPageData);
 		}
 
