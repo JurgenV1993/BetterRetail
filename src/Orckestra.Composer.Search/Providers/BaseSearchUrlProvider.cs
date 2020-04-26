@@ -15,12 +15,9 @@ namespace Orckestra.Composer.Search.Providers
         public NameValueCollection BuildSearchQueryString(BuildSearchUrlParam param)
         {
             var queryString = new NameValueCollection();
-            if (param.SearchCriteria == null)
-            {
-                return queryString;
-            }
+            if (param.SearchCriteria == null) { return queryString; }
 
-            if (!String.IsNullOrEmpty(param.CorrectedSearchTerms))
+            if (!string.IsNullOrEmpty(param.CorrectedSearchTerms))
             {
                 queryString.Add(SearchRequestParams.Keywords, param.CorrectedSearchTerms);
             }
