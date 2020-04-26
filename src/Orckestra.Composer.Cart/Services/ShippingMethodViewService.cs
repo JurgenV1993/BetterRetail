@@ -62,10 +62,7 @@ namespace Orckestra.Composer.Cart.Services
 
             var shippingMethods = await GetFulfillmentMethods(param).ConfigureAwait(false);
 
-            if (shippingMethods == null)
-            {
-                return null;
-            }
+            if (shippingMethods == null) { return null; }
 
             var shippingMethodViewModels = shippingMethods
                 .Select(sm => CartViewModelFactory.GetShippingMethodViewModel(sm, param.CultureInfo)).ToList();
@@ -88,6 +85,7 @@ namespace Orckestra.Composer.Cart.Services
             if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
             if (param.CustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.CustomerId)), nameof(param)); }
             if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+
             //misleading method name, creates a cart if it does not exist, not just a "get" call
             await CartRepository.GetCartAsync(new GetCartParam
             {
@@ -144,7 +142,6 @@ namespace Orckestra.Composer.Cart.Services
                 Scope = cart.ScopeId,
                 Shipments = cart.Shipments,
                 Status = cart.Status
-
             });
         }
 
@@ -225,7 +222,7 @@ namespace Orckestra.Composer.Cart.Services
 
         public virtual async Task<CartViewModel> UpdateRecurringOrderCartShippingMethodAsync(UpdateRecurringOrderCartShippingMethodParam param)
         {
-            if (!RecurringOrdersSettings.Enabled) return GetEmptyRecurringOrderCartViewModel();
+            if (!RecurringOrdersSettings.Enabled) return new CartViewModel();
 
             if (param == null) throw new ArgumentNullException(nameof(param));
 
@@ -236,7 +233,6 @@ namespace Orckestra.Composer.Cart.Services
                 CultureInfo = param.CultureInfo,
                 CustomerId = param.CustomerId,
                 CartName = param.CartName
-
             }).ConfigureAwait(false);
 
             var shipment = cart.Shipments?.FirstOrDefault() ?? throw new InvalidOperationException("No shipment was found in the cart.");
@@ -269,11 +265,6 @@ namespace Orckestra.Composer.Cart.Services
             });
 
             return vm;
-        }
-
-        protected virtual CartViewModel GetEmptyRecurringOrderCartViewModel()
-        {
-            return  new CartViewModel();
         }
     }
 }
