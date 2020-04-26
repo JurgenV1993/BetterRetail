@@ -31,28 +31,23 @@ namespace Orckestra.Composer.Product.Services
         /// <summary>
         /// Creates a <see cref="BreadcrumbViewModel"/> for a given product.
         /// </summary>
-        /// <param name="parameters">Parameters to generate the ViewModel.</param>
+        /// <param name="param">Parameters to generate the ViewModel.</param>
         /// <returns></returns>
-        public virtual async Task<BreadcrumbViewModel> CreateBreadcrumbAsync(GetProductBreadcrumbParam parameters)
+        public virtual async Task<BreadcrumbViewModel> CreateBreadcrumbAsync(GetProductBreadcrumbParam param)
         {
-            AssertParameters(parameters);
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
 
-            var categoriesPath = await GetCategoryViewModelsAsync(parameters.CategoryId, parameters.Scope, parameters.CultureInfo).ConfigureAwait(false);
-            var vm = CreateBreadcrumbViewModel(parameters, categoriesPath);
+            if (!string.IsNullOrWhiteSpace(param.CategoryId) && string.IsNullOrWhiteSpace(param.Scope))
+            {
+                throw new ArgumentException($"{nameof(param.Scope)} must not be null or whitespace if {nameof(param.CategoryId)} is defined.",
+                    nameof(param));
+            }
+
+            var categoriesPath = await GetCategoryViewModelsAsync(param.CategoryId, param.Scope, param.CultureInfo).ConfigureAwait(false);
+            var vm = CreateBreadcrumbViewModel(param, categoriesPath);
 
             return vm;
-        }
-
-        protected virtual void AssertParameters(GetProductBreadcrumbParam parameters)
-        {
-            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
-
-            if (!string.IsNullOrWhiteSpace(parameters.CategoryId) && string.IsNullOrWhiteSpace(parameters.Scope))
-            {
-                throw new ArgumentException($"{nameof(parameters.Scope)} must not be null or whitespace if {nameof(parameters.CategoryId)} is defined.", 
-                    nameof(parameters));
-            }
         }
 
         protected virtual Task<CategoryViewModel[]> GetCategoryViewModelsAsync(string categoryId, string scope, CultureInfo cultureInfo)
