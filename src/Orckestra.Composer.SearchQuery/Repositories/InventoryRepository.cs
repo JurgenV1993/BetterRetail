@@ -28,12 +28,9 @@ namespace Orckestra.Composer.SearchQuery.Repositories
             };
 
             var result = await OvertureClient.SendAsync(request).ConfigureAwait(false);
-            if (param.InventoryLocationIds != null && param.InventoryLocationIds.Count > 0)
-            {
-                return result.Where(d => d.Identifier != null && param.InventoryLocationIds.Contains(d.Identifier.InventoryLocationId)).ToList();
-            }
-
-            return result;
+            return param.InventoryLocationIds != null && param.InventoryLocationIds.Count > 0
+                ? result.Where(d => d.Identifier != null && param.InventoryLocationIds.Contains(d.Identifier.InventoryLocationId)).ToList()
+                : result;
         }
     }
 }
