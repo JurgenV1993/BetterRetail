@@ -86,17 +86,13 @@ namespace Orckestra.Composer.Cart.Services
             if (string.IsNullOrWhiteSpace(param.CartName)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.CartName)), nameof(param)); }
             if (param.CustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.CustomerId)), nameof(param)); }
 
-
             var wishList = await WishListRepository.GetWishListAsync(param).ConfigureAwait(false);
             var fixedWishlist = await FixCartService.SetFulfillmentLocationIfRequired(new FixCartParam
             {
                 Cart = wishList
             }).ConfigureAwait(false);
 
-            if (wishList == null)
-            {
-                return null;
-            }
+            if (wishList == null) { return null; }
 
             return await CreateWishListViewModelAsync(new CreateWishListViewModelParam()
             {
@@ -116,10 +112,7 @@ namespace Orckestra.Composer.Cart.Services
 
             var wishList = await WishListRepository.GetWishListAsync(param).ConfigureAwait(false);
 
-            if (wishList == null)
-            {
-                return null;
-            }
+            if (wishList == null) { return null; }
 
             return CreateSummaryWishListViewModel(new CreateWishListViewModelParam
             {
@@ -159,6 +152,7 @@ namespace Orckestra.Composer.Cart.Services
                 BaseUrl = param.BaseUrl,
                 CultureInfo = param.CultureInfo
             };
+
             viewModel.SignInUrl = WishListUrlProvider.GetSignInUrl(getUrlParam);
             viewModel.ShareUrl = viewModel.TotalQuantity == 0 ? string.Empty: WishListUrlProvider.GetShareUrl(new GetShareWishListUrlParam
             {
