@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Orckestra.Composer.Providers;
 using Orckestra.Composer.Search.Context;
 using Orckestra.Composer.Search.Providers.FacetPredicate;
@@ -30,13 +29,9 @@ namespace Orckestra.Composer.Search.Factory
             if (filter == null) { throw new ArgumentNullException(nameof(filter)); }
             if (string.IsNullOrWhiteSpace(filter.Name)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(filter.Name)), nameof(filter)); }
 
-            var setting = FacetConfigContext.GetFacetSettings()
-                    .Find(s => s.FieldName.Equals(filter.Name, StringComparison.OrdinalIgnoreCase));
+            var setting = FacetConfigContext.GetFacetSettings().Find(s => s.FieldName.Equals(filter.Name, StringComparison.OrdinalIgnoreCase));
 
-            if (setting == null)
-            {
-                return null;
-            }
+            if (setting == null) { return null; }
 
             Type factoryType = FacetPredicateProviderRegistry.ResolveProviderType(setting.FacetType.ToString());
 
