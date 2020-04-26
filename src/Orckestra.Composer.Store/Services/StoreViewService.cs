@@ -49,10 +49,7 @@ namespace Orckestra.Composer.Store.Services
             if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.BaseUrl)), nameof(param)); }
 
             var overtureStore = await StoreRepository.GetStoreByNumberAsync(param).ConfigureAwait(false);
-            if (overtureStore == null)
-            {
-                return null;
-            }
+            if (overtureStore == null) { return null; }
 
             var createVmParam = new CreateStoreViewModelParam
             {
@@ -74,8 +71,7 @@ namespace Orckestra.Composer.Store.Services
             return storeViewModel;
         }
 
-        public virtual async Task<PageHeaderViewModel> GetPageHeaderViewModelAsync(
-            GetStorePageHeaderViewModelParam param)
+        public virtual async Task<PageHeaderViewModel> GetPageHeaderViewModelAsync(GetStorePageHeaderViewModelParam param)
         {
             if (param == null) { throw new ArgumentNullException(nameof(param));}
 
@@ -88,10 +84,7 @@ namespace Orckestra.Composer.Store.Services
 
             }).ConfigureAwait(false);
 
-            if (store == null)
-            {
-                return null;
-            }
+            if (store == null) { return null; }
 
             var vm = new PageHeaderViewModel
             {
@@ -121,14 +114,12 @@ namespace Orckestra.Composer.Store.Services
             if (HttpContext.Current == null)
             {
                 Log.Error("HttpContext.Current is null");
-
                 return relativeUri;
             }
 
             try
             {
                 var baseUri = RequestUtils.GetBaseUrl(HttpContext.Current.Request.Url);
-
                 var url = new Uri(baseUri, relativeUri);
 
                 return url.ToString();
@@ -150,11 +141,10 @@ namespace Orckestra.Composer.Store.Services
                 CultureInfo = param.CultureInfo,
                 Key = "M_Description"
             });
-            if (!string.IsNullOrWhiteSpace(template) && template.Contains("{0}"))
-            {
-                return string.Format(template, store.LocalizedDisplayName);
-            }
-            return template;
+
+            return !string.IsNullOrWhiteSpace(template) && template.Contains("{0}")
+                ? string.Format(template, store.LocalizedDisplayName)
+                : template;
         }
 
         public virtual async Task<List<StoreViewModel>> GetStoresForInStorePickupViewModelAsync(GetStoresForInStorePickupViewModelParam param)
