@@ -429,21 +429,12 @@ namespace Orckestra.Composer.Search.Services
 
         protected static bool HasVariants(ProductDocument resultItem)
         {
-            if (resultItem == null)
-            {
-                return false;
-            }
-            if (resultItem.PropertyBag == null)
+            if (resultItem?.PropertyBag == null)
             {
                 return false;
             }
 
-            if (!resultItem.PropertyBag.TryGetValue("GroupCount", out object variantCountObject))
-            {
-                return false;
-            }
-
-            if (variantCountObject == null)
+            if (!resultItem.PropertyBag.TryGetValue("GroupCount", out object variantCountObject) || variantCountObject == null)
             {
                 return false;
             }
@@ -560,13 +551,10 @@ namespace Orckestra.Composer.Search.Services
 
         private static string TrimProductDisplayName(string displayName)
         {
-            if (string.IsNullOrWhiteSpace(displayName))
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrWhiteSpace(displayName)) { return string.Empty; }
 
-            var trimmedDisplayName = displayName.Substring(0,
-                Math.Min(displayName.Length, DisplayConfiguration.ProductNameMaxLength));
+            var trimmedDisplayName = displayName.Substring(
+                0, Math.Min(displayName.Length, DisplayConfiguration.ProductNameMaxLength));
 
             return trimmedDisplayName;
         }
