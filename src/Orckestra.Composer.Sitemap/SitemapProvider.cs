@@ -17,22 +17,22 @@ namespace Orckestra.Composer.Sitemap
         public int NumberOfEntriesPerSitemap { get; }
         public string SitemapFilePrefix { get; }
 
-        public SitemapProvider(ISitemapEntryProvider entryProvider, ISitemapProviderConfig config, IC1SitemapConfiguration mainConfig)
+        public SitemapProvider(ISitemapEntryProvider entryProvider, ISitemapProviderConfig config, IC1SitemapConfiguration param)
         {
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
-            if (mainConfig.NumberOfEntriesPerFile < 1) throw new ArgumentOutOfRangeException(
-                nameof(mainConfig), mainConfig.NumberOfEntriesPerFile, GetMessageOfZeroNegative(nameof(mainConfig.NumberOfEntriesPerFile)));
+            if (param.NumberOfEntriesPerFile < 1) 
+                throw new ArgumentOutOfRangeException(nameof(param), param.NumberOfEntriesPerFile, GetMessageOfZeroNegative(nameof(param.NumberOfEntriesPerFile)));
 
             EntryProvider = entryProvider;
-            NumberOfEntriesPerSitemap = mainConfig.NumberOfEntriesPerFile;
+            NumberOfEntriesPerSitemap = param.NumberOfEntriesPerFile;
             SitemapFilePrefix = config.SitemapFilePrefix;
         }
 
-        public IEnumerable<Models.Sitemap> GenerateSitemaps(SitemapParams sitemapParams)
+        public IEnumerable<Models.Sitemap> GenerateSitemaps(SitemapParams param)
         {
-            if (string.IsNullOrWhiteSpace(sitemapParams.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.BaseUrl)), nameof(sitemapParams)); }
-            if (string.IsNullOrWhiteSpace(sitemapParams.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.Scope)), nameof(sitemapParams)); }
-            if (sitemapParams.Culture == null) {throw new ArgumentException(GetMessageOfNull(nameof(sitemapParams.Culture)), nameof(sitemapParams)); }
+            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.BaseUrl)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (param.Culture == null) {throw new ArgumentException(GetMessageOfNull(nameof(param.Culture)), nameof(param)); }
 
             var iterationIndex = 1;
             var offset = 0;
@@ -40,8 +40,8 @@ namespace Orckestra.Composer.Sitemap
             do
             {
                 var entries = EntryProvider.GetEntriesAsync(
-                    sitemapParams,
-                    culture: sitemapParams.Culture,
+                    param,
+                    culture: param.Culture,
                     offset: offset,
                     count: NumberOfEntriesPerSitemap
                 ).Result;
@@ -52,17 +52,14 @@ namespace Orckestra.Composer.Sitemap
                 {
                     yield return new Models.Sitemap
                     {
-                        Name = isEntriesNotEnough && iterationIndex == 1 ? GetSitemapName(sitemapParams.Culture) : GetSitemapName(sitemapParams.Culture, iterationIndex),
+                        Name = isEntriesNotEnough && iterationIndex == 1 ? GetSitemapName(param.Culture) : GetSitemapName(param.Culture, iterationIndex),
                         Entries = entries.ToArray(),
                     };
 
                     offset += NumberOfEntriesPerSitemap;
                     iterationIndex += 1;
 
-                    if (isEntriesNotEnough)
-                    {
-                        break;
-                    }
+                    if (isEntriesNotEnough) { break; }
                 }
                 else
                 {
@@ -72,13 +69,11 @@ namespace Orckestra.Composer.Sitemap
             while (true);
         }
 
+        //TODO: fix. If a code will be iu-Cans-CA? Also, Cyrl|Latn etc part will be in the middle
         public virtual bool IsMatch(string sitemapFilename)
         {
-            if (sitemapFilename == null)
-            {
-                return false;
-            }
-
+            if (sitemapFilename == null) { return false; }
+            
             // Source: http://stackoverflow.com/questions/3962543/how-can-i-validate-a-culture-code-with-a-regular-expression
             var cultureRegex = "[a-z]{2,3}(?:-[A-Z]{2,3}(?:-(?:Cyrl|Latn))?)?";
 
