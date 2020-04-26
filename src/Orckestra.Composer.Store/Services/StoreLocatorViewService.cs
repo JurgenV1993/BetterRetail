@@ -22,70 +22,68 @@ namespace Orckestra.Composer.Store.Services
 
         public StoreLocatorViewService(
             IStoreRepository storeRepository,
-           IStoreViewModelFactory storeViewModelFactory,
-           IStoreUrlProvider storeUrlProvider,
-           IMapClustererProvider mapClustererProvider)
+            IStoreViewModelFactory storeViewModelFactory,
+            IStoreUrlProvider storeUrlProvider,
+            IMapClustererProvider mapClustererProvider)
         {
             StoreRepository = storeRepository;
             StoreViewModelFactory = storeViewModelFactory;
             StoreUrlProvider = storeUrlProvider;
             MapClustererProvider = mapClustererProvider;
         }
-        public virtual async Task<StoreLocatorViewModel> GetStoreLocatorViewModelAsync(GetStoreLocatorViewModelParam viewModelParam)
+        public virtual async Task<StoreLocatorViewModel> GetStoreLocatorViewModelAsync(GetStoreLocatorViewModelParam param)
         {
-            if (viewModelParam == null) { throw new ArgumentNullException(nameof(viewModelParam)); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.Scope)), nameof(viewModelParam)); }
-            if (viewModelParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(viewModelParam.CultureInfo)), nameof(viewModelParam)); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.BaseUrl)), nameof(viewModelParam)); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.BaseUrl)), nameof(param)); }
 
-            var overtureStores =
-               await
-                   StoreRepository.GetStoresAsync(new GetStoresParam { Scope = viewModelParam.Scope, IncludeExtraInfo = true })
-                       .ConfigureAwait(false);
+            var overtureStores = await StoreRepository.GetStoresAsync(new GetStoresParam 
+            { 
+                Scope = param.Scope, 
+                IncludeExtraInfo = true 
+            }).ConfigureAwait(false);
 
-            var model =
-                GetEmptyStoreLocatorViewModel(new GetEmptyStoreLocatorViewModelParam
-                {
-                    BaseUrl = viewModelParam.BaseUrl,
-                    CultureInfo = viewModelParam.CultureInfo
-                });
+            var model = GetEmptyStoreLocatorViewModel(new GetEmptyStoreLocatorViewModelParam
+            {
+                BaseUrl = param.BaseUrl,
+                CultureInfo = param.CultureInfo
+            });
 
             IEnumerable<Overture.ServiceModel.Customers.Stores.Store> stores = overtureStores.Results;
 
             var index = 1;
 
-            if (viewModelParam.MapBounds != null)
+            if (param.MapBounds != null)
             {
-                stores = stores.Where(st => st.InBounds(viewModelParam.MapBounds));
+                stores = stores.Where(st => st.InBounds(param.MapBounds));
             }
 
-            if (viewModelParam.SearchPoint != null)
+            if (param.SearchPoint != null)
             {
-                stores = stores.OrderBy(s => s.CalculateDestination(viewModelParam.SearchPoint));
+                stores = stores.OrderBy(s => s.CalculateDestination(param.SearchPoint));
                 model.NearestStoreCoordinate = new StoreGeoCoordinate(stores.FirstOrDefault());
             }
             var storeIndexes = stores.ToDictionary(d => d.Number, d => index++);
 
-            var storesForCurrentPage =
-                stores.Skip((viewModelParam.PageNumber - 1) * viewModelParam.PageSize)
-                    .Take(viewModelParam.PageSize)
-                    .ToList();
+            var storesForCurrentPage = stores.Skip((param.PageNumber - 1) * param.PageSize).Take(param.PageSize).ToList();
 
-            var schedules = await GetStoreSchedules(storesForCurrentPage, viewModelParam);
+            var schedules = await GetStoreSchedules(storesForCurrentPage, param);
 
             foreach (var store in storesForCurrentPage)
             {
                 if (store.StoreSchedule == null)
                 {
-                    store.StoreSchedule =
-                        schedules.FirstOrDefault(s => s.FulfillmentLocationId == store.FulfillmentLocation.Id.ToString());
+                    store.StoreSchedule = schedules.FirstOrDefault(
+                        s => s.FulfillmentLocationId == store.FulfillmentLocation.Id.ToString());
                 }
+
                 var vm = StoreViewModelFactory.CreateStoreViewModel(new CreateStoreViewModelParam
                 {
                     Store = store,
-                    CultureInfo = viewModelParam.CultureInfo,
-                    BaseUrl = viewModelParam.BaseUrl,
-                    SearchPoint = viewModelParam.SearchPoint
+                    CultureInfo = param.CultureInfo,
+                    BaseUrl = param.BaseUrl,
+                    SearchPoint = param.SearchPoint
                 });
 
                 vm.SearchIndex = storeIndexes[store.Number];
@@ -93,23 +91,25 @@ namespace Orckestra.Composer.Store.Services
                 model.Stores.Add(vm);
             }
 
-            if (viewModelParam.IncludeMarkers)
+            if (param.IncludeMarkers)
             {
-                model.Markers = GetMarkers(viewModelParam, stores.ToList(), storeIndexes);
+                model.Markers = GetMarkers(param, stores.ToList(), storeIndexes);
             }
 
             model.NextPage = StoreViewModelFactory.BuildNextPage(new GetStorePageViewModelParam
             {
                 Total = stores.Count(),
-                PageSize = viewModelParam.PageSize,
-                CurrentPageNumber = viewModelParam.PageNumber
+                PageSize = param.PageSize,
+                CurrentPageNumber = param.PageNumber
             });
 
             return model;
         }
 
-        protected virtual List<StoreClusterViewModel> GetMarkers(GetStoreLocatorViewModelParam param,
-            List<Overture.ServiceModel.Customers.Stores.Store> stores, Dictionary<string, int> storeIndexes)
+        protected virtual List<StoreClusterViewModel> GetMarkers(
+            GetStoreLocatorViewModelParam param,
+            List<Overture.ServiceModel.Customers.Stores.Store> stores, 
+            Dictionary<string, int> storeIndexes)
         {
             var getClusterParams = new GetMapClustersParam
             {
