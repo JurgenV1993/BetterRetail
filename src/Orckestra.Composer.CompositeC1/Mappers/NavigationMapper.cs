@@ -11,7 +11,6 @@ using Orckestra.Composer.ViewModels.MenuNavigation;
 
 namespace Orckestra.Composer.CompositeC1.Mappers
 {
-
     public class NavigationMapper : INavigationMapper
     {
         private readonly GoogleAnalyticsNavigationUrlProvider _analyticsNavigationUrlHelper;
