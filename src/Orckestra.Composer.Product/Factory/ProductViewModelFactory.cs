@@ -132,7 +132,6 @@ namespace Orckestra.Composer.Product.Factory
             {
                 return vm;
             }
-
            
             vm.IsRecurringOrderEligible = recurringOrdersEnabled;
             vm.Context["IsRecurringOrderEligible"] = recurringOrdersEnabled;
@@ -171,6 +170,7 @@ namespace Orckestra.Composer.Product.Factory
                 vvm => InitializeVariantImages(param.Product.Id, param.ProductDetailImages, param.CultureInfo, vvm),
                 vvm => InitializeVariantSpecificaton(param.Product, param.ProductDefinition, vvm)
             ).ToList();
+
             productDetailViewModel.Variants = allVariantsVm;
             var selectedVariantVm = GetSelectedVariantViewModel(param.VariantId, allVariantsVm);
 
@@ -237,10 +237,7 @@ namespace Orckestra.Composer.Product.Factory
 
         protected virtual string FixHtml(string html)
         {
-            if (html == null)
-            {
-                return null;
-            }
+            if (html == null) { return null; }
 
             html = Regex.Replace(html, "<br>", "<br/>", RegexOptions.IgnoreCase);
             html = Regex.Replace(html, "&", "&#38;", RegexOptions.IgnoreCase);
@@ -294,7 +291,9 @@ namespace Orckestra.Composer.Product.Factory
                 var variantVm = ViewModelMapper.MapTo<VariantViewModel>(variant, cultureInfo);
                 
                 if(string.IsNullOrEmpty(variantVm.DisplayName))
+                {
                     variantVm.DisplayName = displayName;
+                }
                 
                 variantVm.Kvas = variant.PropertyBag
                     .Join(kvaPropertieNames, bagEntry => bagEntry.Key,
@@ -693,16 +692,13 @@ namespace Orckestra.Composer.Product.Factory
         protected static IEnumerable<ProductDetailImageViewModel> SetFirstImageSelected(
           IEnumerable<ProductDetailImageViewModel> imageViewModels)
         {
-            // convert the IEnumerable to an array so that changes to the .First() element are persisted
-            var productDetailImageViewModels = imageViewModels as ProductDetailImageViewModel[] ?? imageViewModels.ToArray();
-            var firstImage = productDetailImageViewModels.FirstOrDefault();
+            var firstImage = imageViewModels.FirstOrDefault();
 
-            // set Selected = true on the first image so it's thumbnail is active
             if (firstImage != null)
             {
                 firstImage.Selected = true;
             }
-            return productDetailImageViewModels;
+            return imageViewModels;
         }
 
         /// <summary>
