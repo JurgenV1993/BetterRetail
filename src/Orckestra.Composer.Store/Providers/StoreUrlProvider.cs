@@ -36,15 +36,20 @@ namespace Orckestra.Composer.Store.Providers
             var uri = new Uri(storePath, UriKind.Relative);
 
             var queryString = new NameValueCollection();
+
             if(parameters.Page != 1)
+            {
                 queryString.Add("page", parameters.Page.ToString());
+            }        
 
             return UrlFormatter.AppendQueryString(uri.ToString(), queryString);
         }
 
         public virtual string GetStoreUrl(GetStoreUrlParam parameters)
         {
-            Assert(parameters);
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
+            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.BaseUrl)), nameof(parameters)); }
+            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
 
             var storePath = string.Format(UrlTemplate,
                 parameters.CultureInfo.Name,
@@ -82,15 +87,7 @@ namespace Orckestra.Composer.Store.Providers
             if (parameters.Page != 1)
                 queryString.Add("page", parameters.Page.ToString());
 
-
             return UrlFormatter.AppendQueryString(uri.ToString(), queryString);
-        }
-
-        private void Assert(GetStoreUrlParam parameters)
-        {
-            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
-            if (string.IsNullOrWhiteSpace(parameters.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(parameters.BaseUrl)), nameof(parameters)); }
-            if (parameters.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(parameters.CultureInfo)), nameof(parameters)); }
         }
     }
 }
