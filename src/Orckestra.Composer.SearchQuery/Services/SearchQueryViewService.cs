@@ -265,6 +265,7 @@ namespace Orckestra.Composer.SearchQuery.Services
         {
             if (document == null) return null;
             var productDoc = new ProductDocument();
+
             if (document.PropertyBag != null)
             {
                 productDoc.PropertyBag = new PropertyBag(document.PropertyBag);
@@ -282,20 +283,18 @@ namespace Orckestra.Composer.SearchQuery.Services
 
                 //Legacy pricing fields
 
-#pragma warning disable 612, 618
+                #pragma warning disable 612, 618
                 if (document.PropertyBag.ContainsKey(nameof(productDoc.CurrentPrice)) && document.PropertyBag[nameof(productDoc.CurrentPrice)] != null)
                     productDoc.CurrentPrice = double.Parse(document.PropertyBag[nameof(productDoc.CurrentPrice)].ToString());
                 if (document.PropertyBag.ContainsKey(nameof(productDoc.DefaultPrice)) && document.PropertyBag[nameof(productDoc.DefaultPrice)] != null)
                     productDoc.DefaultPrice = double.Parse(document.PropertyBag[nameof(productDoc.DefaultPrice)].ToString());
                 if (document.PropertyBag.ContainsKey(nameof(productDoc.RegularPrice)) && document.PropertyBag[nameof(productDoc.RegularPrice)] != null)
                     productDoc.RegularPrice = double.Parse(document.PropertyBag[nameof(productDoc.RegularPrice)].ToString());
-#pragma warning restore 612, 618
+                #pragma warning restore 612, 618
 
                 //New pricing fields
                 productDoc.EntityPricing = document.PropertyBag.GetOrDeserializePropertyBagEntity<EntityPricing>(nameof(ProductDocument.EntityPricing));
                 productDoc.GroupPricing = document.PropertyBag.GetOrDeserializePropertyBagEntity<GroupPricing>(nameof(ProductDocument.GroupPricing));
-
-
             }
 
             return productDoc;
@@ -323,24 +322,11 @@ namespace Orckestra.Composer.SearchQuery.Services
 
         private static bool HasVariants(ProductDocument resultItem)
         {
-            if (resultItem == null)
-            {
-                return false;
-            }
-            if (resultItem.PropertyBag == null)
-            {
-                return false;
-            }
+            if (resultItem?.PropertyBag == null) { return false; }
 
-            if (!resultItem.PropertyBag.TryGetValue("GroupCount", out object variantCountObject))
-            {
-                return false;
-            }
+            if (!resultItem.PropertyBag.TryGetValue("GroupCount", out object variantCountObject)) { return false; }
 
-            if (variantCountObject == null)
-            {
-                return false;
-            }
+            if (variantCountObject == null) { return false; }
 
             var variantCountString = variantCountObject.ToString();
 
@@ -348,6 +334,5 @@ namespace Orckestra.Composer.SearchQuery.Services
 
             return result > 1; // If the document has only one variant then server returns EntityPrice instead of GroupPrice
         }
-
     }
 }
