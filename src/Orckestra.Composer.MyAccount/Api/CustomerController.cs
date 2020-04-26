@@ -65,10 +65,7 @@ namespace Orckestra.Composer.MyAccount.Api
 
             var viewModel = await CustomerViewService.UpdateAccountAsync(param);
 
-            if (viewModel == null)
-            {
-                return Unauthorized();
-            }
+            if (viewModel == null) { return Unauthorized(); }
 
             viewModel.AddressListUrl = addressListUrl;
             viewModel.ChangePasswordUrl = changePasswordUrl;
@@ -93,7 +90,7 @@ namespace Orckestra.Composer.MyAccount.Api
                 CultureInfo = ComposerContext.CultureInfo,
                 ReturnUrl = checkoutAddressStepUrl
             };
-            var addressListUrl = MyAccountUrlProvider.GetAddressListUrl(urlParam);
+            MyAccountUrlProvider.GetAddressListUrl(urlParam);
             var addAddressUrl = CartUrlProvider.GetCheckoutAddAddressUrl(urlParam);
             var editAddressBaseUrl = CartUrlProvider.GetCheckoutUpdateAddressBaseUrl(urlParam);
 
@@ -145,7 +142,8 @@ namespace Orckestra.Composer.MyAccount.Api
             var returnUrl = request.ReturnUrl;
             if (string.IsNullOrWhiteSpace(returnUrl) || !UrlFormatter.IsReturnUrlValid(RequestUtils.GetBaseUrl(Request).ToString(), returnUrl))
             {
-                returnUrl = MyAccountUrlProvider.GetAddressListUrl(new BaseUrlParameter {
+                returnUrl = MyAccountUrlProvider.GetAddressListUrl(new BaseUrlParameter 
+                {
                     CultureInfo = ComposerContext.CultureInfo
                 });
             }
@@ -183,10 +181,7 @@ namespace Orckestra.Composer.MyAccount.Api
                 ReturnUrl = returnUrl
             });
 
-            if (viewModel == null)
-            {
-                return Unauthorized();
-            }
+            if (viewModel == null) { return Unauthorized(); }
 
             return Ok(viewModel);
         }
@@ -202,10 +197,7 @@ namespace Orckestra.Composer.MyAccount.Api
                 AddressId = id
             });
 
-            if (viewModel == null)
-            {
-                return Unauthorized();
-            }
+            if (viewModel == null) { return Unauthorized(); }
 
             return Ok(viewModel);
         }
@@ -221,10 +213,7 @@ namespace Orckestra.Composer.MyAccount.Api
                 AddressId = id
             });
 
-            if (viewModel == null)
-            {
-                return Unauthorized();
-            }
+            if (viewModel == null) { return Unauthorized(); }
 
             return Ok(viewModel);
         }
@@ -252,8 +241,17 @@ namespace Orckestra.Composer.MyAccount.Api
                 RecurringScheduleId = request.Id
             });
 
-            var addAddressUrl = MyAccountUrlProvider.GetAddAddressUrl(new BaseUrlParameter { CultureInfo = ComposerContext.CultureInfo, ReturnUrl = recurringOrderScheduleUrl });
-            var editAddressBaseUrl = MyAccountUrlProvider.GetUpdateAddressBaseUrl(new BaseUrlParameter { CultureInfo = ComposerContext.CultureInfo, ReturnUrl = recurringOrderScheduleUrl });
+            var addAddressUrl = MyAccountUrlProvider.GetAddAddressUrl(new BaseUrlParameter 
+            { 
+                CultureInfo = ComposerContext.CultureInfo, 
+                ReturnUrl = recurringOrderScheduleUrl 
+            });
+
+            var editAddressBaseUrl = MyAccountUrlProvider.GetUpdateAddressBaseUrl(new BaseUrlParameter 
+            { 
+                CultureInfo = ComposerContext.CultureInfo, 
+                ReturnUrl = recurringOrderScheduleUrl 
+            });
             
             var viewModel = await CustomerAddressViewService.GetAddressListViewModelAsync(new GetAddressListViewModelParam
             {
