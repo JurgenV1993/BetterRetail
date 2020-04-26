@@ -54,10 +54,7 @@ namespace Orckestra.Composer.Mvc.Sample.Providers.UrlProvider
                 var pagesConfiguration = SiteConfiguration.GetPagesConfiguration(parameters.CultureInfo, WebsiteContext.WebsiteId);
                 var signInPath = PageService.GetPageUrl(pagesConfiguration.LoginPageId, parameters.CultureInfo);
 
-                if (string.IsNullOrWhiteSpace(parameters.ReturnUrl))
-                {
-                    return signInPath;
-                }
+                if (string.IsNullOrWhiteSpace(parameters.ReturnUrl)) { return signInPath; }
 
                 var urlBuilder = new UrlBuilder(signInPath);
                 urlBuilder["ReturnUrl"] = GetReturnUrl(parameters); // url builder will encode the query string value
