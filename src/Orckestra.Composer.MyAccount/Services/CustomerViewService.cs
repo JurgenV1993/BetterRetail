@@ -135,10 +135,7 @@ namespace Orckestra.Composer.MyAccount.Services
                 CultureInfo = param.CultureInfo
             }).ConfigureAwait(false);
 
-            if (customer == null)
-            {
-                return null;
-            }
+            if (customer == null) { return null; }
 
             UpdateCustomerInfo(customer, param);
 
@@ -168,9 +165,7 @@ namespace Orckestra.Composer.MyAccount.Services
             customer.Language = updateParam.PreferredLanguage;
         }
 
-        protected virtual UpdateAccountViewModel GetUpdateAccountViewModel(
-            GetUpdateAccountViewModelParam param,
-            Customer customer)
+        protected virtual UpdateAccountViewModel GetUpdateAccountViewModel(GetUpdateAccountViewModelParam param, Customer customer)
         {
             var viewModel = ViewModelMapper.MapTo<UpdateAccountViewModel>(customer, param.CultureInfo);
 
@@ -181,9 +176,7 @@ namespace Orckestra.Composer.MyAccount.Services
             return viewModel;
         }
 
-        protected virtual List<PreferredLanguageViewModel> GetPreferredLanguageViewModel(
-            CultureInfo currentCulture,
-            string customerLanguage)
+        protected virtual List<PreferredLanguageViewModel> GetPreferredLanguageViewModel(CultureInfo currentCulture, string customerLanguage)
         {
             var allcultures = CultureService.GetAllSupportedCultures();
 
