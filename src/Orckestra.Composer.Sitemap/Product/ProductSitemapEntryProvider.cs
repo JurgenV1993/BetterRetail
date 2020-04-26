@@ -35,16 +35,16 @@ namespace Orckestra.Composer.Sitemap.Product
             _productUrlParamFactory = productUrlParamFactory;
         }
 
-        public virtual async Task<IEnumerable<SitemapEntry>> GetEntriesAsync(SitemapParams sitemapParams, CultureInfo culture, int offset, int count)
+        public virtual async Task<IEnumerable<SitemapEntry>> GetEntriesAsync(SitemapParams param, CultureInfo culture, int offset, int count)
         {
-            if (sitemapParams == null) { throw new ArgumentNullException(nameof(sitemapParams)); }
-            if (string.IsNullOrWhiteSpace(sitemapParams.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.BaseUrl)), nameof(sitemapParams)); }
-            if (string.IsNullOrWhiteSpace(sitemapParams.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(sitemapParams.Scope)), nameof(sitemapParams)); }
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.BaseUrl)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
             if (culture == null) { throw new ArgumentNullException(nameof(culture)); }
 
             var request = new SearchProductRequest
             {
-                ScopeId = sitemapParams.Scope,
+                ScopeId = param.Scope,
                 CultureName = culture.Name,
                 Keywords = "*",
                 StartingIndex = offset,
@@ -54,12 +54,9 @@ namespace Orckestra.Composer.Sitemap.Product
 
             var response = await _overtureClient.SendAsync(request).ConfigureAwait(false);
 
-            if (!response.Documents.Any())
-            {
-                return Enumerable.Empty<SitemapEntry>();
-            }
+            if (!response.Documents.Any()) { return Enumerable.Empty<SitemapEntry>(); }
 
-            return CreateStandardSitemapEntries(sitemapParams, response.Documents, culture);
+            return CreateStandardSitemapEntries(param, response.Documents, culture);
         }
 
         protected virtual IEnumerable<SitemapEntry> CreateStandardSitemapEntries(SitemapParams sitemapParams, List<Document> documents, CultureInfo culture)
