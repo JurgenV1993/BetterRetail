@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Orckestra.Composer.CompositeC1.Cache
 {
