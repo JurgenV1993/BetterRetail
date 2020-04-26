@@ -17,9 +17,7 @@ namespace Orckestra.Composer.Store.Providers
 
         public Coordinate GetCoordinate()
         {
-            if (!_store.HasLocation())
-                return null;
-            return new Coordinate(_store.GetLatitude(), _store.GetLongitude());
+            return !_store.HasLocation() ? null : new Coordinate(_store.GetLatitude(), _store.GetLongitude());
         }
     }
 }
