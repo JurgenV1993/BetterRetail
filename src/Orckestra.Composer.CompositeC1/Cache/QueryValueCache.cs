@@ -35,10 +35,7 @@ namespace Orckestra.Composer.CompositeC1.Cache
 
 		private void OnDataChanged(object sender, DataEventArgs dataeventargs)
 		{
-			if (!(dataeventargs.Data is TDataType data))
-			{
-				return;
-			}
+			if (!(dataeventargs.Data is TDataType data)) { return; }
 
 			string cacheKey = GetCacheKey(GetKey(data));
 			lock (_locker)
@@ -59,6 +56,7 @@ namespace Orckestra.Composer.CompositeC1.Cache
 				result = cacheRecord.Value;
 			}
 			else
+			{
 				lock (_locker)
 				{
 					cacheRecord = _innerCache.Get(cacheKey);
@@ -76,16 +74,14 @@ namespace Orckestra.Composer.CompositeC1.Cache
 						_innerCache.Add(cacheKey, new ExtendedNullable<TValueType> { Value = result });
 					}
 				}
+			}
 
 			return result;
 		}
 
 		public TValueType this[TPropertyType key]
 		{
-			get
-			{
-				return Get(key);
-			}
+			get { return Get(key); }
 		}
 
 		private TPropertyType GetKey(TDataType dataItem)
@@ -100,8 +96,7 @@ namespace Orckestra.Composer.CompositeC1.Cache
 
 		private TValueType GetValue(TDataType dataItem)
 		{
-			if (dataItem == default(TDataType))
-				return default;
+			if (dataItem == default(TDataType)) return default;
 
 			if (_compiledValueExpression == null)
 			{
@@ -123,5 +118,4 @@ namespace Orckestra.Composer.CompositeC1.Cache
 			return result;
 		}
 	}
-
 }
