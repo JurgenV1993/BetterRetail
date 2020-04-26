@@ -40,66 +40,59 @@ namespace Orckestra.Composer.Store.Services
 
         }
 
-        public virtual async Task<StoreInventoryViewModel> GetStoreInventoryViewModelAsync(
-            GetStoreInventoryViewModelParam viewModelParam)
+        public virtual async Task<StoreInventoryViewModel> GetStoreInventoryViewModelAsync(GetStoreInventoryViewModelParam param)
         {
-            ValidateParam(viewModelParam);
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
+            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.BaseUrl)), nameof(param)); }
+            if (string.IsNullOrWhiteSpace(param.Sku)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Sku)), nameof(param)); }
 
-            var overtureInventoryItems =
-                await InventoryRepository.GetInventoryItemsBySkuAsync(new GetInventoryItemsBySkuParam
-                {
-                    Scope = viewModelParam.Scope,
-                    Sku = viewModelParam.Sku,
-                    Date = viewModelParam.Date,
-                    IncludeChildScopes = true
-
+            var overtureInventoryItems = await InventoryRepository.GetInventoryItemsBySkuAsync(new GetInventoryItemsBySkuParam
+            {
+                Scope = param.Scope,
+                Sku = param.Sku,
+                Date = param.Date,
+                IncludeChildScopes = true
                 }).ConfigureAwait(false);
 
-            if (overtureInventoryItems == null)
-            {
-                return null;
-            }
+            if (overtureInventoryItems == null) { return null; }
 
-            var model = new StoreInventoryViewModel {Stores = new List<StoreViewModel>()};
+            var model = new StoreInventoryViewModel { Stores = new List<StoreViewModel>() };
 
-            var stores = await GetStores(viewModelParam, overtureInventoryItems);
+            var stores = await GetStores(param, overtureInventoryItems);
 
-            if (stores.Count == 0)
-            {
-                return null;
-            }
+            if (stores.Count == 0) { return null; }
 
             var index = 1;
-            if (viewModelParam.SearchPoint != null)
+            if (param.SearchPoint != null)
             {
-                stores = stores.OrderBy(s => s.CalculateDestination(viewModelParam.SearchPoint)).ToList();
+                stores = stores.OrderBy(s => s.CalculateDestination(param.SearchPoint)).ToList();
             }
 
             var storeIndexes = stores.ToDictionary(d => d.Number, d => index++);
 
             var storesForCurrentPage =
-                stores.Skip((viewModelParam.PageNumber - 1)*viewModelParam.PageSize)
-                    .Take(viewModelParam.PageSize)
+                stores.Skip((param.PageNumber - 1)*param.PageSize)
+                    .Take(param.PageSize)
                     .ToList();
 
-            var isInventoryEnabled = await IsInventoryEnabledAsync(viewModelParam);
-            var statusDisplayNames = await GetInventoryStatusDisplayNamesAsync(viewModelParam, isInventoryEnabled);
+            var isInventoryEnabled = await IsInventoryEnabledAsync(param);
+            var statusDisplayNames = await GetInventoryStatusDisplayNamesAsync(param, isInventoryEnabled);
 
             foreach (var store in storesForCurrentPage)
             {
                 var vm = StoreViewModelFactory.CreateStoreViewModel(new CreateStoreViewModelParam
                 {
                     Store = store,
-                    CultureInfo = viewModelParam.CultureInfo,
-                    BaseUrl = viewModelParam.BaseUrl,
-                    SearchPoint = viewModelParam.SearchPoint
+                    CultureInfo = param.CultureInfo,
+                    BaseUrl = param.BaseUrl,
+                    SearchPoint = param.SearchPoint
                 });
 
                 vm.SearchIndex = storeIndexes[store.Number];
 
-                var inventory =
-                    overtureInventoryItems.Results.FirstOrDefault(
-                        inv => inv.FulfillmentLocationNumber == store.Number);
+                var inventory = overtureInventoryItems.Results.FirstOrDefault(inv => inv.FulfillmentLocationNumber == store.Number);
                 if (inventory != null)
                 {
                     vm.InventoryStatus = GetInventoryStatusViewModel(isInventoryEnabled, inventory, statusDisplayNames);
@@ -108,35 +101,33 @@ namespace Orckestra.Composer.Store.Services
                 model.Stores.Add(vm);
             }
 
-            model.NextPage =
-                StoreViewModelFactory.BuildNextPage(new GetStorePageViewModelParam
-                {
-                    Total = stores.Count,
-                    PageSize = viewModelParam.PageSize,
-                    CurrentPageNumber = viewModelParam.PageNumber
-                });
+            model.NextPage = StoreViewModelFactory.BuildNextPage(new GetStorePageViewModelParam
+            {
+                Total = stores.Count,
+                PageSize = param.PageSize,
+                CurrentPageNumber = param.PageNumber
+            });
 
             return model;
         }
 
-        protected virtual StoreInventoryStatusViewModel GetInventoryStatusViewModel(bool isInventoryEnabled, InventoryItemStatusDetails inventory, Dictionary<string, string> statusDisplayNames)
+        protected virtual StoreInventoryStatusViewModel GetInventoryStatusViewModel(
+            bool isInventoryEnabled, 
+            InventoryItemStatusDetails inventory, 
+            Dictionary<string, string> statusDisplayNames)
         {
             return new StoreInventoryStatusViewModel
             {
-                Status =
-                    isInventoryEnabled
+                Status = isInventoryEnabled
                         ? GetInventoryStatus(inventory.CurrentStatus)
                         : InventoryStatusEnum.Unspecified,
-                DisplayName =
-                    isInventoryEnabled
-                        ? statusDisplayNames.FirstOrDefault(x => x.Key == inventory.CurrentStatus.ToString())
-                            .Value
+                DisplayName = isInventoryEnabled
+                        ? statusDisplayNames.FirstOrDefault(x => x.Key == inventory.CurrentStatus.ToString()).Value
                         : string.Empty
             };
         }
 
-        protected async virtual Task<Dictionary<string, string>> GetInventoryStatusDisplayNamesAsync
-            (GetStoreInventoryViewModelParam param, bool isEnabled)
+        protected async virtual Task<Dictionary<string, string>> GetInventoryStatusDisplayNamesAsync(GetStoreInventoryViewModelParam param, bool isEnabled)
         {
             return isEnabled
                 ? await LookupService.GetLookupDisplayNamesAsync(new GetLookupDisplayNamesParam
@@ -148,18 +139,18 @@ namespace Orckestra.Composer.Store.Services
                 : null;
         }
 
-        protected virtual async Task<List<Overture.ServiceModel.Customers.Stores.Store>> GetStores(GetStoreInventoryViewModelParam viewModelParam,
+        protected virtual async Task<List<Overture.ServiceModel.Customers.Stores.Store>> GetStores(
+            GetStoreInventoryViewModelParam viewModelParam,
             InventoryItemStatusDetailsQueryResult overtureInventoryItems)
         {
-            var getStoresTasks = overtureInventoryItems.Results.Select(inventoryItem =>
-                StoreRepository.GetStoreByNumberAsync(new GetStoreParam
-                {
-                    Scope = viewModelParam.Scope,
-                    CultureInfo = viewModelParam.CultureInfo,
-                    StoreNumber = inventoryItem.FulfillmentLocationNumber,
-                    IncludeSchedules = true,
-                    IncludeAddresses = true
-                }));
+            var getStoresTasks = overtureInventoryItems.Results.Select(inventoryItem => StoreRepository.GetStoreByNumberAsync(new GetStoreParam
+            {
+                Scope = viewModelParam.Scope,
+                CultureInfo = viewModelParam.CultureInfo,
+                StoreNumber = inventoryItem.FulfillmentLocationNumber,
+                IncludeSchedules = true,
+                IncludeAddresses = true
+            }));
 
             var result = await Task.WhenAll(getStoresTasks).ConfigureAwait(false);
 
@@ -185,19 +176,9 @@ namespace Orckestra.Composer.Store.Services
 
         protected virtual async Task<bool> IsInventoryEnabledAsync(GetStoreInventoryViewModelParam param)
         {
-            var productSettingsViewModel =
-                await ProductSettingsViewService.GetProductSettings(param.Scope, param.CultureInfo);
+            var productSettingsViewModel = await ProductSettingsViewService.GetProductSettings(param.Scope, param.CultureInfo);
 
             return productSettingsViewModel.IsInventoryEnabled;
-        }
-
-        protected static void ValidateParam(GetStoreInventoryViewModelParam viewModelParam)
-        {
-            if (viewModelParam == null) { throw new ArgumentNullException(nameof(viewModelParam)); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.Scope)), nameof(viewModelParam)); }
-            if (viewModelParam.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(viewModelParam.CultureInfo)), nameof(viewModelParam)); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.BaseUrl)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.BaseUrl)), nameof(viewModelParam)); }
-            if (string.IsNullOrWhiteSpace(viewModelParam.Sku)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(viewModelParam.Sku)), nameof(viewModelParam)); }
         }
     }
 }
