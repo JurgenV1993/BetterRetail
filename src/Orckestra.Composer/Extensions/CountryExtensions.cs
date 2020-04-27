@@ -17,10 +17,7 @@ namespace Orckestra.Composer.Extensions
             if (string.IsNullOrWhiteSpace(country.PostalCodeRegex)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(country.PostalCodeRegex)), nameof(country));}
 
             var regex = new Regex(country.PostalCodeRegex, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-            if (regex.IsMatch(postalCode))
-            {
-                return;
-            }
+            if (regex.IsMatch(postalCode)) { return; }
 
             throw new InvalidOperationException(string.Format("The postal code {0} does not match the regex of {1}", postalCode, country.CountryName));
         }
