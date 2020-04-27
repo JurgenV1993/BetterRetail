@@ -243,19 +243,17 @@ namespace Orckestra.Composer.Factory
                 IncludeRelationships = false,
                 IncludeVariants = true
             };
+
             var getProductResponse = await OvertureClient.SendAsync(getProductRequest).ConfigureAwait(false);
 
-            if (getProductResponse == null ||
-                (getProductResponse != null && recrurringLineItem.VariantId != string.Empty
-                && recrurringLineItem.VariantId != null && 
-                getProductResponse.Variants.SingleOrDefault(v => v.Id == recrurringLineItem.VariantId) == null))
+            if (getProductResponse == null || (getProductResponse != null && recrurringLineItem.VariantId != string.Empty
+                && recrurringLineItem.VariantId != null 
+                && getProductResponse.Variants.SingleOrDefault(v => v.Id == recrurringLineItem.VariantId) == null))
             {
                 var deleteRecurringLineItem = new DeleteRecurringOrderLineItemsRequest
                 {
                     CustomerId = recrurringLineItem.CustomerId,
-                    RecurringOrderLineItemIds = new List<Guid> {
-                        recrurringLineItem.RecurringOrderLineItemId,
-                    },
+                    RecurringOrderLineItemIds = new List<Guid> { recrurringLineItem.RecurringOrderLineItemId },
                     ScopeId = recrurringLineItem.ScopeId
                 };
                 await OvertureClient.SendAsync(deleteRecurringLineItem);
@@ -279,7 +277,7 @@ namespace Orckestra.Composer.Factory
                 DisplayName = ProductHelper.GetProductOrVariantDisplayName(getProductResponse, variant, param.CultureInfo)
             };
 
-            var productsPricesVm = await ProductPriceViewService.CalculatePricesAsync(new GetProductsPriceParam()
+            var productsPricesVm = await ProductPriceViewService.CalculatePricesAsync(new GetProductsPriceParam
             {
                 CultureInfo = param.CultureInfo,
                 Scope = recrurringLineItem.ScopeId,
@@ -377,10 +375,7 @@ namespace Orckestra.Composer.Factory
         /// <returns></returns>
         public virtual RecurringOrderTemplateAddressViewModel GetAddressViewModel(Address address, CultureInfo cultureInfo)
         {
-            if (address == null)
-            {
-                return new RecurringOrderTemplateAddressViewModel();
-            }
+            if (address == null) { return new RecurringOrderTemplateAddressViewModel(); }
 
             var addressViewModel = ViewModelMapper.MapTo<RecurringOrderTemplateAddressViewModel>(address, cultureInfo);
 
@@ -439,10 +434,7 @@ namespace Orckestra.Composer.Factory
 
         public virtual RecurringOrderShippingMethodViewModel GetShippingMethodViewModel(FulfillmentMethodInfo fulfillmentMethodInfo, CultureInfo cultureInfo)
         {
-            if (fulfillmentMethodInfo == null)
-            {
-                return null;
-            }
+            if (fulfillmentMethodInfo == null) { return null; }
 
             var shippingMethodViewModel = ViewModelMapper.MapTo<RecurringOrderShippingMethodViewModel>(fulfillmentMethodInfo, cultureInfo);
 
