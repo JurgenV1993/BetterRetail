@@ -15,7 +15,7 @@ namespace Orckestra.Composer.Extensions
         /// <returns></returns>
         public static LocalizedString GetDisplayNames(this Lookup lookup, string value)
         {
-            if (lookup?.Values is null || lookup.Values.Count == 0 || string.IsNullOrWhiteSpace(value)) return null;
+            if (lookup?.Values == null || lookup.Values.Count == 0 || string.IsNullOrWhiteSpace(value)) return null;
             value = value.Trim();
 
             var foundLookup = lookup.Values
@@ -34,6 +34,7 @@ namespace Orckestra.Composer.Extensions
         public static string GetDisplayName(this Lookup lookup, string value, string cultureName)
         {
             if (lookup is null || string.IsNullOrWhiteSpace(value) || string.IsNullOrWhiteSpace(cultureName)) return null;
+
             value = value.Trim();
             cultureName = cultureName.Trim();
 
