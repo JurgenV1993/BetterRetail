@@ -39,8 +39,7 @@ namespace Orckestra.Composer.MvcFilters
 
         private bool IsChildActionOnly(ActionExecutingContext filterContext)
         {
-            var childActionAttr = filterContext.ActionDescriptor.GetCustomAttributes(typeof (ChildActionOnlyAttribute),
-                true);
+            var childActionAttr = filterContext.ActionDescriptor.GetCustomAttributes(typeof (ChildActionOnlyAttribute), true);
 
             return childActionAttr.Any();
         }
@@ -95,8 +94,6 @@ namespace Orckestra.Composer.MvcFilters
             });
 
             filterContext.Redirect(newUrl);
-        }
-
-        
+        }        
     }
 }
