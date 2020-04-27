@@ -165,10 +165,7 @@ namespace Orckestra.Composer
         private IDisposable MeasureExecutionTime(object request)
         {
             var collector = ComposerHost.Current.TryResolve<IPerformanceDataCollector>();
-            if (collector == null)
-            {
-                return null;
-            }
+            if (collector == null) { return null; }
 
             string description = "OCS API Call: ";
             if (request is IEnumerable)
