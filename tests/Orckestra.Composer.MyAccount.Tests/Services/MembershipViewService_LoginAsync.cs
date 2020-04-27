@@ -321,10 +321,11 @@ namespace Orckestra.Composer.MyAccount.Tests.Services
             sut.Membership = _container.Get<IMembershipProxy>();
 
             // Act
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => sut.LoginAsync(null));
+            Expression<Func<Task<LoginViewModel>>> expression = () => sut.LoginAsync(null);
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => expression.Compile().Invoke());
 
             //Assert
-            exception.Message.Should().Contain("loginParam");
+            exception.ParamName.Should().BeEquivalentTo(GetParamsInfo(expression)[0].Name);
         }
 
         [Test]
