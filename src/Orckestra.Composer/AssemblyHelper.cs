@@ -41,8 +41,7 @@ namespace Orckestra.Composer
         {
             if (pattern == null) { throw new ArgumentNullException(nameof(pattern)); }
 
-            var assemblyFiles =
-                GetAssemblyFiles().Where(af => Regex.IsMatch(Path.GetFileName(af), pattern));
+            var assemblyFiles = GetAssemblyFiles().Where(af => Regex.IsMatch(Path.GetFileName(af), pattern));
 
             return LoadAssemblies(assemblyFiles);
         }
