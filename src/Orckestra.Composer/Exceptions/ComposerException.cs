@@ -46,10 +46,7 @@ namespace Orckestra.Composer.Exceptions
         /// </summary>
         public void ThrowIfAnyError()
         {
-            if (Errors.Any())
-            {
-                throw this;
-            }
+            if (Errors.Any()) { throw this; }
         }
 
         public override string Message
