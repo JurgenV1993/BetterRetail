@@ -52,8 +52,8 @@ namespace Orckestra.Composer.Providers.Dam
 
         public virtual string GetFallbackImageUrl()
         {
-            if (string.IsNullOrEmpty(_productMediaSettings?.MediaFallbackImageName))
-                return GetLocalFallbackImageUrl();
+            if (string.IsNullOrEmpty(_productMediaSettings?.MediaFallbackImageName)) return GetLocalFallbackImageUrl();
+
             return GetMediaFallbackImageUrl(_productMediaSettings);
         }
 
@@ -90,10 +90,7 @@ namespace Orckestra.Composer.Providers.Dam
 
             _productMediaSettings = await ProductMediaSettingsRepository.GetProductMediaSettings().ConfigureAwait(false);
 
-            if (IsProductHaveMedia(param.MediaSet, param.VariantMediaSet, param.Variants))
-            {
-                return GetAllProductMediaImages(param);
-            }
+            if (IsProductHaveMedia(param.MediaSet, param.VariantMediaSet, param.Variants)) { return GetAllProductMediaImages(param); }
 
             return GetAllProductLocalImages(param);
         }
@@ -126,9 +123,7 @@ namespace Orckestra.Composer.Providers.Dam
 
                 if (param.Variants != null)
                 {
-                    result.AddRange(
-                        param.Variants.Select(variantKey => CreateAllProductImages(param, variantKey.Id, sequenceNumber))
-                    );
+                    result.AddRange(param.Variants.Select(variantKey => CreateAllProductImages(param, variantKey.Id, sequenceNumber)));
                 }
 
             }
@@ -203,8 +198,15 @@ namespace Orckestra.Composer.Providers.Dam
             };
         }
 
-        protected virtual string GetMediaFallbackImageUrl(MediaSettings mediaSettings) => mediaSettings.MediaServerUrl + mediaSettings.MediaFallbackImageName;
-        protected virtual string GetImageUrl(string imagePath, MediaSettings mediaSettings) => imagePath.Replace("~/", mediaSettings.MediaServerUrl);
+        protected virtual string GetMediaFallbackImageUrl(MediaSettings mediaSettings)
+        {
+            return mediaSettings.MediaServerUrl + mediaSettings.MediaFallbackImageName;
+        }
+
+        protected virtual string GetImageUrl(string imagePath, MediaSettings mediaSettings)
+        {
+            return imagePath.Replace("~/", mediaSettings.MediaServerUrl);
+        }
 
         protected virtual string GetSizedImageUrl(ProductMedia productMedia, MediaSettings mediaSettings, string size)
         {
@@ -212,8 +214,7 @@ namespace Orckestra.Composer.Providers.Dam
             {
                 var resizedImage = productMedia.ResizedInstances.FirstOrDefault(resizedImg => resizedImg.Size == size);
 
-                if (resizedImage != null)
-                    return GetImageUrl(resizedImage.Url, mediaSettings);
+                if (resizedImage != null) return GetImageUrl(resizedImage.Url, mediaSettings);
             }
 
             return GetImageUrl(productMedia.Url, mediaSettings);
@@ -236,9 +237,11 @@ namespace Orckestra.Composer.Providers.Dam
             return result;
         }
 
-        protected virtual IEnumerable<ProductMedia> FilterImages(IEnumerable<ProductMedia> productMedias) =>
-            productMedias?.Where(x => x.MediaType == nameof(MediaTypeEnum.Image) && x.IsRemoved != true);
-
+        protected virtual IEnumerable<ProductMedia> FilterImages(IEnumerable<ProductMedia> productMedias)
+        {
+            return productMedias?.Where(x => x.MediaType == nameof(MediaTypeEnum.Image) && x.IsRemoved != true);
+        }
+           
         protected virtual IEnumerable<ProductMedia> GetVariantMediaSet(List<VariantMediaSet> variantMediaSet, Variant variant)
         {
             if (variant != null)
@@ -261,8 +264,7 @@ namespace Orckestra.Composer.Providers.Dam
 
         public virtual string GetMediaImageUrl(Product product, string variantId)
         {
-            if (product == null)
-                return null;
+            if (product == null) return null;
 
             var variant = !string.IsNullOrEmpty(variantId) ? product.Variants?.Find(v => v.Id.ToLower() == variantId.ToLower()) : null;
 
