@@ -699,7 +699,7 @@ namespace Orckestra.Composer.Product.Factory
             {
                 firstImage.Selected = true;
             }
-            return imageViewModels;
+            return list;
         }
 
         /// <summary>
