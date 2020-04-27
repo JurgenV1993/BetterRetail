@@ -113,9 +113,8 @@ namespace Orckestra.Composer.Repositories
             {
                 lineitem.RecurringOrderFrequencyName = param.RecurringOrderFrequencyName;
 
-                var newDate = param.NextOccurence;
                 var nextOccurenceWithTime = lineitem.NextOccurence;
-                newDate = new DateTime(param.NextOccurence.Year, param.NextOccurence.Month, param.NextOccurence.Day,
+                var newDate = new DateTime(param.NextOccurence.Year, param.NextOccurence.Month, param.NextOccurence.Day,
                                         nextOccurenceWithTime.Hour, nextOccurenceWithTime.Minute, nextOccurenceWithTime.Second, DateTimeKind.Utc);
                 
                 lineitem.NextOccurence = newDate;
