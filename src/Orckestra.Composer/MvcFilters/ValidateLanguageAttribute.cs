@@ -31,10 +31,7 @@ namespace Orckestra.Composer.MvcFilters
             var acceptedLanguages = GetAcceptLanguageHeaders(filterContext.HttpContext.Request);
             var resolvedCulture = GetFirstMatchingCultureInfo(acceptedLanguages, CultureService.GetAllSupportedCultures());
 
-            if (resolvedCulture == null)
-            {
-                throw new HttpResponseException(BuildBadRequestResponse());
-            }
+            if (resolvedCulture == null) { throw new HttpResponseException(BuildBadRequestResponse()); }
 
             SetThreadCulture(resolvedCulture);
 
@@ -45,10 +42,7 @@ namespace Orckestra.Composer.MvcFilters
         {
             var requestValues = request.UserLanguages;
 
-            if (requestValues == null || !requestValues.Any())
-            {
-                return null;
-            }
+            if (requestValues == null || !requestValues.Any()) { return null; }
 
             return requestValues.Select(GetQuantifiedValue)
                                 .OrderByDescending(t => t.Item1)
@@ -101,9 +95,8 @@ namespace Orckestra.Composer.MvcFilters
         {
             return new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
-                Content =
-                    new StringContent(
-                        "The HTTP Header 'Accept-Language' was not set or the value was not resolved into a supported culture.")
+                Content = new StringContent(
+                    "The HTTP Header 'Accept-Language' was not set or the value was not resolved into a supported culture.")
             };
         }
 
