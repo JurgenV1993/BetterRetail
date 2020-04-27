@@ -16,7 +16,7 @@ namespace Orckestra.Composer.ViewModels
 	        if (!propertyInfo.CanRead)
 	        {
                 throw new ArgumentException(string.Format("PropertyInfo '{0}' must have a getter.", propertyInfo.Name),
-                    "propertyInfo");
+                    nameof(propertyInfo));
 	        }
 
 		    Getter = propertyInfo.CanRead ? propertyInfo.DelegateForGetPropertyValue(Flags.InstancePublic) : null;
