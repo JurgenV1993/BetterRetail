@@ -11,10 +11,7 @@ namespace Orckestra.Composer.TypeExtensions
         {
             if (t == null) { throw new ArgumentNullException(nameof(t)); }
 
-            if (!t.IsValueType)
-            {
-                return null;
-            }
+            if (!t.IsValueType) { return null; }
 
             if (!DefaultValues.ContainsKey(t))
             {
@@ -24,25 +21,16 @@ namespace Orckestra.Composer.TypeExtensions
 
             var isSuccess = DefaultValues.TryGetValue(t, out object value);
 
-            if (!isSuccess)
-            {
-                throw new Exception("Something really wrong has happened with multi-threading...");
-            }
+            if (!isSuccess) { throw new Exception("Something really wrong has happened with multi-threading..."); }
 
             return value;
         }
 
         public static bool IsAssignableFromConcret(this Type type, Type typeFrom)
         {
-            if (type == null)
-            {
-                return false;
-            }
+            if (type == null) { return false; }
 
-            if (typeFrom == null)
-            {
-                throw new InvalidOperationException("typeFrom is required");
-            }
+            if (typeFrom == null) { throw new ArgumentNullException(nameof(typeFrom)); }
 
             return type.IsAssignableFrom(typeFrom) && !typeFrom.IsAbstract && !typeFrom.IsInterface;
         }
