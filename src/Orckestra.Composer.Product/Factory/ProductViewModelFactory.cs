@@ -692,13 +692,14 @@ namespace Orckestra.Composer.Product.Factory
         protected static IEnumerable<ProductDetailImageViewModel> SetFirstImageSelected(
           IEnumerable<ProductDetailImageViewModel> imageViewModels)
         {
-            var firstImage = imageViewModels.FirstOrDefault();
+            var list = imageViewModels.ToList();
+            var firstImage = list.FirstOrDefault();
 
             if (firstImage != null)
             {
                 firstImage.Selected = true;
             }
-            return imageViewModels.ToList();
+            return imageViewModels;
         }
 
         /// <summary>
