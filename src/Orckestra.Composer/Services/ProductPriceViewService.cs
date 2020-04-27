@@ -41,8 +41,7 @@ namespace Orckestra.Composer.Services
             if (string.IsNullOrEmpty(param.Scope)) { throw new ArgumentException(GetMessageOfNullEmpty(nameof(param.Scope)), nameof(param)); }
             if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
 
-            var productsPriceTask = ProductRepository.CalculatePricesAsync(param.ProductIds,
-                param.Scope);
+            var productsPriceTask = ProductRepository.CalculatePricesAsync(param.ProductIds, param.Scope);
             var currencyTask = ScopeViewService.GetScopeCurrencyAsync(new GetScopeCurrencyParam
             {
                 Scope = param.Scope,
