@@ -38,22 +38,22 @@ namespace Orckestra.Composer.Factory
 
                 if (program.Frequencies != null && program.Frequencies.Any())
                 {
-                    Dictionary<string, RecurringOrderFrequency> dictionary = new Dictionary<string, RecurringOrderFrequency>(StringComparer.OrdinalIgnoreCase);
-                    foreach (var frequency in program.Frequencies)
+                    var dictionary = new Dictionary<string, RecurringOrderProgramFrequencyViewModel>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var vmFrequency in vm.Frequencies)
                     {
-                        if (dictionary.ContainsKey(frequency.RecurringOrderFrequencyName))
-                        {
-                            continue;
-                        }
-                        dictionary.Add(frequency.RecurringOrderFrequencyName, frequency);
+                        if (dictionary.ContainsKey(vmFrequency.RecurringOrderFrequencyName)) { continue; }
+                        dictionary.Add(vmFrequency.RecurringOrderFrequencyName, vmFrequency);
                     }
-                    foreach(var vmFrequency in vm.Frequencies)
+
+                    foreach(var frequency in program.Frequencies)
                     {
-                        dictionary.TryGetValue(vmFrequency.RecurringOrderFrequencyName, out RecurringOrderFrequency match);
-                        if (match != null)
+                        dictionary.TryGetValue(frequency.RecurringOrderFrequencyName, out RecurringOrderProgramFrequencyViewModel vmFrequency);
+                        if (vmFrequency != null)
                         {
-                            var localizlocalizedFrequency = match.Localizations.Find(l => string.Equals(l.CultureIso, culture.Name, StringComparison.OrdinalIgnoreCase));
-                            vmFrequency.DisplayName = localizlocalizedFrequency?.DisplayName ?? vmFrequency.RecurringOrderFrequencyName;
+                            var localizlocalizedFrequency = frequency.Localizations.Find(l => string.Equals(l.CultureIso, culture.Name, StringComparison.OrdinalIgnoreCase));
+                            vmFrequency.DisplayName = localizlocalizedFrequency != null 
+                                ? localizlocalizedFrequency.DisplayName 
+                                : vmFrequency.RecurringOrderFrequencyName;
                         }
                     }
                 }
