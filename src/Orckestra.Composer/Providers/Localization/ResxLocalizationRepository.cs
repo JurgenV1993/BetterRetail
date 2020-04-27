@@ -93,12 +93,15 @@ namespace Orckestra.Composer.Providers.Localization
         /// <returns>Sorted List of resx FullFilenames to find keys for the (Category,Culture) tuple</returns>
         public List<VirtualFile> GetPrioritizedSources(string categoryName, CultureInfo culture)
         {
-            var allFiles      = RecursivelyFindAllResxFiles();
+            var allFiles = RecursivelyFindAllResxFiles();
             var resolvedNames = ResolveConfiguredFilenamePatterns(categoryName, culture);
 
             List<VirtualFile> sources =
-                resolvedNames.Join(allFiles, name => name, fileInfo => fileInfo.Name, (name,fileInfo) => fileInfo, StringComparer.InvariantCultureIgnoreCase)
-                             .ToList();
+                resolvedNames.Join(allFiles, 
+                    name => name, 
+                    fileInfo => fileInfo.Name, 
+                    (name,fileInfo) => fileInfo, StringComparer.InvariantCultureIgnoreCase)
+                .ToList();
 
             return sources;
         }
