@@ -103,9 +103,7 @@ namespace Orckestra.Composer.HttpModules
             }
         }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         protected virtual ICookieAccessor<ComposerCookieDto> GetCookieHandler(HttpContextBase httpContext)
         {
