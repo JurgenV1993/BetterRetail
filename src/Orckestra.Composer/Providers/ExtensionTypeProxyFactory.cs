@@ -27,9 +27,7 @@ namespace Orckestra.Composer.Providers
         /// <summary>
         ///     <see cref="ExtensionTypeProxyFactory"/> is a singleton and should not be instanciated
         /// </summary>
-        private ExtensionTypeProxyFactory()
-        {
-        }
+        private ExtensionTypeProxyFactory() { }
 
         /// <summary>
         /// This method should be called only in unit tests. elsewhere use <see cref="Default"/> to get the singleton instead.
