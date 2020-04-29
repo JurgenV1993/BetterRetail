@@ -46,8 +46,6 @@ namespace Orckestra.Composer.CompositeC1.Controllers
             BreadcrumbViewService = breadcrumbViewService ?? throw new ArgumentNullException(nameof(breadcrumbViewService));
             LanguageSwitchService = languageSwitchService ?? throw new ArgumentNullException(nameof(languageSwitchService));
             UrlProvider = urlProvider ?? throw new ArgumentNullException(nameof(urlProvider));
-            CheckoutNavigationViewService = checkoutNavigationViewService ?? throw new ArgumentNullException(nameof(checkoutNavigationViewService));
-            PaymentViewService = paymentViewService ?? throw new ArgumentNullException(nameof(paymentViewService));
             MyAccountUrlProvider = myAccountUrlProvider ?? throw new ArgumentNullException(nameof(myAccountUrlProvider));
             WebsiteContext = websiteContext;
             CartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
