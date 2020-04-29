@@ -143,14 +143,15 @@ namespace Orckestra.Composer.Store.Services
             GetStoreInventoryViewModelParam viewModelParam,
             InventoryItemStatusDetailsQueryResult overtureInventoryItems)
         {
-            var getStoresTasks = overtureInventoryItems.Results.Select(inventoryItem => StoreRepository.GetStoreByNumberAsync(new GetStoreParam
-            {
-                Scope = viewModelParam.Scope,
-                CultureInfo = viewModelParam.CultureInfo,
-                StoreNumber = inventoryItem.FulfillmentLocationNumber,
-                IncludeSchedules = true,
-                IncludeAddresses = true
-            }));
+            var getStoresTasks = overtureInventoryItems.Results.Select(inventoryItem =>
+                StoreRepository.GetStoreByNumberAsync(new GetStoreByNumberParam
+                {
+                    Scope = viewModelParam.Scope,
+                    CultureInfo = viewModelParam.CultureInfo,
+                    StoreNumber = inventoryItem.FulfillmentLocationNumber,
+                    IncludeSchedules = true,
+                    IncludeAddresses = true
+                }));
 
             var result = await Task.WhenAll(getStoresTasks).ConfigureAwait(false);
 

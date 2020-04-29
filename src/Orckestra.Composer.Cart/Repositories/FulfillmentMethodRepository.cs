@@ -58,6 +58,7 @@ namespace Orckestra.Composer.Cart.Repositories
 
             return CacheProvider.GetOrAddAsync(cacheKey, () => OvertureClient.SendAsync(request));
         }
+
         protected static CacheKey GetCacheKeyForFulfillmentMethodsByScope(string scopeId)
         {
             var cacheKey = new CacheKey(CacheConfigurationCategoryNames.FulfillmentMethodsByScope, scopeId);

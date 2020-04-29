@@ -1,3 +1,5 @@
+using System;
+using System.Web.Hosting;
 using Autofac.Integration.Mvc;
 using Composite.AspNet.MvcFunctions;
 using Composite.Core.Application;
@@ -17,6 +19,7 @@ using Orckestra.ExperienceManagement.Configuration.DataTypes;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Composite.Core;
 
 namespace Orckestra.Composer.Website
 {
@@ -26,6 +29,8 @@ namespace Orckestra.Composer.Website
         private static IComposerHost _host;
         public static void Start()
         {
+            if (!HostingEnvironment.IsHosted) return;
+
             DynamicModuleUtility.RegisterModule(typeof(SecurityModule));
             SetUpSearchConfiguration();
         }
@@ -37,6 +42,8 @@ namespace Orckestra.Composer.Website
 
         public static void OnInitialized()
         {
+            if (!HostingEnvironment.IsHosted) return;
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             LogProvider.SetCurrentLogProvider(C1LogProvider.Instance);
@@ -138,23 +145,11 @@ namespace Orckestra.Composer.Website
                 helpText: "Notification time of the minicart when an item is added/updated in cart (in seconds)."
             );
 
-            functions.RegisterAction<CheckoutController>("GuestCustomerInfo", "Composer.Checkout.GuestCustomerInfo");
-            functions.RegisterAction<CheckoutController>("ShippingAddress", "Composer.Checkout.ShippingAddress");
-            functions.RegisterAction<CheckoutController>("ShippingMethod", "Composer.Checkout.ShippingMethod");
             functions.RegisterAction<CheckoutController>("CheckoutSignInAsGuest", "Composer.Checkout.CheckoutSignInAsGuest");
             functions.RegisterAction<CheckoutController>("CheckoutSignInAsCustomer", "Composer.Checkout.CheckoutSignInAsCustomer");
-            functions.RegisterAction<CheckoutController>("CheckoutOrderSummary", "Composer.Checkout.CheckoutOrderSummary");
-            functions.RegisterAction<CheckoutController>("CheckoutFinalStepOrderSummary", "Composer.Checkout.CheckoutFinalStepOrderSummary");
-            functions.RegisterAction<CheckoutController>("CheckoutComplete", "Composer.Checkout.CheckoutComplete");
-            functions.RegisterAction<CheckoutController>("ShippingAddressRegistered", "Composer.Checkout.ShippingAddressRegistered");
-            functions.RegisterAction<CheckoutController>("BillingAddress", "Composer.Checkout.BillingAddress");
-            functions.RegisterAction<CheckoutController>("BillingAddressRegistered", "Composer.Checkout.BillingAddressRegistered");
             functions.RegisterAction<CheckoutController>("Breadcrumb", "Composer.Checkout.Breadcrumb");
             functions.RegisterAction<CheckoutController>("ConfirmationBreadcrumb", "Composer.Checkout.ConfirmationBreadcrumb");
             functions.RegisterAction<CheckoutController>("LanguageSwitch", "Composer.Checkout.LanguageSwitch");
-            functions.RegisterAction<CheckoutController>("CompleteCheckoutOrderSummary", "Composer.Checkout.CompleteCheckoutOrderSummary");
-            functions.RegisterAction<CheckoutController>("CheckoutPayment", "Composer.Checkout.CheckoutPayment");
-            functions.RegisterAction<CheckoutController>("CheckoutNavigation", "Composer.Checkout.CheckoutNavigation");
 
             functions.RegisterAction<MembershipController>("SignInHeaderBlade", "Composer.Membership.SignInHeader");
             functions.RegisterAction<MembershipController>("ReturningCustomerBlade", "Composer.Membership.ReturningCustomer");
@@ -187,8 +182,6 @@ namespace Orckestra.Composer.Website
             functions.RegisterAction<OrderController>("FindMyOrder", "Composer.Order.FindMyOrder");
             functions.RegisterAction<OrderController>("OrderDetails", "Composer.Order.OrderDetails");
 
-            functions.RegisterAction<StoreLocatorController>("Index", "Composer.Store.Locator")
-                .AddParameter("pagesize", typeof(int), false, label: "Page Size", helpText: "The max count of the items to show in the list.");
             functions.RegisterAction<StoreLocatorController>("StoreDetails", "Composer.Store.Details", "Store Details")
                 .AddParameter("zoom", typeof(int), false, label: "Map Zoom Level", helpText: "Define the resolution of the map view. Zoom levels between 0 and 21+. Default is 14 (streets).");
             functions.RegisterAction<StoreLocatorController>("Breadcrumb", "Composer.Store.Breadcrumb");
@@ -218,6 +211,8 @@ namespace Orckestra.Composer.Website
 
         public static void ConfigureServices(IServiceCollection collection)
         {
+            if (!HostingEnvironment.IsHosted) return;
+
             _host = new ComposerHost();
             _host.LoadPlugins();
             foreach(var type in _host.RegisteredInterfaces)

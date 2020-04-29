@@ -37,12 +37,12 @@ namespace Orckestra.Composer.MyAccount.Services
             ICustomerRepository customerRepository,
             ICartMergeProvider cartMergeProvider)
         {
+            Membership = new StaticMembershipProxy();
+
             MyAccountUrlProvider = myAccountUrlProvider ?? throw new ArgumentNullException(nameof(myAccountUrlProvider));
             ViewModelMapper = viewModelMapper ?? throw new ArgumentNullException(nameof(viewModelMapper));
             CustomerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
             CartMergeProvider = cartMergeProvider ?? throw new ArgumentNullException(nameof(cartMergeProvider));
-
-            Membership = new StaticMembershipProxy();
         }
 
         /// <summary>
@@ -478,6 +478,23 @@ namespace Orckestra.Composer.MyAccount.Services
                 Customer = customer,
                 CultureInfo = param.CultureInfo,
             });
+        }
+
+        /// <summary>
+        /// Return true if the user exist
+        /// </summary>
+        /// <param name="param">Builder params <see cref="GetCustomerByEmailParam"/></param>
+        /// <returns>
+        /// The view model is user exist
+        /// </returns>
+        public virtual async Task<IsUserExistViewModel> GetIsUserExistViewModelAsync(GetCustomerByEmailParam getCustomerByEmailParam)
+        {
+            var customerQueryResult = await CustomerRepository.GetCustomerByEmailAsync(getCustomerByEmailParam).ConfigureAwait(false);
+
+            return new IsUserExistViewModel
+            {
+                IsExist = customerQueryResult.Results.Any(customer => customer.Email == getCustomerByEmailParam.Email)
+            };
         }
 
         /// <summary>

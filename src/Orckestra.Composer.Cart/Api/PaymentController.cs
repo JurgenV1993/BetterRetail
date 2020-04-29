@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -60,6 +60,55 @@ namespace Orckestra.Composer.Cart.Api
             {
                 vm.ActivePaymentViewModel.CreditCardTrustImage = trustImageVm;
             }
+
+            return Ok(vm);
+        }
+
+        /// <summary>
+        /// Get the Payment providers and methods available for the current cart.
+        /// </summary>
+        /// <returns>A Json representation of the Payments methods</returns>
+        [HttpGet]
+        [ActionName("checkoutpayment")]
+        [ValidateModelState]
+        public async Task<IHttpActionResult> GetCheckoutPayment()
+        {
+            var vm = await PaymentViewService.GetSingleCheckoutPaymentAsync(new GetPaymentMethodsParam
+            {
+                Scope = ComposerContext.Scope,
+                CultureInfo = ComposerContext.CultureInfo,
+                CartName = CartConfiguration.ShoppingCartName,
+                CustomerId = ComposerContext.CustomerId,
+                IsAuthenticated = ComposerContext.IsAuthenticated
+            });
+
+            vm.CreditCardTrustImage = ImageService.GetCheckoutTrustImageViewModel(ComposerContext.CultureInfo);
+
+            return Ok(vm);
+        }
+
+        [HttpPut]
+        [ActionName("checkoutpayment")]
+        [ValidateModelState]
+        public async Task<IHttpActionResult> UpdateCheckoutPayment(UpdatePaymentMethodViewModel request)
+        {
+            if (request == null) { return BadRequest("Request cannot be null."); }
+
+            var param = new UpdatePaymentMethodParam
+            {
+                CartName = CartConfiguration.ShoppingCartName,
+                CultureInfo = ComposerContext.CultureInfo,
+                CustomerId = ComposerContext.CustomerId,
+                PaymentId = request.PaymentId.GetValueOrDefault(),
+                Scope = ComposerContext.Scope,
+                PaymentMethodId = request.PaymentMethodId.GetValueOrDefault(),
+                PaymentProviderName = request.PaymentProviderName,
+                PaymentType = request.PaymentType,
+                ProviderNames = request.Providers.ToList(),
+                IsAuthenticated = ComposerContext.IsAuthenticated
+            };
+
+            var vm = await PaymentViewService.UpdateActivePaymentMethodAsync(param);
 
             return Ok(vm);
         }
@@ -200,20 +249,19 @@ namespace Orckestra.Composer.Cart.Api
 
             //Will need to change Viewmodel returned
 
-            var param = new GetPaymentProvidersParam
+            var providers = await PaymentViewService.GetPaymentProvidersAsync(new GetPaymentProvidersParam
             {
                 Scope = ComposerContext.Scope,
-                CultureInfo = ComposerContext.CultureInfo
-            };
-            var providers = await PaymentViewService.GetPaymentProvidersAsync(param).ConfigureAwait(false);
+                CultureInfo = ComposerContext.CultureInfo,
+            }).ConfigureAwait(false);
 
             var results = await PaymentViewService.GetPaymentMethodsAsync(new GetPaymentMethodsParam
             {
                 Scope = ComposerContext.Scope,
                 CultureInfo = ComposerContext.CultureInfo,
-                ProviderNames = providers.Select(p => p.ProviderName).ToList(),
                 CartName = request.CartName,
                 CustomerId = ComposerContext.CustomerId,
+                ProviderNames = providers.Select(p => p.ProviderName).ToList(),
                 IsAuthenticated = ComposerContext.IsAuthenticated
             });
 

@@ -55,22 +55,59 @@ namespace Orckestra.Composer.Cart.Services
         public async virtual Task<ShippingMethodsViewModel> GetShippingMethodsAsync(GetShippingMethodsParam param)
         {
             if (param == null) { throw new ArgumentNullException(nameof(param)); }
-            if (string.IsNullOrWhiteSpace(param.CartName)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.CartName)), nameof(param)); }
-            if (string.IsNullOrWhiteSpace(param.Scope)) { throw new ArgumentException(GetMessageOfNullWhiteSpace(nameof(param.Scope)), nameof(param)); }
-            if (param.CustomerId == Guid.Empty) { throw new ArgumentException(GetMessageOfEmpty(nameof(param.CustomerId)), nameof(param)); }
-            if (param.CultureInfo == null) { throw new ArgumentException(GetMessageOfNull(nameof(param.CultureInfo)), nameof(param)); }
 
             var shippingMethods = await GetFulfillmentMethods(param).ConfigureAwait(false);
 
             if (shippingMethods == null) { return null; }
 
             var shippingMethodViewModels = shippingMethods
-                .Select(sm => CartViewModelFactory.GetShippingMethodViewModel(sm, param.CultureInfo)).ToList();
+                .Select(sm => CartViewModelFactory.GetShippingMethodViewModel(sm, param.CultureInfo))
+                .ToList();
 
             return new ShippingMethodsViewModel
             {
                 ShippingMethods = shippingMethodViewModels
             };
+        }
+
+        public async virtual Task<ShippingMethodTypesViewModel> GetShippingMethodTypesAsync(GetShippingMethodsParam param)
+        {
+            if (param == null) { throw new ArgumentNullException(nameof(param)); }
+
+            var shippingMethods = await GetFulfillmentMethods(param).ConfigureAwait(false);
+
+            if (shippingMethods == null)
+            {
+                return null;
+            }
+
+            var shippingMethodTypeViewModels = shippingMethods
+                .Select(sm => CartViewModelFactory.GetShippingMethodViewModel(sm, param.CultureInfo))
+                .Where(FilterShippingMethodView)
+                .GroupBy(sm => sm.FulfillmentMethodType)
+                .Select(type => CartViewModelFactory.GetShippingMethodTypeViewModel(type.Key, type.ToList(), param.CultureInfo))
+                .OrderBy(OrderShippingMethodTypeView)
+                .ToList();
+
+            return new ShippingMethodTypesViewModel
+            {
+                ShippingMethodTypes = shippingMethodTypeViewModels
+            };
+        }
+
+        public virtual bool FilterShippingMethodView(ShippingMethodViewModel sippingMethod)
+        {
+            return sippingMethod.FulfillmentMethodType == FulfillmentMethodType.Shipping || sippingMethod.FulfillmentMethodType == FulfillmentMethodType.PickUp;
+        }
+
+        public virtual int OrderShippingMethodTypeView(ShippingMethodTypeViewModel sippingMethodType)
+        {
+            switch(sippingMethodType.FulfillmentMethodType)
+            {
+                case FulfillmentMethodType.Shipping: return 0;
+                case FulfillmentMethodType.PickUp: return 1;
+                default: return 2;
+            }
         }
 
         /// <summary>
@@ -95,7 +132,7 @@ namespace Orckestra.Composer.Cart.Services
                 CustomerId = param.CustomerId,
                 Scope = param.Scope
             }).ConfigureAwait(false);
-            
+
             return await GetShippingMethodsAsync(param);
         }
 
