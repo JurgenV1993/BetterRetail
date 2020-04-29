@@ -175,6 +175,8 @@ namespace Orckestra.Composer.Cart.Factory
 
             foreach (var el in lineItemDetailViewModels)
             {
+                if (el.AdditionalFees == null) { continue; }
+
                 foreach(var l in el.AdditionalFees)
                 {
                     if (dictionary.ContainsKey((l.DisplayName, l.Taxable)))
